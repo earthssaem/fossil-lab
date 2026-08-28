@@ -23,11 +23,11 @@ button{font-family:var(--display);cursor:pointer;border:none}
 button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
 /* ---------- 상단 ---------- */
-.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;max-width:1120px;margin:0 auto;padding:14px 16px 0}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;max-width:1120px;margin:0 auto;padding:8px 16px 0}
 .brand{display:flex;align-items:baseline;gap:10px}
 .brand h1{font-family:var(--display);font-weight:400;font-size:30px;margin:0;letter-spacing:-.5px}
 .brand .sub{font-size:13px;color:var(--ink-2)}
-.tabs{display:flex;gap:6px;max-width:1120px;margin:10px auto 0;padding:0 16px;overflow-x:auto;scrollbar-width:none}
+.tabs{display:flex;gap:6px;max-width:1120px;margin:6px auto 0;padding:0 16px;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex:1 0 auto;min-width:150px;padding:10px 14px 12px;border-radius:14px 14px 0 0;background:#fff;color:var(--ink-2);font-size:18px;border:3px solid var(--ink);border-bottom:none;position:relative;top:3px;display:flex;align-items:center;gap:8px;white-space:nowrap;transition:transform .15s}
 .tab .num{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;font-size:14px}
@@ -40,17 +40,19 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 .tab.active .num{background:#fff;color:var(--ink)}
 
 /* ---------- 본문 ---------- */
-.wrap{max-width:1120px;margin:0 auto;padding:0 16px 40px}
-.panel{display:none;background:var(--paper);border:3px solid var(--ink);border-radius:0 18px 18px 18px;padding:16px;box-shadow:0 8px 0 rgba(36,48,58,.12)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px 6px}
+.panel{display:none;background:var(--paper);border:3px solid var(--ink);border-radius:0 18px 18px 18px;padding:12px;box-shadow:0 8px 0 rgba(36,48,58,.12)}
 .panel.active{display:block}
-.stage-wrap{position:relative;width:100%;aspect-ratio:16/9;border:4px solid var(--ink);border-radius:14px;overflow:hidden;background:var(--sky)}
+/* 태블릿 한 화면에 들어오도록: 화면 높이에 맞춰 스테이지 폭을 줄임 (16:9 유지) */
+.stage-wrap{position:relative;width:min(100%,calc((100vh - 250px)*16/9));width:min(100%,calc((100dvh - 250px)*16/9));margin:0 auto;aspect-ratio:16/9;border:4px solid var(--ink);border-radius:14px;overflow:hidden;background:var(--sky)}
+#panel4 .stage-wrap{width:min(100%,calc((100vh - 305px)*16/9));width:min(100%,calc((100dvh - 305px)*16/9))}
 .stage-wrap svg,.stage-wrap canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .stage-wrap canvas{touch-action:none}
 .caption{position:absolute;left:12px;right:12px;bottom:12px;background:rgba(255,253,248,.94);border:3px solid var(--ink);border-radius:12px;padding:10px 16px;font-size:clamp(14px,1.9vw,21px);line-height:1.45;font-weight:500;pointer-events:none;transition:opacity .3s}
 .caption b{color:var(--accent-2)}
 .caption.hidden{opacity:0}
 .badge{position:absolute;top:12px;left:12px;background:var(--ink);color:#fff;font-family:var(--display);font-size:clamp(14px,1.8vw,20px);padding:6px 14px;border-radius:999px;pointer-events:none}
-.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
 .controls .spacer{flex:1}
 .btn{font-size:19px;padding:10px 20px;border-radius:12px;background:#fff;color:var(--ink);border:3px solid var(--ink);box-shadow:0 4px 0 var(--ink);transition:transform .08s,box-shadow .08s;user-select:none;-webkit-user-select:none}
 .btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
@@ -178,6 +180,9 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 .rv.ok{border-color:var(--ok);background:#E4F3E8} .rv.no{border-color:var(--bad);background:#FBE5E2}
 @media(max-width:600px){.sort,.choices,.mc-pics{grid-template-columns:1fr}.org-grid{grid-template-columns:repeat(4,1fr)}.brand h1{font-size:24px}.tab{min-width:120px;font-size:15px}}
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
+
+/* ---------- 푸터 ---------- */
+.site-foot{max-width:1120px;margin:0 auto;padding:4px 16px 8px;text-align:center;font-size:13px;color:var(--ink-2)}
 </style>
 </head>
 <body>
@@ -286,6 +291,7 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 </section>
 
 </main>
+<footer class="site-foot">© 2026 제작: 김연경(earthssaem@gmail.com)</footer>
 <script>
 /* ================= 공통 ================= */
 const $ = s => document.querySelector(s);
