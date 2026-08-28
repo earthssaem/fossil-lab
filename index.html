@@ -24,9 +24,9 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 
 /* ---------- 상단 ---------- */
 .top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;max-width:1120px;margin:0 auto;padding:8px 16px 0}
-.brand{display:flex;align-items:baseline;gap:10px}
-.brand h1{font-family:var(--display);font-weight:400;font-size:30px;margin:0;letter-spacing:-.5px}
-.brand .sub{font-size:13px;color:var(--ink-2)}
+.brand{display:flex;align-items:baseline;gap:10px;min-width:0;flex-wrap:nowrap;white-space:nowrap}
+.brand h1{font-family:var(--display);font-weight:400;font-size:clamp(19px,3.1vw,30px);margin:0;letter-spacing:-.5px;flex:none}
+.brand .sub{font-size:clamp(11px,1.7vw,16px);color:var(--ink-2);border-left:2px solid rgba(36,48,58,.25);padding-left:10px;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .tabs{display:flex;gap:6px;max-width:1120px;margin:6px auto 0;padding:0 16px;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex:1 0 auto;min-width:150px;padding:10px 14px 12px;border-radius:14px 14px 0 0;background:#fff;color:var(--ink-2);font-size:18px;border:3px solid var(--ink);border-bottom:none;position:relative;top:3px;display:flex;align-items:center;gap:8px;white-space:nowrap;transition:transform .15s}
@@ -50,6 +50,7 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 .stage-wrap canvas{touch-action:none}
 .caption{position:absolute;left:12px;right:12px;bottom:12px;background:rgba(255,253,248,.94);border:3px solid var(--ink);border-radius:12px;padding:10px 16px;font-size:clamp(14px,1.9vw,21px);line-height:1.45;font-weight:500;pointer-events:none;transition:opacity .3s}
 .caption b{color:var(--accent-2)}
+.caption small{display:block;font-size:.78em;color:var(--ink-2);font-weight:400}
 .caption.hidden{opacity:0}
 .badge{position:absolute;top:12px;left:12px;background:var(--ink);color:#fff;font-family:var(--display);font-size:clamp(14px,1.8vw,20px);padding:6px 14px;border-radius:999px;pointer-events:none}
 .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
@@ -178,7 +179,8 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 .rv{border:3px solid var(--ink);border-radius:10px;padding:4px 10px;font-family:var(--display);font-size:15px;background:#fff}
 .rv small{display:block;font-family:var(--body);font-size:11px;color:var(--ink-2)}
 .rv.ok{border-color:var(--ok);background:#E4F3E8} .rv.no{border-color:var(--bad);background:#FBE5E2}
-@media(max-width:600px){.sort,.choices,.mc-pics{grid-template-columns:1fr}.org-grid{grid-template-columns:repeat(4,1fr)}.brand h1{font-size:24px}.tab{min-width:120px;font-size:15px}}
+.mini-note{margin-top:8px;font-size:12px;color:var(--ink-2);line-height:1.45}
+@media(max-width:600px){.sort,.choices,.mc-pics{grid-template-columns:1fr}.org-grid{grid-template-columns:repeat(4,1fr)}.tab{min-width:120px;font-size:15px}}
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
 
 /* ---------- 푸터 ---------- */
@@ -187,14 +189,14 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 </head>
 <body>
 <header class="top">
-  <div class="brand"><h1>화석 이야기</h1><span class="sub">통합과학2 · 지질시대의 환경과 생물 · 화석이 만들어지는 과정</span></div>
+  <div class="brand"><h1>화석 이야기</h1><span class="sub">생물의 몸과 흔적은 어떻게 지층에 기록될까?</span></div>
 </header>
 <nav class="tabs" role="tablist">
-  <button class="tab active" data-tab="1" role="tab"><span class="num">1</span>화석이 만들어지기까지</button>
-  <button class="tab" data-tab="2" role="tab"><span class="num">2</span>화석 실험실</button>
-  <button class="tab" data-tab="3" role="tab"><span class="num">3</span>붕어빵으로 보는 몰드·캐스트</button>
-  <button class="tab" data-tab="4" role="tab"><span class="num">4</span>흔적도 화석이 돼요</button>
-  <button class="tab" data-tab="5" role="tab"><span class="num">5</span>정리 퀴즈</button>
+  <button class="tab active" data-tab="1" role="tab"><span class="num">1</span>화석이 남는 과정</button>
+  <button class="tab" data-tab="2" role="tab"><span class="num">2</span>화석화 조건 실험</button>
+  <button class="tab" data-tab="3" role="tab"><span class="num">3</span>몰드·캐스트</button>
+  <button class="tab" data-tab="4" role="tab"><span class="num">4</span>생흔 화석</button>
+  <button class="tab" data-tab="5" role="tab"><span class="num">5</span>핵심 퀴즈</button>
 </nav>
 <main class="wrap">
 
@@ -220,23 +222,24 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
   <div class="lab-grid">
     <div class="lab-side">
       <div class="card">
-        <h3>어떤 생물인가요? <span class="tag">조건 ③</span></h3>
+        <h3>어떤 생물인가요?</h3>
         <div class="org-grid" id="org-grid"></div>
         <div id="org-hint" style="font-size:13px;color:var(--ink-2);margin-top:8px"></div>
       </div>
       <div class="card">
-        <h3>얼마나 빨리 묻히나요? <span class="tag">조건 ①</span></h3>
+        <h3>얼마나 빨리 묻히나요?</h3>
         <div class="seg" id="seg-burial">
           <button data-v="fast" class="sel">빠르게 매몰<small>바로 퇴적물에 덮임</small></button>
           <button data-v="slow">느리게 매몰<small>바닥에 오래 방치</small></button>
         </div>
       </div>
       <div class="card">
-        <h3>어떤 환경인가요? <span class="tag">조건 ②</span></h3>
+        <h3>어떤 환경인가요?</h3>
         <div class="seg" id="seg-oxy">
-          <button data-v="low" class="sel">산소 적음<small>분해가 느린 곳</small></button>
-          <button data-v="high">산소 많음<small>분해가 빠른 곳</small></button>
+          <button data-v="low" class="sel">산소 적음<small>분해가 비교적 느려질 수 있는 환경</small></button>
+          <button data-v="high">산소 많음<small>분해가 비교적 활발할 수 있는 환경</small></button>
         </div>
+        <div class="mini-note">이 실험은 다른 조건이 같을 때 산소량의 영향을 단순하게 비교한 모형이에요. 실제 분해 속도에는 온도, 물의 흐름, 산성도 등도 영향을 줘요.</div>
       </div>
       <button class="btn primary big" id="t2-run" style="width:100%">🔬 실험 시작</button>
     </div>
@@ -247,8 +250,8 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
         <div class="caption" id="cap2">왼쪽에서 생물과 조건을 고른 뒤 <b>실험 시작</b>을 눌러 보세요.</div>
       </div>
       <div class="result" id="result2">
-        <div class="head" id="result2-head"><span class="stars" id="result2-stars"></span><span id="result2-title"></span></div>
-        <div class="body"><div id="result2-desc"></div><ul id="result2-list"></ul></div>
+        <div class="head" id="result2-head"><span id="result2-title"></span></div>
+        <div class="body"><div id="result2-desc"></div><ul id="result2-list"></ul><div class="mini-note">이 결과는 화석으로 남을 가능성을 단순화하여 보여 주는 모형이에요.</div></div>
       </div>
     </div>
   </div>
@@ -404,31 +407,26 @@ function drawClam(scale = 1) {
   g.appendChild(hard); g.appendChild(soft);
   return g;
 }
-/* 공룡: soft = 몸, hard = 뼈 (조각 4개) */
-function drawDino(scale = 1) {
-  const g = E('g', { class: 'org dino', transform: `scale(${scale})` });
-  const c = '#7FBF6A';
-  const soft = E('g', { class: 'soft' }, [
-    E('path', { d: 'M-110 -6 L-60 -22 C-40 -50 30 -50 60 -30 L86 -62 C104 -68 126 -58 126 -42 L124 -14 L98 -8 L74 -2 C70 20 40 34 10 30 L-10 30 L-24 56 L-8 60 L-36 62 L-40 30 C-60 26 -80 14 -110 -6 Z', fill: c, stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }),
-    E('path', { d: 'M20 30 L26 56 L42 58 L14 62 L8 32', fill: c, stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }),
-    E('circle', { cx: 100, cy: -46, r: 6, fill: '#fff', stroke: '#24303A', 'stroke-width': 3 }), E('circle', { cx: 102, cy: -46, r: 2.5, fill: '#24303A' }),
-    E('path', { d: 'M92 -22 L118 -26', stroke: '#24303A', 'stroke-width': 3, 'stroke-linecap': 'round' }),
-    ...[-30, -10, 10].map(x => E('circle', { cx: x, cy: -26, r: 5, fill: '#5F9E4B' })),
-  ]);
-  const bone = (d, w = 6) => [E('path', { d, fill: 'none', stroke: '#F3EEE3', 'stroke-width': w, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }), E('path', { d, fill: 'none', stroke: '#24303A', 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' })];
-  const hard = E('g', { class: 'hard' }, [
-    E('g', { class: 'piece skull' }, [E('path', { d: 'M78 -40 L100 -62 L124 -58 L124 -30 L100 -22 L84 -28 Z', fill: '#F3EEE3', stroke: '#24303A', 'stroke-width': 3 }), E('path', { d: 'M92 -30 L96 -24 M104 -30 L108 -24 M116 -32 L118 -26', stroke: '#24303A', 'stroke-width': 1.5 })]),
-    E('g', { class: 'piece spine' }, [...bone('M-104 -8 C-60 -12 -20 -18 20 -20 C50 -22 66 -32 80 -40'), ...bone('M-20 -18 Q-26 0 -14 16 M0 -20 Q-4 2 6 18 M20 -20 Q18 0 26 14 M40 -24 Q42 -6 48 8', 4)]),
-    E('g', { class: 'piece legs' }, [...bone('M-10 -8 L-24 30 L-34 58 M-30 58 L-42 60 M20 -10 L22 30 L18 58 M14 58 L38 58', 5)]),
-  ]);
-  g.appendChild(hard); g.appendChild(soft);
+/* 고사리: 전부 soft (잎·줄기) */
+function drawFern(scale = 1) {
+  const g = E('g', { class: 'org fern', transform: `scale(${scale})` });
+  const soft = E('g', { class: 'soft' });
+  soft.appendChild(E('path', { d: 'M-2 66 C-8 30 -4 -18 4 -58', fill: 'none', stroke: '#3E6B34', 'stroke-width': 7, 'stroke-linecap': 'round' }));
+  const leaf = (x, y, len, dir) => E('path', { d: `M${x} ${y} Q${x + dir * len * .45} ${y - 10} ${x + dir * len} ${y - 2} Q${x + dir * len * .5} ${y + 7} ${x} ${y + 4} Z`, fill: '#6FAF57', stroke: '#24303A', 'stroke-width': 2.5, 'stroke-linejoin': 'round' });
+  [[-50, 22], [-35, 32], [-20, 42], [-5, 50], [10, 55], [25, 58], [40, 56], [55, 50]].forEach(([y, len], i) => {
+    const x = lerp(3, -3, i / 7);
+    soft.appendChild(leaf(x, y, len, -1)); soft.appendChild(leaf(x, y, len, 1));
+  });
+  soft.appendChild(E('path', { d: 'M4 -58 Q16 -68 10 -78 Q-2 -72 4 -58 Z', fill: '#6FAF57', stroke: '#24303A', 'stroke-width': 2.5 }));
+  g.appendChild(E('g', { class: 'hard' }));
+  g.appendChild(soft);
   return g;
 }
 const ORGS = {
-  jelly: { name: '해파리', hard: false, draw: drawJelly, hint: '온몸이 연해서 단단한 부분이 없어요.', color: '#F6B7DC' },
+  jelly: { name: '해파리', hard: false, draw: drawJelly, hint: '몸이 부드럽고 단단한 부분이 거의 없어요.', color: '#F6B7DC' },
+  fern: { name: '고사리', hard: false, draw: drawFern, hint: '단단한 뼈나 껍데기는 없지만 잎의 모양이 눌려 남을 수 있어요.', color: '#6FAF57' },
   clam: { name: '조개', hard: true, draw: drawClam, hint: '단단한 껍데기가 있어요.', color: '#F1DFC4' },
-  fish: { name: '물고기', hard: true, draw: drawFish, hint: '살은 연하지만 단단한 뼈가 있어요.', color: '#F28C3A' },
-  dino: { name: '공룡', hard: true, draw: drawDino, hint: '크고 단단한 뼈와 이빨이 있어요.', color: '#7FBF6A' },
+  fish: { name: '물고기', hard: true, draw: drawFish, hint: '살은 부드럽지만 뼈가 있어요.', color: '#F28C3A' },
 };
 
 /* 바다·지층 배경 (탭1·2 공용) */
@@ -598,7 +596,7 @@ function drawExplorer() {
   ]);
   hills.style.opacity = 0; svg.insertBefore(hills, ground);
 
-  // ---- 확대창: 침투·치환 ----
+  // ---- 확대창: 광물 충전·치환 ----
   const mag = E('g', { class: 'mag' }); mag.style.opacity = 0;
   const MX = 760, MY = 150, MR = 88;
   mag.appendChild(E('line', { class: 'magline', x1: 520, y1: 330, x2: MX - 60, y2: MY + 62, stroke: '#24303A', 'stroke-width': 4 }));
@@ -623,8 +621,15 @@ function drawExplorer() {
   scene.defs.appendChild(E('marker', { id: 's1-arrow', viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 5, markerHeight: 5, orient: 'auto' }, [E('path', { d: 'M0 0 L10 5 L0 10 Z', fill: '#2E7DB0' })]));
   mag.appendChild(flow);
   const magLabelBg = E('rect', { x: MX - 160, y: MY + MR + 22, width: 320, height: 40, rx: 10, fill: '#FFFDF8', stroke: '#24303A', 'stroke-width': 3 });
-  const magLabel = E('text', { x: MX, y: MY + MR + 49, 'text-anchor': 'middle', 'font-family': 'Jua', 'font-size': 19, fill: '#24303A', text: '뼈의 단면 (빈틈이 많아요)' });
+  const magLabel = E('text', { x: MX, y: MY + MR + 49, 'text-anchor': 'middle', 'font-family': 'Jua', 'font-size': 17, fill: '#24303A', text: '뼈의 단면 — 작은 빈틈이 있어요' });
   mag.appendChild(magLabelBg); mag.appendChild(magLabel);
+  function setMagLabel(t) {
+    magLabel.textContent = t;
+    const w = clamp(t.length * 15 + 30, 200, 700);
+    const x = clamp(MX - w / 2, 12, 948 - w);
+    attr(magLabelBg, { x, width: w });
+    magLabel.setAttribute('x', x + w / 2);
+  }
   svg.appendChild(mag);
 
   // 비
@@ -639,13 +644,13 @@ function drawExplorer() {
   (function flowLoop() { let o = 0; setInterval(() => { o = (o + 1.2) % 16; flow.querySelectorAll('.flowline').forEach(p => p.setAttribute('stroke-dashoffset', -o)); }, 40); })();
 
   const STEPS = [
-    { badge: '시작', cap: '옛날 옛적 바다에 물고기 한 마리가 살고 있었어요. 이 물고기는 어떻게 화석이 될까요?' },
-    { badge: '① 죽음', cap: '<b>① 죽음</b> — 생물이 죽어 바닥에 가라앉아요. 이대로 오래 두면 다른 생물에게 먹히거나 물살에 부서져요.' },
-    { badge: '② 매몰', cap: '<b>② 매몰</b> — 물에 떠다니던 모래·진흙 알갱이가 하나하나 가라앉아 유해를 완전히 덮어요. 빨리 묻힐수록 화석으로 남기 쉬워요.' },
-    { badge: '③ 화석화 작용', cap: '<b>③ 화석화 작용</b> — 지층이 계속 쌓이고, 지하수에 녹은 <b>광물질이 뼈의 빈틈에 침투</b>하거나 <b>뼈 성분이 광물로 치환</b>되어 돌처럼 단단해져요.' },
-    { badge: '④ 지각 변동', cap: '<b>④ 지각 변동</b> — 지층이 밀려 올라가는 <b>융기</b>가 일어나 바다였던 곳이 땅이 돼요. 지층은 평행한 채로 함께 올라가요.' },
-    { badge: '⑤ 풍화·침식', cap: '<b>⑤ 풍화·침식</b> — 비바람에 위쪽 지층부터 조금씩 깎여 나가요.' },
-    { badge: '⑥ 노출·발견', cap: '<b>⑥ 노출</b> — 마침내 화석이 지표에 드러나 사람에게 <b>발견</b>돼요!' },
+    { badge: '시작', cap: '옛날 바다에 살던 물고기가 죽었어요. 물고기의 뼈가 <b>광물화</b>되어 화석으로 남는 <b>한 가지 과정</b>을 살펴볼까요?' },
+    { badge: '① 죽음', cap: '<b>① 죽음</b> — 생물이 죽어 바닥에 가라앉아요. 오래 드러나 있으면 다른 생물에게 먹히거나 물살에 부서질 수 있어요.' },
+    { badge: '② 매몰', cap: '<b>② 매몰 완료</b> — 유해가 퇴적물에 완전히 묻혔어요. 지층 속을 <b>단면</b>으로 살펴볼게요.' },
+    { badge: '광물 충전·치환', cap: '뼈의 빈틈에 광물이 채워지거나(<b>광물 충전</b>) 원래 성분의 일부가 새로운 광물로 <b>치환</b>되면서 뼈의 형태가 보존될 수 있어요. 두 가지는 함께 일어나기도 하고, 어느 한쪽만 일어나기도 해요.' },
+    { badge: '⑤ 융기', cap: '<b>⑤ 융기</b> — 지각 변동으로 바다 밑에 있던 지층이 서서히 올라와 육지가 될 수 있어요. 이 과정에서 지층이 기울거나 휘어지기도 해요. <small>이 장면에서는 지층이 크게 변형되지 않은 채 올라오는 경우를 보여 줘요.</small>' },
+    { badge: '⑥ 풍화·침식', cap: '<b>⑥ 풍화·침식</b> — 비와 바람 등의 영향으로 위쪽 암석부터 조금씩 깎여 나가요.' },
+    { badge: '⑦ 노출·발견', cap: '<b>⑦ 노출·발견</b> — 위쪽 암석이 깎이면서 화석이 지표에 드러났어요. 이제 사람이 발견할 수 있어요! <small>화석은 그 전에 이미 만들어져 있었고, 발견은 드러난 화석을 찾는 일이에요.</small>' },
   ];
   let cur = 0, auto = false, busy = false;
   const dots = $('#t1-steps');
@@ -679,7 +684,7 @@ function drawExplorer() {
     css(hills, { opacity: n >= 4 ? 1 : 0 }, 0);
     css(mag, { opacity: n === 3 ? 1 : 0 }, 0); css(flow, { opacity: 0 }, 0);
     crystals.forEach((c, i) => { const p = pores[i]; css(c, { transform: `translate(${p.getAttribute('cx')}px,${p.getAttribute('cy')}px) scale(${n >= 3 ? 1 : 0})` }, 0); });
-    css(boneDisc, { fill: n >= 3 ? '#8A8276' : '#F3EEE3' }, 0); magLabel.textContent = n >= 3 ? '침투 + 치환 완료: 뼈가 돌이 됐어요' : '뼈의 단면 (빈틈이 많아요)';
+    css(boneDisc, { fill: n >= 3 ? '#8A8276' : '#F3EEE3' }, 0); setMagLabel(n >= 3 ? '광물 충전과 치환이 일어난 뼈의 모습' : '뼈의 단면 — 작은 빈틈이 있어요');
     css(rain, { opacity: n === 5 ? 1 : 0 }, 0);
     css(person, { opacity: n === 6 ? 1 : 0 }, 0); css(sparkle, { opacity: n === 6 ? 1 : 0 }, 0);
   }
@@ -692,32 +697,33 @@ function drawExplorer() {
       css(fishG, { transform: `translate(470px,${FY}px) rotate(180deg)` }, 1600); await sleep(1700);
     }
     if (n === 2) {
+      setCap('<b>② 매몰</b> — 물에 떠다니던 모래와 진흙이 가라앉아 유해를 덮어요. 빨리 묻힐수록 먹히거나 흩어질 가능성이 줄어들어요.', '② 매몰');
       await deposit(layers[0], 272, 4200, fx, 20, 940, 150);
       css(soft, { opacity: 0 }, 0);
       await sleep(300);
-      setCap('<b>② 매몰</b> — 완전히 묻혔어요. 지층 속을 <b>단면</b>으로 들여다보면 유해가 이렇게 들어 있어요.', '② 매몰');
+      setCap(STEPS[2].cap, '② 매몰');
       css(ghost, { opacity: .5 }, 900); await sleep(1000);
     }
     if (n === 3) {
-      setCap('<b>③ 화석화 작용</b> — 그 위로 퇴적물이 계속 쌓여 지층이 두꺼워져요.', '③ 화석화 작용');
+      setCap('<b>③ 퇴적층 형성</b> — 그 위로 퇴적물이 계속 쌓여 지층이 두꺼워져요.', '③ 퇴적층 형성');
       css(ghost, { opacity: 1 }, 800);
       await deposit(layers[1], 228, 2600, fx, 20, 940, 150);
       await deposit(layers[2], 188, 2400, fx, 20, 940, 150);
-      setCap('<b>③ 화석화 작용</b> — 오랜 시간 눌리고 다져져 퇴적물이 <b>암석(퇴적암)</b>으로 굳어요. 뼈 속에서는 무슨 일이 일어날까요?', '③ 화석화 작용');
+      setCap('<b>④ 암석화</b> — 퇴적물이 눌리고 다져지며, 광물질이 알갱이 사이를 붙여 <b>퇴적암</b>으로 굳어요. 뼈에서는 어떤 변화가 일어날까요?', '④ 암석화');
       layers.forEach((l, i) => css(l, { fill: ROCK[i] }, 1800)); await sleep(2000);
       css(mag, { opacity: 1 }, 600); await sleep(900);
-      setCap('<b>③-1 침투</b> — 지층 사이로 스며든 <b>지하수</b>에는 광물질이 녹아 있어요. 지하수가 뼈의 빈틈으로 들어가요.', '③ 침투');
-      magLabel.textContent = '지하수가 뼈의 빈틈으로 스며들어요'; css(flow, { opacity: 1 }, 600); await sleep(2600);
-      magLabel.textContent = '빈틈에 광물질이 채워져요 (침투)';
-      setCap('<b>③-1 침투</b> — 빈틈마다 광물질이 결정으로 자라 <b>빈틈이 꽉 채워져요</b>. 뼈가 훨씬 무겁고 단단해져요.', '③ 침투');
+      setCap('<b>광물 충전</b> — 지층 사이로 스며든 <b>지하수</b>에는 여러 광물 성분이 녹아 있어요. 이 물이 뼈의 작은 빈틈으로 들어가요.', '광물 충전');
+      setMagLabel('광물 성분이 녹은 물이 스며들어요'); css(flow, { opacity: 1 }, 600); await sleep(2600);
+      setMagLabel('빈틈에 광물질이 채워져요 — 광물 충전');
+      setCap('<b>광물 충전</b> — 물에 녹아 있던 광물질이 뼈의 빈틈에 <b>침전</b>해요. 빈틈이 채워지면서 뼈가 더 무겁고 단단해질 수 있어요.', '광물 충전');
       crystals.forEach((c, i) => { const p = pores[i]; setTimeout(() => css(c, { transform: `translate(${p.getAttribute('cx')}px,${p.getAttribute('cy')}px) scale(1)` }, 500), i * 150); });
       await sleep(3000);
-      setCap('<b>③-2 치환</b> — 뼈를 이루던 성분은 조금씩 녹아 나가고, 그 자리를 <b>광물이 대신 채워요</b>. 모양은 그대로인 채 재료만 돌로 바뀌어요.', '③ 치환');
-      magLabel.textContent = '뼈 성분이 광물로 바뀌어요 (치환)';
+      setCap('<b>치환</b> — 뼈의 원래 성분이 조금씩 녹아 나가고 그 자리에 새로운 광물이 생겨요. 뼈의 구조를 유지한 채 성분의 일부 또는 대부분이 바뀔 수 있어요.', '치환');
+      setMagLabel('뼈의 원래 성분을 새로운 광물이 대신해요 — 치환');
       css(boneDisc, { fill: '#8A8276' }, 3200); setBone('#8A8276', 3200); await sleep(3400);
       css(flow, { opacity: 0 }, 600);
-      magLabel.textContent = '침투 + 치환 완료: 뼈가 돌이 됐어요';
-      setCap(STEPS[3].cap, '③ 화석화 작용'); await sleep(800);
+      setMagLabel('광물 충전과 치환이 일어난 뼈의 모습');
+      setCap(STEPS[3].cap, STEPS[3].badge); await sleep(800);
     }
     if (n === 4) {
       css(mag, { opacity: 0 }, 400);
@@ -760,7 +766,7 @@ function drawExplorer() {
   setState(0); $('#t1-prev').disabled = true;
 })();
 
-/* ================= 탭2: 화석 실험실 ================= */
+/* ================= 탭2: 화석화 조건 실험 ================= */
 (function () {
   const svg = $('#svg2');
   const scene = drawSeaScene(svg, 's2');
@@ -793,8 +799,8 @@ function drawExplorer() {
   const grid = $('#org-grid');
   for (const k in ORGS) {
     const b = document.createElement('button'); b.className = 'org' + (k === state.org ? ' sel' : ''); b.dataset.k = k;
-    const s = E('svg', { viewBox: '-90 -70 180 140' }); s.appendChild(E('g', { transform: k === 'dino' ? 'scale(.55)' : k === 'jelly' ? 'translate(0,-20)' : '' }, [ORGS[k].draw(1)]));
-    b.appendChild(s); b.insertAdjacentHTML('beforeend', `${ORGS[k].name}<small>${{ jelly: '✕ 연함', clam: '○ 껍데기', fish: '○ 뼈', dino: '○ 뼈·이빨' }[k]}</small>`);
+    const s = E('svg', { viewBox: '-90 -70 180 140' }); s.appendChild(E('g', { transform: k === 'fern' ? 'scale(.8)' : k === 'jelly' ? 'translate(0,-20)' : '' }, [ORGS[k].draw(1)]));
+    b.appendChild(s); b.insertAdjacentHTML('beforeend', `${ORGS[k].name}<small>${{ jelly: '✕ 연함', fern: '△ 잎 자국', clam: '○ 껍데기', fish: '○ 뼈' }[k]}</small>`);
     b.onclick = () => { state.org = k; $$('#org-grid .org').forEach(x => x.classList.toggle('sel', x === b)); $('#org-hint').textContent = ORGS[k].hint; if (!busy) showIdle(); };
     grid.appendChild(b);
   }
@@ -805,11 +811,11 @@ function drawExplorer() {
   let busy = false, org = null, ghost = null;
   function placeOrg() {
     orgG.innerHTML = ''; ghostG.innerHTML = '';
-    org = ORGS[state.org].draw({ dino: .7, fish: 1, clam: 1.1, jelly: .85 }[state.org]);
+    org = ORGS[state.org].draw({ fern: .85, fish: 1, clam: 1.1, jelly: .85 }[state.org]);
     orgG.appendChild(org);
     orgG.style.transformOrigin = '0 0';
     css(orgG, { transform: 'translate(470px,250px)', opacity: 1 }, 0); orgG.style.opacity = 1;
-    ghost = ORGS[state.org].draw({ dino: .7, fish: 1, clam: 1.1, jelly: .85 }[state.org]); ghost.querySelector('.soft').remove();
+    ghost = ORGS[state.org].draw({ fern: .85, fish: 1, clam: 1.1, jelly: .85 }[state.org]); ghost.querySelector('.soft').remove();
     ghostG.appendChild(ghost); ghostG.style.transformOrigin = '0 0';
     css(ghostG, { opacity: 0 }, 0);
   }
@@ -827,22 +833,23 @@ function drawExplorer() {
 
   function verdict() {
     const hard = ORGS[state.org].hard, f = state.burial === 'fast', l = state.oxy === 'low';
-    if (!hard) return f && l ? 'impression' : 'fail';
+    if (!hard) return f && l ? (state.org === 'fern' ? 'plant' : 'impression') : 'fail';
     if (f && l) return 'perfect'; if (f && !l) return 'damaged'; if (!f && l) return 'partial'; return 'fail';
   }
   const RESULT = {
-    perfect: { g: 3, stars: '★★★', title: '완전한 화석이 되었어요!', desc: '단단한 부분 전체가 온전하게 남아 화석이 되었어요. 박물관에 전시될 만한 최고의 결과!' },
-    damaged: { g: 2, stars: '★★☆', title: '화석이 되었지만 일부가 손상되었어요', desc: '빠르게 묻혔지만 산소가 많아 분해가 활발했어요. 연한 부분은 모두 사라지고 단단한 부분도 일부 부서졌어요.' },
-    partial: { g: 1, stars: '★☆☆', title: '조각 일부만 화석으로 남았어요', desc: '묻히기 전에 바닥에 오래 방치되어 청소동물에게 먹히고 물살에 흩어졌어요. 운 좋게 몇 조각만 묻혀 화석이 되었어요.' },
-    fail: { g: 0, stars: '✕', title: '화석이 되지 못했어요', desc: '먹히고, 부서지고, 분해되어 아무것도 남지 않았어요. 실제로 대부분의 생물은 이렇게 흔적 없이 사라져요.' },
-    impression: { g: 'i', stars: '★☆☆', title: '희미한 인상(자국) 화석만 남았어요', desc: '몸은 전부 분해되어 사라졌지만, 빠르게 묻히고 분해가 느린 환경이라 눌린 자국만 희미하게 남았어요. 해파리 화석은 이렇게 아주 드물게 발견돼요.' },
+    perfect: { g: 3, title: '보존 상태가 좋아요', desc: '빠르게 묻히고 훼손이 적어 단단한 부분이 비교적 온전하게 남았어요.' },
+    damaged: { g: 2, title: '일부만 보존되었어요', desc: '분해와 훼손으로 단단한 부분 일부가 손상되었지만 확인할 수 있는 흔적이 남았어요.' },
+    partial: { g: 1, title: '조각이 남았어요', desc: '오래 노출되는 동안 먹히거나 흩어졌지만 일부 조각이 묻혀 보존되었어요.' },
+    fail: { g: 0, title: '화석으로 남기 어려웠어요', desc: '분해와 훼손이 계속되어 확인할 수 있는 흔적이 거의 남지 않았어요.' },
+    impression: { g: 'i', title: '희귀한 흔적이 남았어요', desc: '매우 유리한 조건이 겹쳐 해파리 몸의 희미한 윤곽이 남았어요. 부드러운 몸이 보존되는 경우는 매우 드물어요.' },
+    plant: { g: 3, title: '보존 상태가 좋아요', desc: '고사리 잎이 납작하게 눌리거나 잎의 모양이 인상으로 남았어요. 잎은 생물의 몸 일부이므로 체화석이에요.' },
   };
   function explain() {
     const hard = ORGS[state.org].hard, f = state.burial === 'fast', l = state.oxy === 'low';
     return [
-      { ok: f, t: f ? '① 빠르게 묻혀서 먹히거나 부서질 가능성이 줄었어요.' : '① 느리게 묻혀서 먹히거나 물에 흩어지고 부서졌어요.' },
-      { ok: l, t: l ? '② 산소가 적어 분해가 느린 환경이라 흔적이 사라지기 전에 보존되었어요.' : '② 산소가 많아 분해가 빨라서 흔적이 빠르게 사라졌어요.' },
-      { ok: hard, t: hard ? `③ ${ORGS[state.org].name}에게는 단단한 부분(${state.org === 'clam' ? '껍데기' : '뼈'})이 있어 연한 조직보다 오래 남았어요.` : '③ 해파리는 단단한 부분이 없어 연한 조직이 모두 분해되었어요.' },
+      { ok: f, t: f ? '빠르게 묻혀 먹히거나 흩어질 가능성이 줄었어요.' : '느리게 묻혀 오래 드러나 있는 동안 먹히거나 흩어지고 부서졌어요.' },
+      { ok: l, t: l ? '산소가 적어, 다른 조건이 같다면 분해가 비교적 느려질 수 있는 환경이었어요.' : '산소가 많아, 다른 조건이 같다면 분해가 비교적 활발할 수 있는 환경이었어요.' },
+      { ok: hard || state.org === 'fern', t: hard ? `${ORGS[state.org].name}에게는 단단한 부분(${state.org === 'clam' ? '껍데기' : '뼈'})이 있어 연한 부분보다 오래 남을 수 있었어요.` : state.org === 'fern' ? '고사리는 단단한 부분은 없지만 잎이 눌린 모양(인상)이 남을 수 있어요.' : '해파리는 단단한 부분이 없어 연한 몸이 대부분 분해되었어요.' },
     ];
   }
 
@@ -855,15 +862,15 @@ function drawExplorer() {
     const piecesOf = () => Array.from(body.querySelectorAll('.piece'));
     // 1. 죽음
     cap(`${ORGS[state.org].name}가 죽어 바닥으로 가라앉아요.`, '죽음');
-    const rot = (state.org === 'fish' || state.org === 'dino') ? ' rotate(180deg)' : '';
-    const oy = state.org === 'jelly' ? 310 : 330;
+    const rot = state.org === 'fish' ? ' rotate(180deg)' : '';
+    const oy = state.org === 'jelly' ? 310 : state.org === 'fern' ? 312 : 330;
     css(orgG, { transform: `translate(470px,${oy}px)` + rot }, 1400); await sleep(1600);
     // 2. 매몰
     if (fast) {
-      cap('조건 ① <b>빠르게 매몰</b> — 퇴적물 알갱이가 계속 가라앉아 유해를 금방 완전히 덮어요.', '매몰');
+      cap('<b>빠른 매몰</b> — 퇴적물이 유해를 빠르게 덮어요. 먹히거나 물살에 흩어질 가능성이 줄어들어요.', '매몰');
       await deposit(layers[0], 272, 2600, fx, 20, 940, 150);
     } else {
-      cap('조건 ① <b>느리게 매몰</b> — 유해가 바닥에 오래 방치돼요. 청소동물이 몰려들고 물살에 흩어져요…', '방치');
+      cap('<b>느린 매몰</b> — 유해가 바닥에 오래 드러나 있어요. 청소동물에게 먹히거나 물살에 흩어지고 부서질 수 있어요.', '방치');
       css(crab, { transform: 'translate(-60px,372px)', opacity: 1 }, 0); await sleep(50);
       css(crab, { transform: 'translate(400px,372px)', opacity: 1 }, 1500);
       css(scav, { transform: 'translate(1050px,300px) scale(-1,1)', opacity: 1 }, 0); await sleep(50);
@@ -884,11 +891,11 @@ function drawExplorer() {
     css(ghostG, { opacity: .75 }, 900); await sleep(1200);
     // 3. 분해 환경
     if (low) {
-      cap('조건 ② <b>산소가 적은 환경</b> — 분해가 아주 느려요. 연한 부분은 천천히 사라지지만 단단한 부분은 그대로예요.', '분해 느림');
+      cap('<b>산소가 적은 환경</b> — 다른 조건이 같다면 분해가 비교적 느리게 일어날 수 있어요. 연한 부분이 사라지는 동안 단단한 부분이나 몸의 흔적이 남을 가능성이 커져요.', '분해 느림');
       css(dark, { opacity: .45 }, 1200);
       css(softOf(), { opacity: 0 }, 2500); await sleep(2600);
     } else {
-      cap('조건 ② <b>산소가 많은 환경</b> — 세균이 활발하게 분해해요. 연한 부분이 빠르게 사라지고 단단한 부분도 약해져요.', '분해 빠름');
+      cap('<b>산소가 많은 환경</b> — 다른 조건이 같다면 분해가 비교적 빠르게 일어날 수 있어요. 연한 부분이 사라지고 남은 부분도 훼손될 가능성이 커져요.', '분해 빠름');
       css(germs, { opacity: 1 }, 400); bubbles(fxWater, 380, 600, 160, 370, 30, 2200);
       css(softOf(), { opacity: 0 }, 1200);
       await sleep(1400);
@@ -896,24 +903,30 @@ function drawExplorer() {
       await sleep(1200); css(germs, { opacity: 0 }, 500);
     }
     if (hard && !fast && low) { const ps = piecesOf(); ps.slice(0, ps.length - 1).forEach(p => pieceStyle(p, { opacity: 0 }, 900)); await sleep(900); }
-    // 4. 시간 경과: 지층이 계속 쌓이고 굳음, 광물질 침투
-    cap('수만 년이 흘러 그 위로 지층이 계속 쌓여요.', '화석화 작용');
+    // 4. 시간 경과: 지층이 계속 쌓이고 굳음 (압축·교결)
+    cap('오랜 시간이 흐르며 그 위로 퇴적물이 계속 쌓여요.', '화석화 작용');
     css(dark, { opacity: 0 }, 1200);
     await deposit(layers[1], 228, 1800, fx, 20, 940, 150); await deposit(layers[2], 188, 1600, fx, 20, 940, 150);
-    cap('퇴적물이 다져져 암석으로 굳고, 남은 유해의 빈틈에 광물질이 침투해 돌처럼 변해요.', '화석화 작용');
+    cap('퇴적물이 <b>압축되고 교결</b>되어 암석으로 굳어요. 남은 뼈의 빈틈에는 광물이 채워질 수도 있어요.', '암석화');
     const v = verdict(); const boneCol = '#8A8276';
     layers.forEach((l, i) => css(l, { fill: ROCKC[i] }, 2200));
     body.querySelectorAll('.hard path, .hard ellipse').forEach(p => { if (p.getAttribute('fill') && p.getAttribute('fill') !== 'none') css(p, { fill: boneCol }, 2200); if (p.getAttribute('stroke') && p.getAttribute('stroke') !== '#24303A') css(p, { stroke: boneCol }, 2200); });
     await sleep(2400);
     // 5. 융기 → 침식 → 노출
-    cap('지각 변동으로 지층이 <b>융기</b>해요…', '융기');
+    cap('지층이 지표 가까이 <b>올라온</b> 뒤 위쪽 암석이 침식돼요. 무엇이 남았을까요?', '융기');
     await uplift(ground, scene.water, 60, 2200, () => css(hillsG, { opacity: 1 }, 1800));
-    cap('위쪽 지층부터 <b>침식</b>되어 깎여 나가요… 무엇이 남았을까요?', '침식');
+    cap('지층이 지표 가까이 올라온 뒤 위쪽 암석이 <b>침식</b>돼요. 무엇이 남았을까요?', '침식');
     await erode(layers[2], 900, fx); await erode(layers[1], 900, fx); await erode(layers[0], 1100, fx);
     css(ghostG, { opacity: 1 }, 400);
     if (v === 'impression') { const imp = E('ellipse', { cx: 0, cy: 0, rx: 62, ry: 26, fill: 'none', stroke: '#B7A98E', 'stroke-width': 5, 'stroke-dasharray': '10 6', opacity: 0 }); ghostG.appendChild(imp); css(imp, { opacity: 1 }, 800); }
+    if (v === 'plant') {
+      const imp = drawFern(.85);
+      imp.querySelectorAll('path').forEach(p => { if (p.getAttribute('fill') && p.getAttribute('fill') !== 'none') p.setAttribute('fill', '#7A6248'); p.setAttribute('stroke', '#5A4634'); });
+      imp.setAttribute('transform', 'scale(.85) scale(1,.55)'); imp.style.opacity = 0;
+      ghostG.appendChild(imp); css(imp, { opacity: 1 }, 800);
+    }
     const R = RESULT[v];
-    $('#result2-head').className = 'head grade-' + R.g; $('#result2-stars').textContent = R.stars; $('#result2-title').textContent = R.title; $('#result2-desc').textContent = R.desc;
+    $('#result2-head').className = 'head grade-' + R.g; $('#result2-title').textContent = R.title; $('#result2-desc').textContent = R.desc;
     $('#result2-list').innerHTML = explain().map(e => `<li><span class="chip ${e.ok ? 'good' : 'bad'}">${e.ok ? '유리' : '불리'}</span><span>${e.t}</span></li>`).join('');
     $('#result2').classList.add('show');
     cap(`<b>${R.title}</b> — 아래 결과표에서 이유를 확인하고, 조건을 바꿔 다시 실험해 보세요.`, '결과');
@@ -923,7 +936,7 @@ function drawExplorer() {
   showIdle();
 })();
 
-/* ================= 탭3: 붕어빵으로 보는 몰드·캐스트 ================= */
+/* ================= 탭3: 몰드·캐스트 ================= */
 (function () {
   const svg = $('#svg3'), ctl = $('#ctl3'), cap = $('#cap3'), badge = $('#badge3');
   const FISH = 'M-150 0 C-130 -62 -40 -80 30 -54 L62 -30 L142 -72 C118 -36 118 36 142 72 L62 30 C-40 80 -130 62 -150 0 Z';
@@ -1099,7 +1112,7 @@ function drawExplorer() {
     L.appendChild(E('path', { d: 'M730 150 L730 215', stroke: '#E8553E', 'stroke-width': 5, 'stroke-linecap': 'round' }));
     css(L, { opacity: 1 }, 600);
     css(S.steam, { opacity: 0 }, 600);
-    setCap((outcome === 'good' ? '' : '재료가 어떻든 <b>모양은 틀이 정해요</b>. ') + '<b>몰드</b>는 붕어빵 모양이 <b>움푹 파인 틀</b>, <b>캐스트</b>는 그 틀을 채워서 나온 <b>붕어빵</b>이에요. 화석에도 똑같은 관계가 있어요!', '몰드 vs 캐스트');
+    setCap((outcome === 'good' ? '' : '재료가 어떻든 <b>모양은 틀이 정해요</b>. ') + '<b>몰드</b>는 붕어빵 모양으로 <b>움푹 파인 틀</b>, <b>캐스트</b>는 그 틀을 채워 만들어진 <b>붕어빵</b>이에요. 화석의 몰드와 캐스트도 이와 <b>비슷한 관계</b>예요.', '몰드 vs 캐스트');
     buttons([['🐚 실제 화석에서는?', fossilA, 'primary big'], ['↺ 다시 굽기', start]]);
   }
 
@@ -1156,7 +1169,7 @@ function drawExplorer() {
     buttons([['다음 ▶ 굳어요', fossilB, 'primary']]);
   }
   async function fossilB() {
-    setCap('<b>② 암석화</b> — 지층이 계속 쌓여 눌리고 다져지면서 퇴적물이 <b>퇴적암</b>으로 굳어요. 껍데기는 암석이 된 지층 속에 꼭 끼어 있어요.', '화석 ②');
+    setCap('<b>② 암석화</b> — 지층이 계속 쌓여 퇴적물이 <b>압축되고 교결</b>되어 <b>퇴적암</b>으로 굳어요. 껍데기는 암석이 된 지층 속에 꼭 끼어 있어요.', '화석 ②');
     const RC = ['#A88F62', '#9E9282', '#B39A6A', '#8F7A50'];
     R.rock.querySelectorAll('.band').forEach((b, i) => css(b, { fill: RC[i] }, 2000)); css(R.rock.querySelector('.grains'), { opacity: .35 }, 2000);
     svg.querySelector('.rocktitle').textContent = '지층 단면 (굳어서 퇴적암이 됨)';
@@ -1164,15 +1177,15 @@ function drawExplorer() {
     buttons([['다음 ▶ 껍데기가 녹으면?', fossilC, 'primary']]);
   }
   async function fossilC() {
-    setCap('<b>③ 몰드</b> — 지하수가 스며들어 껍데기가 <b>녹아 없어져요</b>. 암석 속에는 껍데기 모양 그대로 <b>빈 공간(틀)</b>이 남아요 = <b>몰드</b>!', '화석 ③ 몰드');
+    setCap('<b>③ 외부 몰드</b> — 암석 속 껍데기가 <b>녹아 사라지면</b> 껍데기의 <b>바깥 모양</b>을 간직한 빈 공간이 남을 수 있어요. 이것을 <b>외부 몰드</b>라고 해요. <small>이 체험에서는 생물의 바깥 모양이 남은 외부 몰드를 다뤄요.</small>', '화석 ③ 몰드');
     buttons([]); css(R.water, { opacity: 1 }, 600); await sleep(600);
     css(R.cavity, { opacity: 1 }, 1800); css(R.shell, { opacity: 0 }, 1800); await sleep(1900);
     css(R.water, { opacity: 0 }, 600);
-    bigLabel('빈 공간 = 몰드 (mold)', '#2E7DB0');
+    bigLabel('빈 공간 = 외부 몰드', '#2E7DB0');
     buttons([['다음 ▶ 빈 공간이 채워지면?', fossilD, 'primary']]);
   }
   async function fossilD() {
-    setCap('<b>④ 캐스트</b> — 빈 공간에 다른 <b>광물질이 채워져</b> 굳으면, 원래 껍데기 모양 그대로 돌로 된 모형이 생겨요 = <b>캐스트</b>!', '화석 ④ 캐스트');
+    setCap('<b>④ 캐스트</b> — 몰드의 빈 공간에 <b>퇴적물이나 광물질이 들어가 굳으면</b> 원래 생물의 바깥 모양을 닮은 <b>캐스트</b>가 만들어질 수 있어요.', '화석 ④ 캐스트');
     buttons([]); css(R.water, { opacity: 1 }, 600);
     await tween(R.castG.firstChild, { y: -120, height: 240 }, 2200); css(R.castLines, { opacity: 1 }, 800); css(R.water, { opacity: 0 }, 600);
     bigLabel('채워진 모양 = 캐스트 (cast)', '#E8553E');
@@ -1202,9 +1215,9 @@ function drawExplorer() {
       g.appendChild(E('text', { x: 220, y: 380, 'text-anchor': 'middle', 'font-family': 'Noto Sans KR', 'font-size': 16, fill: '#4A5763', text: kind === 'mold' ? '생물의 겉모양이 찍힌 "틀"' : '틀 속을 채워 생물 모양이 된 "모형"' }));
       return g;
     };
-    svg.appendChild(half(30, '#2E7DB0', '몰드 (mold)', '생물 모양의 빈 공간 · 틀', 'mold'));
-    svg.appendChild(half(490, '#E8553E', '캐스트 (cast)', '빈 공간을 채워 굳은 것 · 모형', 'cast'));
-    setCap('<b>붕어빵과 다른 점 한 가지!</b> 붕어빵은 틀이 먼저 있지만, 화석은 <b>생물이 먼저 묻히고 녹아 없어져서</b> 틀(몰드)이 생겨요. 그 틀이 채워지면 캐스트!', '정리');
+    svg.appendChild(half(30, '#2E7DB0', '이 체험의 몰드', '껍데기의 바깥 모양이 움푹 남은 빈 공간', 'mold'));
+    svg.appendChild(half(490, '#E8553E', '캐스트', '그 빈 공간을 다른 물질이 채워 굳은 모양', 'cast'));
+    setCap('<b>붕어빵과 다른 점!</b> 붕어빵은 틀이 먼저 있지만, 자연에서는 <b>생물이 묻힌 뒤 사라진 자리</b>에 몰드가 생겨요. 그 빈 공간이 채워지면 캐스트가 만들어질 수 있어요.', '정리');
     badge.textContent = '정리';
     buttons([['↺ 처음부터 (붕어빵 굽기)', start], ['🐚 화석 과정 다시 보기', fossilA]]);
   }
@@ -1213,12 +1226,11 @@ function drawExplorer() {
   tabInit[3] = () => { if (phase === 'idle') start(); };
 })();
 
-/* ================= 탭4: 흔적도 화석이 돼요 (생흔 화석 체험) ================= */
+/* ================= 탭4: 생흔 화석 체험 ================= */
 (function () {
   const cv = $('#cv4'), ctx = cv.getContext('2d'), W = 960, H = 540;
   const cap = $('#cap4'), badge = $('#badge4'), hint = $('#hint4');
   let mode = 'foot', foot = 'dino', prints = [], burrows = [], drawing = false, lastPt = null, dist = 0, side = 0, animT = -1, animRAF = null, done = false;
-  const cracks = []; for (let i = 0; i < 28; i++) { const x = rnd(0, W), y = rnd(0, H); const seg = [[x, y]]; let a = rnd(0, Math.PI * 2); for (let k = 0; k < 5; k++) { a += rnd(-.9, .9); seg.push([seg[k][0] + Math.cos(a) * rnd(14, 40), seg[k][1] + Math.sin(a) * rnd(14, 40)]); } cracks.push(seg); }
   const grains = []; for (let i = 0; i < 260; i++) grains.push([rnd(0, W), rnd(0, H), rnd(1, 3)]);
   const edgeNoise = []; for (let i = 0; i <= 60; i++) edgeNoise.push(rnd(-30, 30));
 
@@ -1305,8 +1317,7 @@ function drawExplorer() {
       ctx.save(); ctx.globalAlpha = f; drawFootTop(t, rockT); ctx.restore();
     }
     if (t >= .52 && t < .66) {
-      const yrs = Math.round(lerp(0, 50000, (t - .52) / .14) / 1000) * 1000;
-      ctx.globalAlpha = 1; ctx.fillStyle = 'rgba(36,48,58,.85)'; ctx.fillRect(W / 2 - 150, 40, 300, 60); ctx.fillStyle = '#fff'; ctx.font = '30px Jua, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(`${yrs.toLocaleString()}년 경과…`, W / 2, 81);
+      ctx.globalAlpha = 1; ctx.fillStyle = 'rgba(36,48,58,.85)'; ctx.fillRect(W / 2 - 150, 40, 300, 60); ctx.fillStyle = '#fff'; ctx.font = '30px Jua, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('오랜 시간 경과 중…', W / 2, 81);
     }
   }
   /* 윗면 뷰 */
@@ -1314,7 +1325,6 @@ function drawExplorer() {
     ctx.fillStyle = hexLerp('#9C6B3F', '#8A8276', rockT); ctx.fillRect(0, 0, W, H);
     ctx.fillStyle = 'rgba(0,0,0,.08)'; grains.forEach(([x, y, r]) => { ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); });
     drawPrints(hexLerp('#5A3A1E', '#4E4840', rockT));
-    if (t < .34) { const a = clamp(t / .14, 0, 1); ctx.strokeStyle = `rgba(60,30,10,${a * .8})`; ctx.lineWidth = 2; cracks.forEach(seg => { ctx.beginPath(); seg.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke(); }); }
     if (t >= .14 && t < .84) { // 덮임 (반투명 → 불투명)
       const cover = clamp((t - .14) / .2, 0, 1);
       ctx.save(); ctx.globalAlpha = ctx.globalAlpha * cover; ctx.fillStyle = hexLerp('#E0BC7A', '#A89B8C', rockT); ctx.fillRect(0, 0, W, H);
@@ -1376,13 +1386,13 @@ function drawExplorer() {
       ctx.fillRect(0, y, W, h); ctx.strokeStyle = '#24303A'; ctx.lineWidth = 3; ctx.strokeRect(0, y, W, h);
       if (erosT > 0 && h < 34 * li) { ctx.fillStyle = 'rgba(0,0,0,.15)'; for (let k = 0; k < 18; k++) { const x = (k * 157 + i * 61) % W; ctx.beginPath(); ctx.arc(x, y - 6 - (k % 4) * 6, 2.4, 0, 7); ctx.fill(); } }
     }
-    if (t >= .5 && t < .7) { const yrs = Math.round(lerp(0, 50000, (t - .5) / .2) / 1000) * 1000; ctx.fillStyle = 'rgba(36,48,58,.85)'; ctx.fillRect(W / 2 - 150, 300, 300, 60); ctx.fillStyle = '#fff'; ctx.font = '30px Jua, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(`${yrs.toLocaleString()}년 경과…`, W / 2, 341); }
+    if (t >= .5 && t < .7) { ctx.fillStyle = 'rgba(36,48,58,.85)'; ctx.fillRect(W / 2 - 150, 300, 300, 60); ctx.fillStyle = '#fff'; ctx.font = '30px Jua, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('오랜 시간 경과 중…', W / 2, 341); }
     if (t >= .95) { // 라벨
       burrows.forEach(b => { const [x, y] = b[Math.floor(b.length / 2)]; ctx.strokeStyle = '#E8553E'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(x, y, 34, 0, 7); ctx.stroke(); });
     }
   }
-  const CAPS_FOOT = [[0, '<b>진흙이 마르며</b> 발자국이 단단해져요. (마르기 전에 물에 씻기면 사라져 버려요)', '① 마름'], [.14, '위에 <b>다른 퇴적물</b>(모래)이 발자국을 덮어요. 발자국 모양이 그대로 보존돼요.', '② 매몰'], [.34, '이제 <b>옆에서 자른 단면</b>으로 볼게요. 오목한 발자국 위에 다른 퇴적물이 쌓이고 있어요.', '단면 보기'], [.46, '그 위로 지층이 <b>계속 쌓여요</b>.', '② 매몰'], [.52, '오랜 시간이 지나 진흙과 모래가 <b>단단한 암석</b>으로 굳어요.', '③ 암석화'], [.66, '지각 변동으로 드러난 뒤, <b>위층부터 차례로 침식</b>되어 발자국이 찍힌 층의 경계가 나타나요.', '④ 침식'], [.84, '다시 <b>위에서 본 모습</b>이에요.', '⑤ 노출'], [.9, '<b>발자국 화석!</b> 몸은 없지만 "어떤 생물이 이곳을 이렇게 걸어갔다"는 기록 = <b>생흔 화석</b>', '⑤ 생흔 화석']];
-  const CAPS_BUR = [[0, '생물이 판 굴에 <b>다른 종류의 퇴적물</b>이 흘러들어 채워져요.', '① 굴이 채워짐'], [.25, '그 위로 <b>새 지층</b>이 계속 쌓여요.', '② 매몰'], [.5, '오랜 시간이 지나 전부 <b>단단한 암석</b>으로 굳어요. 굴을 채운 퇴적물은 주변과 다른 색의 돌이 돼요.', '③ 암석화'], [.7, '위층이 <b>침식</b>되어 굴이 있던 지층이 드러나면…', '④ 침식'], [.95, '<b>굴 화석!</b> 생물의 몸은 없지만 "이 생물이 여기서 이렇게 굴을 파고 살았다"는 기록 = <b>생흔 화석</b>', '⑤ 생흔 화석']];
+  const CAPS_FOOT = [[0, '부드러운 퇴적물에 발자국이 남았어요. 자국이 물이나 다른 생물에 의해 <b>흐트러지기 전에 덮여야</b> 해요.', '① 발자국 유지'], [.14, '<b>새로운 퇴적물</b>이 발자국을 덮어요. 자국이 흐트러지지 않고 보존될 가능성이 커져요.', '② 매몰'], [.34, '<b>옆에서 자른 단면</b>으로 볼게요. 오목한 발자국 위에 새로운 퇴적물이 쌓이고 있어요.', '단면 보기'], [.46, '그 위로 지층이 <b>계속 쌓여요</b>.', '② 매몰'], [.52, '오랜 시간이 지나 퇴적물이 <b>압축되고 교결</b>되어 단단한 암석으로 굳어요.', '③ 암석화'], [.66, '지층이 지표 가까이 드러난 뒤 <b>위쪽 암석이 침식</b>되면서 발자국이 남은 층의 경계가 나타나요.', '④ 침식'], [.84, '다시 <b>위에서 본 모습</b>이에요.', '⑤ 노출'], [.9, '<b>발자국 화석!</b> 생물의 몸은 없지만 생물이 <b>걸어간 행동</b>이 기록된 <b>생흔 화석</b>이에요.', '⑤ 생흔 화석']];
+  const CAPS_BUR = [[0, '생물이 떠난 굴이 <b>주변과 다른 퇴적물로 채워지거나</b>, 생물이 이동하며 뒤채움한 흔적이 남아요.', '① 굴이 채워짐'], [.25, '그 위로 <b>새 지층</b>이 계속 쌓여요.', '② 매몰'], [.5, '오랜 시간이 지나 퇴적물이 <b>압축되고 교결</b>되어 암석으로 굳어요. 굴을 채운 물질은 주변과 색, 알갱이 크기 또는 단단함이 달라 <b>구별될 수</b> 있어요.', '③ 암석화'], [.7, '위층이 <b>침식</b>되어 굴이 있던 지층이 드러나면…', '④ 침식'], [.95, '<b>굴 화석!</b> 생물의 몸은 남아 있지 않지만, 생물이 <b>굴을 파고 생활했던 행동</b>이 기록된 <b>생흔 화석</b>이에요.', '⑤ 생흔 화석']];
   function runAnim() {
     if (mode === 'foot' && prints.length === 0) { hint.style.display = ''; hint.firstChild.textContent = '먼저 진흙 위를 드래그해서 발자국을 남겨요!'; return; }
     if (mode === 'burrow' && burrows.length === 0) { hint.style.display = ''; hint.firstChild.textContent = '먼저 퇴적물 속을 드래그해서 굴을 파요!'; return; }
@@ -1434,86 +1444,46 @@ function drawExplorer() {
   reset();
 })();
 
-/* ================= 탭5: 정리 퀴즈 (한 문제씩) ================= */
+/* ================= 탭5: 핵심 퀴즈 (4문항, 한 문제씩) ================= */
 (function () {
   const quiz = $('#quiz');
-  const shellMold = () => { const s = E('svg', { viewBox: '0 0 300 170' }); s.appendChild(E('rect', { x: 0, y: 0, width: 300, height: 170, fill: '#EEF3F6' })); s.appendChild(E('rect', { x: 60, y: 20, width: 180, height: 130, rx: 16, fill: '#8A8276', stroke: '#24303A', 'stroke-width': 4 })); s.appendChild(E('g', { transform: 'translate(150,85)' }, [E('path', { d: 'M0 30 C-50 30 -58 0 -42 -16 C-26 -32 26 -32 42 -16 C58 0 50 30 0 30 Z', fill: '#3A3632', stroke: '#B5AEA3', 'stroke-width': 3 }), ...[-30, -15, 0, 15, 30].map(x => E('path', { d: `M0 30 L${x} -28`, stroke: '#B5AEA3', 'stroke-width': 1.5 }))])); return s; };
-  const shellCast = () => { const s = E('svg', { viewBox: '0 0 300 170' }); s.appendChild(E('rect', { x: 0, y: 0, width: 300, height: 170, fill: '#EEF3F6' })); s.appendChild(E('rect', { x: 60, y: 20, width: 180, height: 130, rx: 16, fill: '#D9D3C8', stroke: '#24303A', 'stroke-width': 4 })); s.appendChild(E('g', { transform: 'translate(150,85)' }, [E('path', { d: 'M0 30 C-50 30 -58 0 -42 -16 C-26 -32 26 -32 42 -16 C58 0 50 30 0 30 Z', fill: '#9AA5B1', stroke: '#24303A', 'stroke-width': 4 }), ...[-30, -15, 0, 15, 30].map(x => E('path', { d: `M0 30 L${x} -28`, stroke: '#4A5763', 'stroke-width': 1.5 })), E('path', { d: 'M-30 -8 Q-16 -22 4 -20', fill: 'none', stroke: '#fff', 'stroke-width': 3, opacity: .7 })])); return s; };
-
-  /* 문항 정의: type = 'mc' | 'order' | 'pic' */
   const QS = [
-    { tab: 1, type: 'order', q: '화석이 만들어지는 과정을 순서대로 눌러 보세요.', items: ['죽음', '매몰', '화석화 작용', '지각 변동(융기)', '풍화·침식', '노출·발견'], exp: '죽음 → 매몰 → 화석화 작용 → 지각 변동(융기) → 풍화·침식 → 노출·발견. 빨리 묻히고, 굳고, 땅 위로 올라와 깎여야 우리가 볼 수 있어요.' },
-    { tab: 1, type: 'mc', q: '지하수에 녹아 있던 광물질이 뼈의 <b>빈틈을 채워</b> 뼈가 무겁고 단단해지는 화석화 작용은?', choices: ['침투', '치환', '풍화', '융기'], ans: 0, exp: '빈틈에 광물질이 채워지는 것이 침투, 뼈 성분 자체가 광물로 바뀌는 것이 치환이에요.' },
-    { tab: 1, type: 'mc', q: '탭1에서 지층이 융기할 때 지층의 모습으로 옳은 것은?', choices: ['층이 평행한 채로 함께 밀려 올라간다', '위층만 먼저 올라간다', '아래층이 위층을 뚫고 올라간다', '지층이 모두 섞여 버린다'], ans: 0, exp: '융기는 지층 전체가 함께 올라가는 것이라 층의 순서와 나란함은 그대로 유지돼요.' },
-    { tab: 2, type: 'mc', q: '화석 실험실: <b>물고기</b>를 <b>느리게 매몰</b>, <b>산소 많음</b> 조건에 두면?', choices: ['완전한 화석', '일부 손상된 화석', '조각 일부만 화석', '화석이 되지 못함'], ans: 3, exp: '묻히기 전에 먹히고 흩어진 데다 분해까지 빨라서 아무것도 남지 않아요.' },
-    { tab: 2, type: 'mc', q: '단단한 부분이 없는 <b>해파리</b>가 그나마 흔적을 남길 수 있는 조건은?', choices: ['빠른 매몰 + 산소 적음', '빠른 매몰 + 산소 많음', '느린 매몰 + 산소 적음', '느린 매몰 + 산소 많음'], ans: 0, exp: '연한 몸은 금방 분해되므로, 빨리 묻히고 분해가 아주 느린 곳에서만 눌린 자국(인상)이 드물게 남아요.' },
-    { tab: 2, type: 'mc', q: '다음 중 화석으로 남기 <b>어려운</b> 경우는?', choices: ['죽은 뒤 퇴적물에 빠르게 묻힌다', '산소가 적어 분해가 느린 곳에 묻힌다', '뼈나 껍데기 같은 단단한 부분이 있다', '죽은 뒤 바닥에 오랫동안 놓여 있다'], ans: 3, exp: '바닥에 오래 놓이면 청소동물에게 먹히고 물살에 부서져요. 학습지의 조건 ①②③을 떠올려 보세요.' },
-    { tab: 3, type: 'pic', q: '그림을 보고 몰드와 캐스트를 골라 보세요.', exp: '움푹 파인 자국(틀)이 몰드, 그 틀을 채워 볼록하게 굳은 것이 캐스트예요. 붕어빵 틀 = 몰드, 붕어빵 = 캐스트!' },
-    { tab: 3, type: 'mc', q: '붕어빵과 실제 화석(몰드·캐스트)의 <b>다른 점</b>으로 옳은 것은?', choices: ['화석은 생물이 먼저 묻히고 녹아 없어져야 틀(몰드)이 생긴다', '화석에는 캐스트가 없다', '붕어빵은 캐스트가 먼저 생기고 틀이 나중에 생긴다', '화석의 몰드는 생물 모양과 관계없다'], ans: 0, exp: '붕어빵은 틀이 먼저 있지만, 화석은 껍데기가 지층 속에서 녹아 없어져야 그 자리에 틀(몰드)이 남고, 그 빈 공간이 광물로 채워지면 캐스트가 돼요.' },
-    { tab: 3, type: 'mc', q: '탭3에서 껍데기가 녹아 몰드가 생길 때, 껍데기를 둘러싸고 있던 것은?', choices: ['퇴적물이 굳어서 된 암석(퇴적암) 지층', '아직 무른 진흙', '바닷물', '용암'], ans: 0, exp: '퇴적물이 굳어 암석이 된 뒤에 지하수가 껍데기를 녹여야 빈 공간이 무너지지 않고 남아요.' },
-    { tab: 4, type: 'mc', q: '다음 중 <b>생흔 화석</b>이 <b>아닌</b> 것은?', choices: ['공룡 발자국', '벌레가 판 굴', '공룡 뼈', '배설물'], ans: 2, exp: '뼈·껍데기처럼 생물의 몸(유해)이 남은 것은 체화석, 발자국·굴·배설물처럼 활동 흔적이 남은 것은 생흔 화석이에요.' },
-    { tab: 4, type: 'mc', q: '굴 화석이 주변 암석과 <b>다른 색</b>으로 보이는 까닭은?', choices: ['굴 속에 다른 종류의 퇴적물이 흘러들어 채워진 뒤 굳었기 때문', '벌레의 몸이 그대로 남았기 때문', '굴 속에서 불이 났기 때문', '색을 칠했기 때문'], ans: 0, exp: '굴을 판 생물의 몸은 사라지지만, 굴을 채운 다른 퇴적물이 굳어 주변과 구별되는 생흔 화석이 돼요.' },
-    { tab: 4, type: 'mc', q: '진흙 위의 발자국이 화석으로 남으려면 가장 먼저 필요한 일은?', choices: ['다른 퇴적물이 위를 덮어 자국을 보존한다', '비가 와서 자국을 씻어 낸다', '동물이 다시 밟는다', '바로 사람이 발견한다'], ans: 0, exp: '자국이 지워지기 전에 다른 퇴적물이 덮어야 해요. 그 뒤 굳고, 위층이 깎여 나가면 자국이 드러나요.' },
+    { q: '화석으로 남는 데 더 유리한 조건은 무엇일까요?', choices: ['빨리 퇴적물에 묻힌다', '오랫동안 바닥에 드러나 있다'], ans: 0, exp: '빨리 묻히면 먹히거나 흩어지고 분해될 가능성이 줄어들어요.' },
+    { q: '조개 모양이 암석에 움푹 파인 빈 공간으로 남았어요. 무엇일까요?', choices: ['몰드', '캐스트'], ans: 0, exp: '움푹 남은 빈 공간은 몰드, 그 공간이 채워져 굳은 모양은 캐스트예요.' },
+    { q: '고사리 잎의 모양이 암석에 찍혀 남았어요. 어떤 화석일까요?', choices: ['체화석', '생흔 화석'], ans: 0, exp: '잎은 생물의 몸 일부이므로 잎의 형태가 남은 인상 화석도 체화석이에요.' },
+    { q: '생물이 살아 있을 때 판 굴이 남았어요. 어떤 화석일까요?', choices: ['체화석', '생흔 화석'], ans: 1, exp: '굴은 생물의 몸이 아니라 살아 있을 때 한 행동이 남은 기록이에요.' },
   ];
-  const TABNAME = { 1: '탭1 화석이 만들어지기까지', 2: '탭2 화석 실험실', 3: '탭3 몰드·캐스트', 4: '탭4 생흔 화석' };
-  let idx = 0, score = 0, results = [];
+  let queue = QS.map((_, i) => i), pos = 0, results = QS.map(() => null);
 
   function render() {
     quiz.innerHTML = '';
-    if (idx >= QS.length) return renderEnd();
-    const Q = QS[idx];
+    if (pos >= queue.length) return renderEnd();
+    const qi = queue[pos], Q = QS[qi];
     const box = document.createElement('div'); box.className = 'q';
-    box.innerHTML = `<div class="qtop"><span class="qn">Q${idx + 1} / ${QS.length}</span><span class="qtab">${TABNAME[Q.tab]}</span></div><h3>${Q.q}</h3><div class="qbody"></div><div class="qfeed" hidden></div><div class="qctl"><button class="btn primary big" id="q-check" disabled>확인</button></div>`;
+    box.innerHTML = `<div class="qtop"><span class="qn">Q${qi + 1} / ${QS.length}</span></div><h3>${Q.q}</h3><div class="qbody"><div class="choices">${Q.choices.map((c, i) => `<button class="choice" data-i="${i}">${c}</button>`).join('')}</div></div><div class="qfeed" hidden></div><div class="qctl"><button class="btn ok big" id="q-next" style="display:none">다음 문제 ▶</button></div>`;
     quiz.appendChild(box);
-    const body = box.querySelector('.qbody'), feed = box.querySelector('.qfeed'), btn = box.querySelector('#q-check');
-    let getAnswer = () => null, markAnswer = () => { };
-    if (Q.type === 'mc') {
-      let sel = null;
-      const order = Q.choices.map((c, i) => i).sort(() => Math.random() - .5);
-      body.innerHTML = `<div class="choices">${order.map(i => `<button class="choice" data-i="${i}">${Q.choices[i]}</button>`).join('')}</div>`;
-      body.querySelectorAll('.choice').forEach(c => c.onclick = () => { if (btn.dataset.done) return; body.querySelectorAll('.choice').forEach(x => x.classList.remove('sel')); c.classList.add('sel'); sel = +c.dataset.i; btn.disabled = false; });
-      getAnswer = () => sel === Q.ans;
-      markAnswer = () => body.querySelectorAll('.choice').forEach(c => { if (+c.dataset.i === Q.ans) c.classList.add('right'); else if (c.classList.contains('sel')) c.classList.add('wrong'); });
-    } else if (Q.type === 'order') {
-      const picked = [];
-      const shuffled = Q.items.map((t, i) => i).sort(() => Math.random() - .5);
-      body.innerHTML = `<div class="seq" id="seq"></div><div class="pool">${shuffled.map(i => `<button class="item" data-i="${i}">${Q.items[i]}</button>`).join('')}</div><div style="margin-top:8px"><button class="btn" id="seq-undo">↩ 하나 되돌리기</button></div>`;
-      const seq = body.querySelector('#seq');
-      const draw = () => { seq.innerHTML = picked.map((i, k) => `<span class="seqitem"><b>${k + 1}</b> ${Q.items[i]}</span>`).join('<span class="arrow">→</span>') || '<span class="seqhint">아래 카드를 순서대로 눌러 보세요</span>'; btn.disabled = picked.length !== Q.items.length; };
-      body.querySelectorAll('.item').forEach(it => it.onclick = () => { if (btn.dataset.done || it.classList.contains('used')) return; it.classList.add('used'); picked.push(+it.dataset.i); draw(); });
-      body.querySelector('#seq-undo').onclick = () => { if (btn.dataset.done || !picked.length) return; const i = picked.pop(); body.querySelector(`.item[data-i="${i}"]`).classList.remove('used'); draw(); };
-      draw();
-      getAnswer = () => picked.every((v, k) => v === k);
-      markAnswer = () => { seq.querySelectorAll('.seqitem').forEach((s, k) => s.classList.add(picked[k] === k ? 'right' : 'wrong')); };
-    } else if (Q.type === 'pic') {
-      const order = Math.random() < .5 ? ['mold', 'cast'] : ['cast', 'mold']; const ans = {};
-      body.innerHTML = `<div class="mc-pics"></div>`; const pics = body.querySelector('.mc-pics');
-      order.forEach((k, i) => {
-        const d = document.createElement('div'); d.className = 'mc-pic'; d.dataset.kind = k; d.dataset.key = 'p' + i;
-        d.appendChild(k === 'mold' ? shellMold() : shellCast());
-        d.insertAdjacentHTML('beforeend', `<div class="cap-s">${k === 'mold' ? '암석에 조개 모양이 움푹 파여 있어요' : '조개 모양으로 볼록하게 채워진 돌이에요'}</div><div class="lbl"><button data-v="mold">몰드</button><button data-v="cast">캐스트</button></div>`);
-        d.querySelectorAll('.lbl button').forEach(b => b.onclick = () => { if (btn.dataset.done) return; d.querySelectorAll('.lbl button').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); ans[d.dataset.key] = b.dataset.v; btn.disabled = Object.keys(ans).length < 2; });
-        pics.appendChild(d);
-      });
-      getAnswer = () => Array.from(pics.children).every(p => ans[p.dataset.key] === p.dataset.kind);
-      markAnswer = () => pics.querySelectorAll('.mc-pic').forEach(p => p.querySelectorAll('.lbl button').forEach(b => { if (b.dataset.v === p.dataset.kind) b.classList.add('right'); else if (b.classList.contains('sel')) b.classList.add('wrong'); }));
-    }
-    btn.onclick = () => {
-      if (btn.dataset.done) { idx++; render(); return; }
-      const ok = getAnswer(); btn.dataset.done = 1; markAnswer();
-      if (ok) score++; results.push(ok);
+    const feed = box.querySelector('.qfeed'), next = box.querySelector('#q-next');
+    let answered = false;
+    box.querySelectorAll('.choice').forEach(c => c.onclick = () => {
+      if (answered) return; answered = true;
+      const ok = +c.dataset.i === Q.ans; results[qi] = ok;
+      box.querySelectorAll('.choice').forEach(x => { if (+x.dataset.i === Q.ans) x.classList.add('right'); else if (x === c) x.classList.add('wrong'); });
       feed.hidden = false; feed.className = 'qfeed ' + (ok ? 'good' : 'bad');
       feed.innerHTML = `<div class="fh">${ok ? '🎉 정답이에요!' : '😅 아쉬워요'}</div><div>${Q.exp}</div>`;
-      btn.textContent = idx + 1 < QS.length ? '다음 문제 ▶' : '결과 보기 ▶'; btn.className = 'btn ok big';
-      feed.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    };
+      next.style.display = ''; next.textContent = pos + 1 < queue.length ? '다음 문제 ▶' : '결과 보기 ▶';
+    });
+    next.onclick = () => { pos++; render(); };
   }
   function renderEnd() {
+    const score = results.filter(Boolean).length;
+    const wrong = QS.map((_, i) => i).filter(i => !results[i]);
+    const msg = score === QS.length ? '완벽해요! 화석의 핵심 기록을 모두 해독했어요.' : score >= 2 ? '좋아요! 헷갈린 문제만 다시 확인해 볼까요?' : '괜찮아요! 핵심 장면을 다시 보면 금방 알 수 있어요.';
     const box = document.createElement('div'); box.className = 'q';
-    const msg = score === QS.length ? '완벽해요! 화석 박사 🏆' : score >= QS.length * .7 ? '잘했어요! 틀린 문제의 탭을 다시 한번 보세요.' : '탭 1~4를 다시 보고 도전해 보세요.';
-    box.innerHTML = `<div class="score show">${QS.length}문제 중 ${score}문제 정답! ${msg}</div><div class="review">${QS.map((q, i) => `<span class="rv ${results[i] ? 'ok' : 'no'}">Q${i + 1} ${results[i] ? '○' : '✕'}<small>탭${q.tab}</small></span>`).join('')}</div><div class="qctl"><button class="btn primary big" id="q-restart">↺ 처음부터 다시 풀기</button></div>`;
+    box.innerHTML = `<div class="score show">${QS.length}문제 중 ${score}문제 정답!</div><div style="text-align:center;margin-top:10px;font-size:16px">${msg}</div><div class="review">${QS.map((q, i) => `<span class="rv ${results[i] ? 'ok' : 'no'}">Q${i + 1} ${results[i] ? '○' : '✕'}</span>`).join('')}</div><div class="qctl" style="justify-content:center;flex-wrap:wrap;gap:10px">${wrong.length ? '<button class="btn warn big" id="q-wrong">틀린 문제만 다시 보기</button>' : ''}<button class="btn big" id="q-back">체험으로 돌아가기</button><button class="btn primary big" id="q-restart">↺ 처음부터 다시 풀기</button></div>`;
     quiz.appendChild(box);
-    box.querySelector('#q-restart').onclick = () => { idx = 0; score = 0; results = []; render(); };
+    const w = box.querySelector('#q-wrong'); if (w) w.onclick = () => { queue = wrong; pos = 0; render(); };
+    box.querySelector('#q-back').onclick = () => $('.tab[data-tab="1"]').click();
+    box.querySelector('#q-restart').onclick = () => { queue = QS.map((_, i) => i); pos = 0; results = QS.map(() => null); render(); };
   }
   render();
 })();
