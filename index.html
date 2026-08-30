@@ -18,16 +18,16 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent;display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
 button{font-family:var(--display);cursor:pointer;border:none}
 button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
 /* ---------- 상단 ---------- */
-.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;max-width:1120px;margin:0 auto;padding:8px 16px 0}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;max-width:1120px;margin:0 auto;padding:8px 16px 0;width:100%;min-width:0}
 .brand{display:flex;align-items:baseline;gap:10px;min-width:0;flex-wrap:nowrap;white-space:nowrap}
 .brand h1{font-family:var(--display);font-weight:400;font-size:clamp(19px,3.1vw,30px);margin:0;letter-spacing:-.5px;flex:none}
 .brand .sub{font-size:clamp(11px,1.7vw,16px);color:var(--ink-2);border-left:2px solid rgba(36,48,58,.25);padding-left:10px;min-width:0;overflow:hidden;text-overflow:ellipsis}
-.tabs{display:flex;gap:6px;max-width:1120px;margin:6px auto 0;padding:0 16px;overflow-x:auto;scrollbar-width:none}
+.tabs{display:flex;gap:6px;max-width:1120px;margin:6px auto 0;padding:0 16px;overflow-x:auto;scrollbar-width:none;width:100%;min-width:0}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex:1 0 auto;min-width:150px;padding:10px 14px 12px;border-radius:14px 14px 0 0;background:#fff;color:var(--ink-2);font-size:18px;border:3px solid var(--ink);border-bottom:none;position:relative;top:3px;display:flex;align-items:center;gap:8px;white-space:nowrap;transition:transform .15s}
 .tab .num{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;font-size:14px}
@@ -40,7 +40,7 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 .tab.active .num{background:#fff;color:var(--ink)}
 
 /* ---------- 본문 ---------- */
-.wrap{max-width:1120px;margin:0 auto;padding:0 16px 6px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px 6px;width:100%;flex:1 0 auto}
 .panel{display:none;background:var(--paper);border:3px solid var(--ink);border-radius:0 18px 18px 18px;padding:12px;box-shadow:0 8px 0 rgba(36,48,58,.12)}
 .panel.active{display:block}
 /* 태블릿 한 화면에 들어오도록: 화면 높이에 맞춰 스테이지 폭을 줄임 (16:9 유지) */
@@ -184,7 +184,35 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
 
 /* ---------- 푸터 ---------- */
-.site-foot{max-width:1120px;margin:0 auto;padding:4px 16px 8px;text-align:center;font-size:13px;color:var(--ink-2)}
+.site-foot{max-width:1120px;margin:auto auto 0;padding:4px 16px 8px;text-align:center;font-size:13px;color:var(--ink-2);width:100%}
+
+/* ---------- 그림형 퀴즈 ---------- */
+#panel5 .q.tall{min-height:min(560px,calc(100dvh - 220px));display:flex;flex-direction:column}
+#panel5 .qbody{flex:1;display:flex;flex-direction:column;justify-content:center}
+.qart{min-height:200px;display:grid;place-items:center;margin:10px 0}
+.qart svg{width:min(420px,100%);height:auto;display:block}
+.pic2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch;margin:10px 0}
+.piccard{border:3px solid var(--ink);border-radius:14px;background:#fff;padding:10px;cursor:pointer;text-align:center;position:relative;transition:transform .12s}
+.piccard svg{width:100%;height:auto;display:block;border-radius:8px}
+.piccard .pl{font-family:var(--display);font-size:19px;margin-top:8px}
+.piccard:hover{transform:translateY(-2px)}
+.piccard.right{border-color:var(--ok);background:#E4F3E8}
+.piccard.wrong{border-color:var(--bad);background:#FBE5E2}
+.piccard.dim{opacity:.5}
+.mark{position:absolute;top:8px;right:8px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:20px;border:3px solid var(--ink)}
+.mark.ok{background:var(--ok)} .mark.no{background:var(--bad)}
+.oxrow{display:flex;gap:24px;justify-content:center;margin-top:10px}
+.oxbtn{width:104px;height:104px;border-radius:50%;border:4px solid var(--ink);background:#fff;font-family:var(--display);color:var(--ink);display:grid;place-items:center;box-shadow:0 4px 0 var(--ink);line-height:1.1}
+.oxbtn>span{font-size:38px;line-height:1}
+.oxbtn small{display:block;font-size:12px;font-family:var(--body);color:var(--ink-2)}
+.oxbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.oxbtn.right{background:var(--ok);color:#fff} .oxbtn.right small{color:#fff}
+.oxbtn.wrong{background:var(--bad);color:#fff} .oxbtn.wrong small{color:#fff}
+#panel5 .choices .choice{font-family:var(--display);font-size:19px;padding:14px;text-align:center}
+.fossil-tag{display:inline-block;background:#fff;color:var(--ink);border-radius:999px;padding:2px 12px;font-size:14px;font-family:var(--body);font-weight:700;margin-left:8px;vertical-align:middle}
+@keyframes popok{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+.pop{animation:popok .45s ease}
+@media(max-width:600px){.pic2{grid-template-columns:1fr}.oxbtn{width:92px;height:92px}}
 </style>
 </head>
 <body>
@@ -422,6 +450,31 @@ function drawFern(scale = 1) {
   g.appendChild(soft);
   return g;
 }
+/* 고사리 인상 화석: 납작한 암석 판 표면에 눌린 잎 자국 (quality: 'full' | 'partial' | 'faint') */
+function drawFernImprint(quality = 'full', withSlab = true) {
+  const g = E('g', { class: 'fern-imprint' });
+  if (withSlab) {
+    g.appendChild(E('path', { d: 'M-118 -92 L108 -102 L126 82 L-98 98 Z', fill: '#C9BCA4', stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }));
+    g.appendChild(E('path', { d: 'M-112 -86 L102 -96 M-104 88 L118 74', stroke: '#fff', 'stroke-width': 2, opacity: .35 }));
+    g.appendChild(E('path', { d: 'M-84 -60 l14 8 M64 46 l16 -6 M-70 62 l12 -8', stroke: '#8A7458', 'stroke-width': 1.5, opacity: .5 }));
+  }
+  const imp = E('g', { class: 'imp' });
+  const inkc = '#8A7458', dark = '#6E5C44';
+  const rows = [[-50, 20], [-36, 27], [-22, 34], [-8, 40], [6, 44], [20, 45], [34, 42], [48, 36]];
+  const useRows = quality === 'full' ? rows : quality === 'partial' ? rows.slice(2, 7) : rows.slice(3, 5);
+  if (quality !== 'faint') imp.appendChild(E('path', { d: quality === 'partial' ? 'M-2 60 C-5 34 -3 4 -1 -24' : 'M-2 62 C-6 30 -2 -20 2 -58', fill: 'none', stroke: dark, 'stroke-width': 5, 'stroke-linecap': 'round' }));
+  const op = quality === 'faint' ? .35 : quality === 'partial' ? .7 : .9;
+  useRows.forEach(([y, len]) => {
+    [-1, 1].forEach(dir => {
+      imp.appendChild(E('path', { d: `M0 ${y} Q${dir * len * .45} ${y - 9} ${dir * len} ${y - 2} Q${dir * len * .5} ${y + 6} 0 ${y + 4} Z`, fill: inkc, stroke: dark, 'stroke-width': 1.5, opacity: op }));
+      imp.appendChild(E('path', { d: `M0 ${y + 1} Q${dir * len * .5} ${y - 4} ${dir * len * .88} ${y - 2}`, fill: 'none', stroke: dark, 'stroke-width': 1, opacity: op * .85 }));
+    });
+  });
+  if (quality === 'partial') imp.appendChild(E('path', { d: 'M-8 -28 L4 -22 M-2 -30 L2 -20', stroke: dark, 'stroke-width': 1.5, opacity: .6 }));
+  if (quality === 'faint') imp.appendChild(E('path', { d: 'M-32 -12 q9 -6 18 -2 M18 26 q9 -6 16 0 M-10 44 q8 -5 15 -1', stroke: inkc, 'stroke-width': 3, fill: 'none', opacity: .3, 'stroke-linecap': 'round' }));
+  g.appendChild(imp);
+  return g;
+}
 const ORGS = {
   jelly: { name: '해파리', hard: false, draw: drawJelly, hint: '몸이 부드럽고 단단한 부분이 거의 없어요.', color: '#F6B7DC' },
   fern: { name: '고사리', hard: false, draw: drawFern, hint: '단단한 뼈나 껍데기는 없지만 잎의 모양이 눌려 남을 수 있어요.', color: '#6FAF57' },
@@ -429,7 +482,7 @@ const ORGS = {
   fish: { name: '물고기', hard: true, draw: drawFish, hint: '살은 부드럽지만 뼈가 있어요.', color: '#F28C3A' },
 };
 
-/* 바다·지층 배경 (탭1·2 공용) */
+/* 깊고 잔잔한 호수·지층 배경 (탭1·2 공용) */
 function drawSeaScene(svg, id) {
   const defs = E('defs', {}, [
     E('linearGradient', { id: id + '-water', x1: 0, y1: 0, x2: 0, y2: 1 }, [E('stop', { offset: 0, 'stop-color': '#7CC4EA' }), E('stop', { offset: 1, 'stop-color': '#2E7DB0' })]),
@@ -443,9 +496,32 @@ function drawSeaScene(svg, id) {
     E('path', { d: 'M560 60 a20 20 0 0 1 40 -12 a24 24 0 0 1 46 6 a16 16 0 0 1 3 32 l-88 0 a18 18 0 0 1 -1 -26 Z', fill: '#fff', stroke: '#24303A', 'stroke-width': 4 }),
   ]);
   svg.appendChild(sun); svg.appendChild(clouds);
+  // 먼 배경: 낮은 산과 숲 (육지의 호수임을 표현)
+  const far = E('g', { class: 'farland' }, [
+    E('path', { d: 'M-300 134 L-120 58 L80 134 Z', fill: '#A9C49B', stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }),
+    E('path', { d: 'M20 134 L200 76 L380 134 Z', fill: '#93B586', stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }),
+    E('path', { d: 'M620 134 L820 66 L1020 134 Z', fill: '#A9C49B', stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }),
+    E('path', { d: 'M900 134 L1080 84 L1260 134 Z', fill: '#93B586', stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }),
+    ...[430, 480, 530, 580].map((x, i) => E('g', { transform: `translate(${x},${134 - (i % 2) * 6})` }, [
+      E('rect', { x: -3, y: -14, width: 6, height: 14, fill: '#8A5230', stroke: '#24303A', 'stroke-width': 2 }),
+      E('path', { d: 'M0 -46 L14 -14 L-14 -14 Z', fill: '#5F9E4B', stroke: '#24303A', 'stroke-width': 2.5, 'stroke-linejoin': 'round' }),
+    ])),
+  ]);
+  svg.appendChild(far);
   const water = E('rect', { class: 'water', x: -300, y: 130, width: 1560, height: 600, fill: `url(#${id}-water)` });
   svg.appendChild(water);
-  svg.appendChild(E('path', { class: 'water', d: 'M-300 132 Q-250 118 -200 132 T-100 132 T0 132 T100 132 T200 132 T300 132 T400 132 T500 132 T600 132 T700 132 T800 132 T900 132 T1000 132 T1100 132 T1200 132 L1260 132 L1260 150 L-300 150 Z', fill: '#7CC4EA', stroke: '#24303A', 'stroke-width': 4 }));
+  // 잔잔한 호수 수면 (거의 평평한 선)
+  svg.appendChild(E('path', { class: 'water', d: 'M-300 132 Q200 128 480 131 Q760 134 1260 131 L1260 148 L-300 148 Z', fill: '#7CC4EA', stroke: '#24303A', 'stroke-width': 4 }));
+  // 잔물결
+  const ripples = E('g', { class: 'water' }, [220, 470, 730].map((x, i) => E('path', { d: `M${x} ${168 + i * 26} q 22 7 44 0`, fill: 'none', stroke: '#A6D8F0', 'stroke-width': 4, 'stroke-linecap': 'round', opacity: .7 })));
+  svg.appendChild(ripples);
+  // 호수를 둘러싼 양쪽 물가 (육지)
+  const shore = E('g', { class: 'shore' }, [
+    E('path', { d: 'M-300 96 L-120 112 Q-30 122 -64 148 L-300 156 Z', fill: '#8FB07A', stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }),
+    E('path', { d: 'M1260 96 L1080 112 Q990 122 1024 148 L1260 156 Z', fill: '#8FB07A', stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }),
+    E('path', { d: 'M-210 108 q8 -18 16 0 M-160 112 q8 -18 16 0 M1150 108 q8 -18 16 0', fill: 'none', stroke: '#5F9E4B', 'stroke-width': 4, 'stroke-linecap': 'round' }),
+  ]);
+  svg.appendChild(shore);
   const ground = E('g', { class: 'ground' });
   ground.style.transformOrigin = '480px 460px';
   const base = E('g', { class: 'base' }, [
@@ -610,15 +686,22 @@ function drawExplorer() {
     const c = E('polygon', { points: '0,-7 6,-2 4,6 -4,6 -6,-2', fill: '#7FA3C9', stroke: '#24303A', 'stroke-width': 1.5, transform: `translate(${cx},${cy})` });
     c.style.transformBox = 'fill-box'; c.style.transformOrigin = 'center'; c.style.transform = `translate(${cx}px,${cy}px) scale(0)`; mag.appendChild(c); crystals.push(c);
   }
-  // 지하수 흐름 (점선 화살표) + 광물 이온 점
+  // 지하수: 지층·암석의 작은 틈을 따라 천천히 이동하는 반투명 물 입자 (안에 광물질 입자)
   const flow = E('g', { class: 'flow' }); flow.style.opacity = 0;
+  const seep = [];
   [[-1, -.4], [-1, .3], [-.6, -1], [.2, -1], [1, -.3], [.8, .7]].forEach(([dx, dy]) => {
     const L = Math.hypot(dx, dy); dx /= L; dy /= L;
-    const x1 = MX + dx * (MR + 40), y1 = MY + dy * (MR + 40), x2 = MX + dx * (MR - 22), y2 = MY + dy * (MR - 22);
-    flow.appendChild(E('path', { class: 'flowline', d: `M${x1} ${y1} L${x2} ${y2}`, stroke: '#2E7DB0', 'stroke-width': 4, 'stroke-dasharray': '8 8', 'stroke-linecap': 'round', 'marker-end': 'url(#s1-arrow)' }));
-    for (let k = 0; k < 3; k++) flow.appendChild(E('circle', { cx: lerp(x1, x2, k / 3), cy: lerp(y1, y2, k / 3), r: 3, fill: '#7FA3C9', stroke: '#24303A', 'stroke-width': 1 }));
+    // 암석의 가는 틈(균열)
+    flow.appendChild(E('path', { d: `M${MX + dx * (MR + 46)} ${MY + dy * (MR + 46)} L${MX + dx * (MR - 18)} ${MY + dy * (MR - 18)}`, stroke: '#B9AF9E', 'stroke-width': 2.5, 'stroke-dasharray': '3 4', 'stroke-linecap': 'round', opacity: .8 }));
+    for (let k = 0; k < 3; k++) {
+      const drop = E('g', {}, [
+        E('circle', { r: 5, fill: 'rgba(124,196,234,.42)', stroke: 'rgba(46,125,176,.55)', 'stroke-width': 1.2 }),
+        E('circle', { cx: 1.2, cy: -.8, r: 1.7, fill: '#7FA3C9', stroke: '#24303A', 'stroke-width': .6 }),
+      ]);
+      flow.appendChild(drop);
+      seep.push({ g: drop, dx, dy, r: MR + 46 - k * 22 + rnd(0, 8) });
+    }
   });
-  scene.defs.appendChild(E('marker', { id: 's1-arrow', viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 5, markerHeight: 5, orient: 'auto' }, [E('path', { d: 'M0 0 L10 5 L0 10 Z', fill: '#2E7DB0' })]));
   mag.appendChild(flow);
   const magLabelBg = E('rect', { x: MX - 160, y: MY + MR + 22, width: 320, height: 40, rx: 10, fill: '#FFFDF8', stroke: '#24303A', 'stroke-width': 3 });
   const magLabel = E('text', { x: MX, y: MY + MR + 49, 'text-anchor': 'middle', 'font-family': 'Jua', 'font-size': 17, fill: '#24303A', text: '뼈의 단면 — 작은 빈틈이 있어요' });
@@ -641,12 +724,12 @@ function drawExplorer() {
     if (rain.style.opacity === '1') rain.querySelectorAll('line').forEach(l => { let y = +l.getAttribute('y1') + 9; if (y > 330) y = -20; const x = +l.getAttribute('x1'); attr(l, { y1: y, y2: y + 22, x2: x - 6 }); });
     requestAnimationFrame(rainLoop);
   })();
-  (function flowLoop() { let o = 0; setInterval(() => { o = (o + 1.2) % 16; flow.querySelectorAll('.flowline').forEach(p => p.setAttribute('stroke-dashoffset', -o)); }, 40); })();
+  (function flowLoop() { setInterval(() => { seep.forEach(s => { s.r -= .45; if (s.r < MR - 20) s.r = MR + 48; s.g.setAttribute('transform', `translate(${MX + s.dx * s.r},${MY + s.dy * s.r})`); }); }, 40); })();
 
   const STEPS = [
-    { badge: '시작', cap: '옛날 바다에 살던 물고기가 죽었어요. 물고기의 뼈가 <b>광물화</b>되어 화석으로 남는 <b>한 가지 과정</b>을 살펴볼까요?' },
-    { badge: '① 죽음', cap: '<b>① 죽음</b> — 생물이 죽어 바닥에 가라앉아요. 오래 드러나 있으면 다른 생물에게 먹히거나 물살에 부서질 수 있어요.' },
-    { badge: '② 매몰', cap: '<b>② 매몰 완료</b> — 유해가 퇴적물에 완전히 묻혔어요. 지층 속을 <b>단면</b>으로 살펴볼게요.' },
+    { badge: '시작', cap: '옛날 깊고 잔잔한 <b>호수</b>에 물고기 한 마리가 살고 있었어요. 이 물고기의 뼈는 어떻게 화석으로 남을까요? <small>뼈가 광물화되어 남는 한 가지 과정을 살펴봐요.</small>' },
+    { badge: '① 죽음', cap: '<b>① 죽음</b> — 물고기가 죽어 호수 바닥으로 가라앉아요. 오래 드러나 있으면 다른 생물에게 먹히거나 물살에 흩어질 수 있어요.' },
+    { badge: '② 매몰', cap: '<b>② 매몰 완료</b> — 물고기가 퇴적물에 완전히 묻혔어요. 호수 바닥 아래를 <b>단면</b>으로 살펴볼게요.' },
     { badge: '광물 충전·치환', cap: '뼈의 빈틈에 광물이 채워지거나(<b>광물 충전</b>) 원래 성분의 일부가 새로운 광물로 <b>치환</b>되면서 뼈의 형태가 보존될 수 있어요. 두 가지는 함께 일어나기도 하고, 어느 한쪽만 일어나기도 해요.' },
     { badge: '⑤ 융기', cap: '<b>⑤ 융기</b> — 지각 변동으로 바다 밑에 있던 지층이 서서히 올라와 육지가 될 수 있어요. 이 과정에서 지층이 기울거나 휘어지기도 해요. <small>이 장면에서는 지층이 크게 변형되지 않은 채 올라오는 경우를 보여 줘요.</small>' },
     { badge: '⑥ 풍화·침식', cap: '<b>⑥ 풍화·침식</b> — 비와 바람 등의 영향으로 위쪽 암석부터 조금씩 깎여 나가요.' },
@@ -680,7 +763,7 @@ function drawExplorer() {
     else if (n === 5) setLayers([330, 272, 228]);
     else setLayers([380, 272, 228]);
     css(ground, { transform: n >= 4 ? 'translate(0,-60px)' : 'none' }, 0);
-    scene.water.forEach(w => css(w, { transform: n >= 4 ? 'translate(0,96px)' : 'none', opacity: n >= 4 ? 0 : 1 }, 0));
+    scene.water.forEach(w => css(w, { transform: n >= 4 ? 'translate(0,96px)' : 'none', opacity: n >= 3 ? 0 : 1 }, 0));
     css(hills, { opacity: n >= 4 ? 1 : 0 }, 0);
     css(mag, { opacity: n === 3 ? 1 : 0 }, 0); css(flow, { opacity: 0 }, 0);
     crystals.forEach((c, i) => { const p = pores[i]; css(c, { transform: `translate(${p.getAttribute('cx')}px,${p.getAttribute('cy')}px) scale(${n >= 3 ? 1 : 0})` }, 0); });
@@ -697,7 +780,7 @@ function drawExplorer() {
       css(fishG, { transform: `translate(470px,${FY}px) rotate(180deg)` }, 1600); await sleep(1700);
     }
     if (n === 2) {
-      setCap('<b>② 매몰</b> — 물에 떠다니던 모래와 진흙이 가라앉아 유해를 덮어요. 빨리 묻힐수록 먹히거나 흩어질 가능성이 줄어들어요.', '② 매몰');
+      setCap('<b>② 매몰</b> — 호수로 흘러든 고운 모래와 진흙이 물고기를 덮어요. 빨리 묻힐수록 먹히거나 흩어질 가능성이 줄어들어요.', '② 매몰');
       await deposit(layers[0], 272, 4200, fx, 20, 940, 150);
       css(soft, { opacity: 0 }, 0);
       await sleep(300);
@@ -709,13 +792,15 @@ function drawExplorer() {
       css(ghost, { opacity: 1 }, 800);
       await deposit(layers[1], 228, 2600, fx, 20, 940, 150);
       await deposit(layers[2], 188, 2400, fx, 20, 940, 150);
+      setCap('오랜 시간이 흐르는 동안 <b>호수는 사라지고</b>, 물고기가 묻힌 지층은 <b>땅속</b>에 깊이 묻혀요.', '시간 경과');
+      scene.water.forEach(w => css(w, { opacity: 0 }, 1800)); await sleep(2000);
       setCap('<b>④ 암석화</b> — 퇴적물이 눌리고 다져지며, 광물질이 알갱이 사이를 붙여 <b>퇴적암</b>으로 굳어요. 뼈에서는 어떤 변화가 일어날까요?', '④ 암석화');
       layers.forEach((l, i) => css(l, { fill: ROCK[i] }, 1800)); await sleep(2000);
       css(mag, { opacity: 1 }, 600); await sleep(900);
-      setCap('<b>광물 충전</b> — 지층 사이로 스며든 <b>지하수</b>에는 여러 광물 성분이 녹아 있어요. 이 물이 뼈의 작은 빈틈으로 들어가요.', '광물 충전');
+      setCap('<b>광물 충전</b> — 땅속으로 스며든 물은 암석과 접촉하면서 여러 광물질을 녹여요. 광물질이 녹은 <b>지하수</b>가 지층의 <b>틈을 따라</b> 이동해 뼈의 빈틈으로 들어가요.', '광물 충전');
       setMagLabel('광물 성분이 녹은 물이 스며들어요'); css(flow, { opacity: 1 }, 600); await sleep(2600);
       setMagLabel('빈틈에 광물질이 채워져요 — 광물 충전');
-      setCap('<b>광물 충전</b> — 물에 녹아 있던 광물질이 뼈의 빈틈에 <b>침전</b>해요. 빈틈이 채워지면서 뼈가 더 무겁고 단단해질 수 있어요.', '광물 충전');
+      setCap('<b>광물 충전</b> — 지하수에 녹아 있던 광물질이 뼈의 빈틈에 <b>침전</b>해요. 빈틈이 채워지면서 뼈가 더 무겁고 단단해질 수 있어요.', '광물 충전');
       crystals.forEach((c, i) => { const p = pores[i]; setTimeout(() => css(c, { transform: `translate(${p.getAttribute('cx')}px,${p.getAttribute('cy')}px) scale(1)` }, 500), i * 150); });
       await sleep(3000);
       setCap('<b>치환</b> — 뼈의 원래 성분이 조금씩 녹아 나가고 그 자리에 새로운 광물이 생겨요. 뼈의 구조를 유지한 채 성분의 일부 또는 대부분이 바뀔 수 있어요.', '치환');
@@ -779,6 +864,7 @@ function drawExplorer() {
   const ghostG = E('g', { class: 'ghost' }); ghostG.style.opacity = 0; ground.appendChild(ghostG);
   const fx = E('g', { class: 'fx' }); ground.appendChild(fx);
   const fxWater = E('g', { class: 'fxw' }); svg.appendChild(fxWater);
+  const slabFX = E('g', { class: 'slabfx' }); svg.appendChild(slabFX); // 고사리 인상 화석 앞면 뷰 오버레이
   // 산소 부족 표시: 어두운 물 덮개
   const dark = E('rect', { x: -300, y: 130, width: 1560, height: 260, fill: '#1E3A50' }); dark.style.opacity = 0; svg.insertBefore(dark, ground);
   // 청소동물
@@ -822,7 +908,7 @@ function drawExplorer() {
   function showIdle() {
     placeOrg();
     layers.forEach((l, i) => { attr(l, { y: BOT[i], height: 0 }); css(l, { fill: SEDC[i] }, 0); });
-    fx.innerHTML = ''; css(ground, { transform: 'none' }, 0); scene.water.forEach(w => css(w, { transform: 'none', opacity: 1 }, 0)); css(hillsG, { opacity: 0 }, 0);
+    fx.innerHTML = ''; slabFX.innerHTML = ''; css(ground, { transform: 'none' }, 0); scene.water.forEach(w => css(w, { transform: 'none', opacity: 1 }, 0)); css(hillsG, { opacity: 0 }, 0);
     css(dark, { opacity: 0 }, 0); css(crab, { opacity: 0 }, 0); css(scav, { opacity: 0 }, 0); css(germs, { opacity: 0 }, 0);
     $('#badge2').textContent = '실험 준비'; $('#cap2').innerHTML = `<b>${ORGS[state.org].name}</b>를 골랐어요. 조건을 정하고 <b>실험 시작</b>을 눌러 보세요.`;
     $('#result2').classList.remove('show');
@@ -833,7 +919,8 @@ function drawExplorer() {
 
   function verdict() {
     const hard = ORGS[state.org].hard, f = state.burial === 'fast', l = state.oxy === 'low';
-    if (!hard) return f && l ? (state.org === 'fern' ? 'plant' : 'impression') : 'fail';
+    if (state.org === 'fern') return f && l ? 'plant' : (f || l) ? 'plantPartial' : 'plantFail';
+    if (!hard) return f && l ? 'impression' : 'fail';
     if (f && l) return 'perfect'; if (f && !l) return 'damaged'; if (!f && l) return 'partial'; return 'fail';
   }
   const RESULT = {
@@ -842,8 +929,19 @@ function drawExplorer() {
     partial: { g: 1, title: '조각이 남았어요', desc: '오래 노출되는 동안 먹히거나 흩어졌지만 일부 조각이 묻혀 보존되었어요.' },
     fail: { g: 0, title: '화석으로 남기 어려웠어요', desc: '분해와 훼손이 계속되어 확인할 수 있는 흔적이 거의 남지 않았어요.' },
     impression: { g: 'i', title: '희귀한 흔적이 남았어요', desc: '매우 유리한 조건이 겹쳐 해파리 몸의 희미한 윤곽이 남았어요. 부드러운 몸이 보존되는 경우는 매우 드물어요.' },
-    plant: { g: 3, title: '보존 상태가 좋아요', desc: '고사리 잎이 납작하게 눌리거나 잎의 모양이 인상으로 남았어요. 잎은 생물의 몸 일부이므로 체화석이에요.' },
+    plant: { g: 3, title: '고사리 잎의 인상 화석이 남았어요!', tag: '체화석', desc: '고사리 잎이 빠르게 묻혀 납작하게 눌렸어요. 잎의 원래 물질은 대부분 사라졌지만 잎이 눌렸던 모양이 암석에 남았어요.', note: '잎은 생물의 몸 일부이므로 잎의 모양이 남은 인상 화석도 체화석이에요.' },
+    plantPartial: { g: 1, title: '고사리 잎의 일부만 남았어요', tag: '체화석', desc: '잎이 일부 분해되거나 찢어진 뒤 묻혀 잎의 윤곽 일부만 인상으로 남았어요.', note: '잎은 생물의 몸 일부이므로 잎의 모양이 남은 인상 화석도 체화석이에요.' },
+    plantFail: { g: 0, title: '알아볼 수 있는 잎 자국이 거의 남지 않았어요', desc: '오래 드러나 있는 동안 잎이 분해되고 흩어져 뚜렷한 인상 화석으로 남기 어려웠어요.' },
   };
+  function showResult(v) {
+    const R = RESULT[v];
+    $('#result2-head').className = 'head grade-' + R.g;
+    $('#result2-title').innerHTML = R.title + (R.tag ? ' <span class="fossil-tag">' + R.tag + '</span>' : '');
+    $('#result2-desc').innerHTML = R.desc + (R.note ? '<div class="mini-note">' + R.note + '</div>' : '');
+    $('#result2-list').innerHTML = explain().map(e => `<li><span class="chip ${e.ok ? 'good' : 'bad'}">${e.ok ? '유리' : '불리'}</span><span>${e.t}</span></li>`).join('');
+    $('#result2').classList.add('show');
+    cap(`<b>${R.title}</b> — 아래 결과표에서 이유를 확인하고, 조건을 바꿔 다시 실험해 보세요.`, '결과');
+  }
   function explain() {
     const hard = ORGS[state.org].hard, f = state.burial === 'fast', l = state.oxy === 'low';
     return [
@@ -856,14 +954,15 @@ function drawExplorer() {
   async function run() {
     if (busy) return; busy = true; $('#t2-run').disabled = true;
     showIdle(); $('#result2').classList.remove('show');
+    if (state.org === 'fern') { await runFern(); return; }
     const hard = ORGS[state.org].hard, fast = state.burial === 'fast', low = state.oxy === 'low';
     let body = org; // 조작 대상 (매몰 후에는 단면용 복제본)
     const softOf = () => body.querySelector('.soft');
     const piecesOf = () => Array.from(body.querySelectorAll('.piece'));
     // 1. 죽음
-    cap(`${ORGS[state.org].name}가 죽어 바닥으로 가라앉아요.`, '죽음');
+    cap(`${ORGS[state.org].name}가 죽어 호수 바닥으로 가라앉아요.`, '죽음');
     const rot = state.org === 'fish' ? ' rotate(180deg)' : '';
-    const oy = state.org === 'jelly' ? 310 : state.org === 'fern' ? 312 : 330;
+    const oy = state.org === 'jelly' ? 310 : 330;
     css(orgG, { transform: `translate(470px,${oy}px)` + rot }, 1400); await sleep(1600);
     // 2. 매몰
     if (fast) {
@@ -919,17 +1018,88 @@ function drawExplorer() {
     await erode(layers[2], 900, fx); await erode(layers[1], 900, fx); await erode(layers[0], 1100, fx);
     css(ghostG, { opacity: 1 }, 400);
     if (v === 'impression') { const imp = E('ellipse', { cx: 0, cy: 0, rx: 62, ry: 26, fill: 'none', stroke: '#B7A98E', 'stroke-width': 5, 'stroke-dasharray': '10 6', opacity: 0 }); ghostG.appendChild(imp); css(imp, { opacity: 1 }, 800); }
-    if (v === 'plant') {
-      const imp = drawFern(.85);
-      imp.querySelectorAll('path').forEach(p => { if (p.getAttribute('fill') && p.getAttribute('fill') !== 'none') p.setAttribute('fill', '#7A6248'); p.setAttribute('stroke', '#5A4634'); });
-      imp.setAttribute('transform', 'scale(.85) scale(1,.55)'); imp.style.opacity = 0;
-      ghostG.appendChild(imp); css(imp, { opacity: 1 }, 800);
+    showResult(v);
+    busy = false; $('#t2-run').disabled = false;
+  }
+
+  /* ---- 고사리 전용 화석화: 잎 낙하 → 침강 → 매몰 → 압착 → 암석화 → 갈라짐 → 인상 ---- */
+  async function runFern() {
+    const fast = state.burial === 'fast', low = state.oxy === 'low';
+    const v = verdict(); // plant | plantPartial | plantFail
+    orgG.innerHTML = ''; ghostG.innerHTML = '';
+    org = drawFern(.85); orgG.appendChild(org); orgG.style.transformOrigin = '0 0';
+    // 1. 잎이 호숫가에서 떨어져 잔잔한 물에 내려앉음
+    cap('호숫가의 고사리 잎이 떨어져 잔잔한 물 위로 내려와요.', '잎 떨어짐');
+    css(orgG, { transform: 'translate(940px,30px) rotate(50deg)', opacity: 1 }, 0); await sleep(60);
+    css(orgG, { transform: 'translate(800px,70px) rotate(-25deg)' }, 900); await sleep(950);
+    css(orgG, { transform: 'translate(660px,105px) rotate(30deg)' }, 900); await sleep(950);
+    css(orgG, { transform: 'translate(540px,140px) rotate(80deg)' }, 800); await sleep(1000);
+    // 2. 가라앉아 바닥의 고운 진흙 위에 평평하게 놓임
+    cap('잎이 천천히 가라앉아 호수 바닥의 고운 진흙 위에 <b>평평하게</b> 놓여요.', '가라앉음');
+    css(orgG, { transform: 'translate(480px,368px) rotate(90deg)' }, 2200); await sleep(2400);
+    // 3. 매몰 (조건 반영)
+    if (!fast) {
+      cap('잎이 바닥에 오래 드러나 있어요. 그동안 잎이 분해되고 찢어져요…', '방치');
+      css(germs, { opacity: 1 }, 400); bubbles(fxWater, 380, 600, 160, 370, 22, 2200);
+      org.querySelectorAll('.soft path').forEach((p, i) => css(p, { opacity: i % 2 ? 0 : .55 }, 1600));
+      await sleep(1900); css(germs, { opacity: 0 }, 500);
+      cap('한참 뒤에야 고운 퇴적물이 남은 잎 조각을 덮어요.', '매몰');
+      await deposit(layers[0], 272, 3000, fx, 20, 940, 150);
+    } else {
+      cap('새로운 고운 퇴적물이 잎을 <b>빠르게</b> 덮어요.', '매몰');
+      await deposit(layers[0], 272, 2600, fx, 20, 940, 150);
     }
-    const R = RESULT[v];
-    $('#result2-head').className = 'head grade-' + R.g; $('#result2-title').textContent = R.title; $('#result2-desc').textContent = R.desc;
-    $('#result2-list').innerHTML = explain().map(e => `<li><span class="chip ${e.ok ? 'good' : 'bad'}">${e.ok ? '유리' : '불리'}</span><span>${e.t}</span></li>`).join('');
-    $('#result2').classList.add('show');
-    cap(`<b>${R.title}</b> — 아래 결과표에서 이유를 확인하고, 조건을 바꿔 다시 실험해 보세요.`, '결과');
+    if (low) { cap('<b>산소가 적은 환경</b> — 분해가 비교적 느려 잎의 모양이 유지될 가능성이 커져요.', '분해 느림'); css(dark, { opacity: .45 }, 1000); await sleep(1500); }
+    else { cap('<b>산소가 많은 환경</b> — 묻힌 뒤에도 잎의 조직이 비교적 빠르게 분해돼요.', '분해 빠름'); css(germs, { opacity: 1 }, 400); await sleep(1500); css(germs, { opacity: 0 }, 400); }
+    // 단면 보기: 잎을 반투명하게
+    ghostG.innerHTML = '';
+    const flat = drawFern(.85);
+    if (v === 'plantPartial') flat.querySelectorAll('.soft path').forEach((p, i) => { if (i % 3 === 0) p.remove(); });
+    if (v === 'plantFail') flat.querySelectorAll('.soft path').forEach((p, i) => { if (i % 4 !== 0) p.remove(); });
+    ghostG.appendChild(flat); ghostG.style.transformOrigin = '0 0';
+    css(ghostG, { transform: 'translate(480px,368px) rotate(90deg) scale(1,1)', opacity: .8 }, 0);
+    css(orgG, { opacity: 0 }, 0);
+    // 4. 퇴적층이 쌓이며 납작하게 눌림 (깃 모양 배열은 유지)
+    cap('위로 퇴적층이 계속 쌓이면서 잎이 <b>납작하게 눌려요</b>. 깃 모양의 잎 배열은 그대로 남아요.', '눌림');
+    css(dark, { opacity: 0 }, 1000);
+    const dep1 = deposit(layers[1], 228, 2400, fx, 20, 940, 150);
+    css(ghostG, { transform: 'translate(480px,371px) rotate(90deg) scale(.5,1)' }, 2400);
+    await dep1;
+    cap('잎의 연한 조직과 원래 성분은 대부분 사라지고, <b>눌린 모양</b>만 남아요.', '눌림');
+    const dep2 = deposit(layers[2], 188, 2200, fx, 20, 940, 150);
+    css(ghostG, { transform: 'translate(480px,373px) rotate(90deg) scale(.22,1)' }, 2200);
+    flat.querySelectorAll('path').forEach(p => { if (p.getAttribute('fill') && p.getAttribute('fill') !== 'none') css(p, { fill: '#7A6248' }, 2200); css(p, { stroke: '#5A4634' }, 2200); });
+    await dep2;
+    // 5. 암석화
+    cap('퇴적물이 <b>압축되고 교결</b>되어 암석으로 굳어요.', '암석화');
+    layers.forEach((l, i) => css(l, { fill: ROCKC[i] }, 2000)); await sleep(2200);
+    // 6. 융기·침식 후 암석이 갈라짐
+    cap('지층이 지표 가까이 올라온 뒤 위쪽 암석이 <b>침식</b>돼요.', '융기·침식');
+    await uplift(ground, scene.water, 60, 2000, () => css(hillsG, { opacity: 1 }, 1600));
+    await erode(layers[2], 800, fx); await erode(layers[1], 800, fx);
+    css(ghostG, { opacity: 0 }, 300);
+    // 7. 갈라진 암석 면에 인상이 드러남 (앞면 뷰)
+    cap('암석을 쪼개자, 잎이 눌렸던 모양이 <b>인상</b>으로 나타나요!', '갈라짐');
+    const q = v === 'plant' ? 'full' : v === 'plantPartial' ? 'partial' : 'faint';
+    const split = E('g', { transform: 'translate(470,240) scale(1.5)' }); split.style.opacity = 0;
+    split.appendChild(drawFernImprint(q)); // 아래 면: 오목한 잎 자국
+    const top = E('g', { class: 'topslab' });
+    top.appendChild(E('path', { d: 'M-118 -92 L108 -102 L126 82 L-98 98 Z', fill: '#B7AC93', stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }));
+    split.appendChild(top);
+    slabFX.appendChild(split);
+    css(split, { opacity: 1 }, 500); await sleep(900);
+    // 위 판이 열리며 맞은편 대응 자국이 잠깐 보였다가 치워짐
+    const counter = drawFernImprint(q); counter.setAttribute('transform', 'scale(-1,1)');
+    top.appendChild(counter);
+    css(top, { transform: 'translate(180px,-135px) rotate(12deg)' }, 1400); await sleep(2300);
+    css(top, { transform: 'translate(330px,-235px) rotate(20deg)', opacity: 0 }, 900); await sleep(1000);
+    const lblTxt = v === 'plant' ? '암석 표면에 눌린 잎 자국 (인상)' : v === 'plantPartial' ? '잎 자국이 일부만 남았어요' : '희미한 조각만 남았어요';
+    const lbl = E('g', {}, [
+      E('rect', { x: 470 - 165, y: 26, width: 330, height: 42, rx: 10, fill: '#FFFDF8', stroke: '#24303A', 'stroke-width': 3 }),
+      E('text', { x: 470, y: 54, 'text-anchor': 'middle', 'font-family': 'Jua', 'font-size': 19, fill: '#24303A', text: lblTxt }),
+    ]);
+    lbl.style.opacity = 0; slabFX.appendChild(lbl); css(lbl, { opacity: 1 }, 500);
+    showResult(v);
     busy = false; $('#t2-run').disabled = false;
   }
   $('#t2-run').onclick = run;
@@ -1444,14 +1614,81 @@ function drawExplorer() {
   reset();
 })();
 
-/* ================= 탭5: 핵심 퀴즈 (4문항, 한 문제씩) ================= */
+/* ================= 탭5: 핵심 퀴즈 (그림형 4문항, 한 문제씩) ================= */
 (function () {
   const quiz = $('#quiz');
+
+  /* --- 문항 그림 (기존 그리기 함수 재사용·변형) --- */
+  function artBuried() { // 빠르게 묻히는 물고기
+    const s = E('svg', { viewBox: '0 0 300 190' });
+    s.appendChild(E('rect', { width: 300, height: 190, fill: '#CFE8F5' }));
+    s.appendChild(E('rect', { y: 118, width: 300, height: 72, fill: '#C9A96B' }));
+    s.appendChild(E('path', { d: 'M0 118 L300 118', stroke: '#24303A', 'stroke-width': 3 }));
+    s.appendChild(E('g', { transform: 'translate(150,132) rotate(180) scale(.5)' }, [drawFish(1)]));
+    s.appendChild(E('path', { d: 'M36 136 Q150 92 264 136 L264 156 L36 156 Z', fill: '#DDBE7C', stroke: '#24303A', 'stroke-width': 3, opacity: .95 }));
+    for (let i = 0; i < 14; i++) s.appendChild(E('circle', { cx: 40 + ((i * 47) % 220), cy: 26 + ((i * 31) % 58), r: 2.2 + (i % 3), fill: '#DDBE7C', stroke: '#24303A', 'stroke-width': 1 }));
+    return s;
+  }
+  function artExposed() { // 오래 노출되어 흩어지는 물고기
+    const s = E('svg', { viewBox: '0 0 300 190' });
+    s.appendChild(E('rect', { width: 300, height: 190, fill: '#CFE8F5' }));
+    s.appendChild(E('rect', { y: 118, width: 300, height: 72, fill: '#C9A96B' }));
+    s.appendChild(E('path', { d: 'M0 118 L300 118', stroke: '#24303A', 'stroke-width': 3 }));
+    const bones = drawFish(.5); bones.querySelector('.soft').remove();
+    const ps = bones.querySelectorAll('.piece');
+    if (ps[0]) ps[0].setAttribute('transform', 'translate(-46,6) rotate(-40)');
+    if (ps[1]) ps[1].setAttribute('transform', 'translate(4,10) rotate(14)');
+    if (ps[2]) ps[2].setAttribute('transform', 'translate(60,0) rotate(50)');
+    s.appendChild(E('g', { transform: 'translate(128,112)' }, [bones]));
+    s.appendChild(E('g', { transform: 'translate(240,106) scale(.7)' }, [
+      E('ellipse', { rx: 22, ry: 13, fill: '#E8553E', stroke: '#24303A', 'stroke-width': 3 }),
+      E('path', { d: 'M-18 5 L-30 15 M-8 9 L-14 22 M8 9 L14 22 M18 5 L30 15 M-22 -6 L-34 -19 M22 -6 L34 -19', stroke: '#24303A', 'stroke-width': 3, 'stroke-linecap': 'round' }),
+      E('circle', { cx: -7, cy: -9, r: 3.5, fill: '#fff', stroke: '#24303A', 'stroke-width': 1.5 }), E('circle', { cx: 7, cy: -9, r: 3.5, fill: '#fff', stroke: '#24303A', 'stroke-width': 1.5 }),
+      E('circle', { cx: -6, cy: -9, r: 1.5, fill: '#24303A' }), E('circle', { cx: 8, cy: -9, r: 1.5, fill: '#24303A' }),
+    ]));
+    s.appendChild(E('path', { d: 'M34 56 q14 8 28 0 M64 78 q14 8 28 0 M210 48 q14 8 28 0', stroke: '#7CC4EA', 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }));
+    return s;
+  }
+  function artMold() { // 움푹 파인 조개 몰드
+    const s = E('svg', { viewBox: '0 0 300 200' });
+    s.appendChild(E('rect', { width: 300, height: 200, fill: '#EEF3F6' }));
+    s.appendChild(E('defs', {}, [E('radialGradient', { id: 'q-mold', cx: .5, cy: .35, r: .8 }, [E('stop', { offset: 0, 'stop-color': '#2E2A26' }), E('stop', { offset: 1, 'stop-color': '#57504A' })])]));
+    s.appendChild(E('path', { d: 'M28 30 L272 22 L282 172 L20 180 Z', fill: '#B7A98E', stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }));
+    const g = E('g', { transform: 'translate(158,106)' });
+    const shell = 'M0 34 C-62 34 -72 -2 -52 -22 C-32 -42 32 -42 52 -22 C72 -2 62 34 0 34 Z';
+    g.appendChild(E('path', { d: shell, fill: 'url(#q-mold)', stroke: '#3B342E', 'stroke-width': 3 }));
+    g.appendChild(E('path', { d: 'M-52 -22 C-32 -42 32 -42 52 -22', fill: 'none', stroke: '#17140F', 'stroke-width': 5, opacity: .7 }));
+    g.appendChild(E('path', { d: 'M-40 27 C-10 37 10 37 40 27', fill: 'none', stroke: '#CBBFA9', 'stroke-width': 4, opacity: .85 }));
+    [-34, -17, 0, 17, 34].forEach(x => g.appendChild(E('path', { d: `M0 32 L${x} -34`, stroke: '#1E1A15', 'stroke-width': 1.5, opacity: .5 })));
+    s.appendChild(g);
+    s.appendChild(E('path', { d: 'M70 66 L112 88 M112 88 L100 84 M112 88 L106 78', stroke: '#E8553E', 'stroke-width': 4, 'stroke-linecap': 'round' }));
+    s.appendChild(E('g', {}, [
+      E('rect', { x: 6, y: 40, width: 134, height: 27, rx: 8, fill: '#fff', stroke: '#24303A', 'stroke-width': 2.5 }),
+      E('text', { x: 73, y: 59, 'text-anchor': 'middle', 'font-family': 'Jua', 'font-size': 15, fill: '#C7432E', text: '움푹 파인 빈 공간' }),
+    ]));
+    return s;
+  }
+  function artFernRock() { // 고사리 인상 화석 판
+    const s = E('svg', { viewBox: '0 0 300 220' });
+    s.appendChild(E('rect', { width: 300, height: 220, fill: '#EEF3F6' }));
+    s.appendChild(E('g', { transform: 'translate(150,110) scale(.9)' }, [drawFernImprint('full')]));
+    return s;
+  }
+  function artBurrow() { // 지층 단면 속 굴 화석
+    const s = E('svg', { viewBox: '0 0 300 200' });
+    [['#C9B58A', 0, 52], ['#B39A6A', 52, 54], ['#9E9282', 106, 50], ['#A88F62', 156, 44]].forEach(([c, y, h]) => s.appendChild(E('rect', { x: 0, y, width: 300, height: h, fill: c, stroke: '#24303A', 'stroke-width': 2 })));
+    const path = 'M42 20 C72 58 50 88 90 108 C130 128 118 158 158 170 C198 182 220 148 258 156';
+    s.appendChild(E('path', { d: path, fill: 'none', stroke: '#24303A', 'stroke-width': 26, 'stroke-linecap': 'round' }));
+    s.appendChild(E('path', { d: path, fill: 'none', stroke: '#6E8B74', 'stroke-width': 20, 'stroke-linecap': 'round' }));
+    s.appendChild(E('rect', { x: 0, y: 0, width: 300, height: 200, fill: 'none', stroke: '#24303A', 'stroke-width': 4 }));
+    return s;
+  }
+
   const QS = [
-    { q: '화석으로 남는 데 더 유리한 조건은 무엇일까요?', choices: ['빨리 퇴적물에 묻힌다', '오랫동안 바닥에 드러나 있다'], ans: 0, exp: '빨리 묻히면 먹히거나 흩어지고 분해될 가능성이 줄어들어요.' },
-    { q: '조개 모양이 암석에 움푹 파인 빈 공간으로 남았어요. 무엇일까요?', choices: ['몰드', '캐스트'], ans: 0, exp: '움푹 남은 빈 공간은 몰드, 그 공간이 채워져 굳은 모양은 캐스트예요.' },
-    { q: '고사리 잎의 모양이 암석에 찍혀 남았어요. 어떤 화석일까요?', choices: ['체화석', '생흔 화석'], ans: 0, exp: '잎은 생물의 몸 일부이므로 잎의 형태가 남은 인상 화석도 체화석이에요.' },
-    { q: '생물이 살아 있을 때 판 굴이 남았어요. 어떤 화석일까요?', choices: ['체화석', '생흔 화석'], ans: 1, exp: '굴은 생물의 몸이 아니라 살아 있을 때 한 행동이 남은 기록이에요.' },
+    { type: 'pic2', tag: '화석화 조건', q: '어느 쪽이 화석으로 남을 가능성이 더 높을까요? 그림을 눌러 골라 보세요.', options: [{ label: '빠르게 묻힘', art: artBuried }, { label: '오랫동안 노출됨', art: artExposed }], ans: 0, exp: '빨리 묻히면 먹히거나 물살에 흩어지고 분해될 가능성이 줄어들어요.' },
+    { type: 'mc', tag: '몰드·캐스트', q: '조개 모양이 암석에 움푹 파인 빈 공간으로 남았어요. 무엇일까요?', art: artMold, choices: ['몰드', '캐스트'], ans: 0, exp: '움푹 남은 빈 공간은 몰드, 그 공간이 다른 물질로 채워져 굳은 모양은 캐스트예요.' },
+    { type: 'ox', tag: '인상 화석 O·X', q: '고사리 잎이 눌려 남은 인상 화석은 체화석이다.', art: artFernRock, ans: 0, exp: '잎은 생물의 몸 일부이므로 잎의 모양이 남은 인상 화석도 체화석이에요.' },
+    { type: 'mc', tag: '생흔 화석', q: '생물이 살아 있을 때 판 굴이 지층에 남았어요. 어떤 화석일까요?', art: artBurrow, choices: ['체화석', '생흔 화석'], ans: 1, exp: '굴은 생물의 몸이 아니라 생물이 살아 있을 때 한 행동이 남은 기록이에요.' },
   ];
   let queue = QS.map((_, i) => i), pos = 0, results = QS.map(() => null);
 
@@ -1459,19 +1696,57 @@ function drawExplorer() {
     quiz.innerHTML = '';
     if (pos >= queue.length) return renderEnd();
     const qi = queue[pos], Q = QS[qi];
-    const box = document.createElement('div'); box.className = 'q';
-    box.innerHTML = `<div class="qtop"><span class="qn">Q${qi + 1} / ${QS.length}</span></div><h3>${Q.q}</h3><div class="qbody"><div class="choices">${Q.choices.map((c, i) => `<button class="choice" data-i="${i}">${c}</button>`).join('')}</div></div><div class="qfeed" hidden></div><div class="qctl"><button class="btn ok big" id="q-next" style="display:none">다음 문제 ▶</button></div>`;
+    const box = document.createElement('div'); box.className = 'q tall';
+    box.innerHTML = `<div class="qtop"><span class="qn">Q${qi + 1} / ${QS.length}</span><span class="qtab">${Q.tag}</span></div><h3>${Q.q}</h3><div class="qbody"></div><div class="qfeed" hidden></div><div class="qctl"><button class="btn ok big" id="q-next" style="display:none">다음 문제 ▶</button></div>`;
     quiz.appendChild(box);
-    const feed = box.querySelector('.qfeed'), next = box.querySelector('#q-next');
+    const body = box.querySelector('.qbody'), feed = box.querySelector('.qfeed'), next = box.querySelector('#q-next');
     let answered = false;
-    box.querySelectorAll('.choice').forEach(c => c.onclick = () => {
+    const finish = (ok, popEl) => {
       if (answered) return; answered = true;
-      const ok = +c.dataset.i === Q.ans; results[qi] = ok;
-      box.querySelectorAll('.choice').forEach(x => { if (+x.dataset.i === Q.ans) x.classList.add('right'); else if (x === c) x.classList.add('wrong'); });
+      results[qi] = ok;
       feed.hidden = false; feed.className = 'qfeed ' + (ok ? 'good' : 'bad');
-      feed.innerHTML = `<div class="fh">${ok ? '🎉 정답이에요!' : '😅 아쉬워요'}</div><div>${Q.exp}</div>`;
+      feed.innerHTML = `<div class="fh">${ok ? '✔ 정답이에요!' : '✖ 다시 그림을 살펴볼까요?'}</div><div>${Q.exp}</div>`;
       next.style.display = ''; next.textContent = pos + 1 < queue.length ? '다음 문제 ▶' : '결과 보기 ▶';
-    });
+      if (popEl) popEl.classList.add('pop');
+      feed.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    };
+    if (Q.type === 'pic2') {
+      const row = document.createElement('div'); row.className = 'pic2'; body.appendChild(row);
+      Q.options.forEach((o, i) => {
+        const cdiv = document.createElement('div'); cdiv.className = 'piccard'; cdiv.setAttribute('role', 'button'); cdiv.tabIndex = 0;
+        cdiv.appendChild(o.art());
+        cdiv.insertAdjacentHTML('beforeend', `<div class="pl">${o.label}</div>`);
+        const pick = () => {
+          if (answered) return;
+          const okA = i === Q.ans;
+          Array.from(row.children).forEach((el, k) => {
+            if (k === Q.ans) { el.classList.add('right'); el.insertAdjacentHTML('beforeend', '<span class="mark ok">✔</span>'); }
+            else if (el === cdiv) { el.classList.add('wrong'); el.insertAdjacentHTML('beforeend', '<span class="mark no">✖</span>'); }
+            else el.classList.add('dim');
+          });
+          finish(okA, row.children[Q.ans]);
+        };
+        cdiv.onclick = pick; cdiv.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } };
+        row.appendChild(cdiv);
+      });
+    } else if (Q.type === 'ox') {
+      const art = document.createElement('div'); art.className = 'qart'; art.appendChild(Q.art()); body.appendChild(art);
+      const row = document.createElement('div'); row.className = 'oxrow'; body.appendChild(row);
+      [['◯', '맞아요'], ['✕', '아니에요']].forEach(([icon, txt], i) => {
+        const b = document.createElement('button'); b.className = 'oxbtn'; b.innerHTML = `<span>${icon}<small>${txt}</small></span>`;
+        b.onclick = () => { if (answered) return; const okA = i === Q.ans; row.children[Q.ans].classList.add('right'); if (!okA) b.classList.add('wrong'); finish(okA, row.children[Q.ans]); };
+        row.appendChild(b);
+      });
+    } else { // mc
+      const art = document.createElement('div'); art.className = 'qart'; art.appendChild(Q.art()); body.appendChild(art);
+      body.insertAdjacentHTML('beforeend', `<div class="choices">${Q.choices.map((c, i) => `<button class="choice" data-i="${i}">${c}</button>`).join('')}</div>`);
+      body.querySelectorAll('.choice').forEach(c => c.onclick = () => {
+        if (answered) return;
+        const okA = +c.dataset.i === Q.ans;
+        body.querySelectorAll('.choice').forEach(x => { if (+x.dataset.i === Q.ans) { x.classList.add('right'); x.insertAdjacentHTML('beforeend', ' ✔'); } else if (x === c) { x.classList.add('wrong'); x.insertAdjacentHTML('beforeend', ' ✖'); } });
+        finish(okA, body.querySelector('.choice.right'));
+      });
+    }
     next.onclick = () => { pos++; render(); };
   }
   function renderEnd() {
