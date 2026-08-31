@@ -73,17 +73,18 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 /* ---------- 탭2 실험실 ---------- */
 .lab-grid{display:grid;grid-template-columns:1fr;gap:14px}
 @media(min-width:900px){.lab-grid{grid-template-columns:300px 1fr}}
-.lab-side{display:flex;flex-direction:column;gap:14px}
-.card{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:12px}
-.card h3{font-family:var(--display);font-weight:400;font-size:19px;margin:0 0 8px;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.lab-side{display:flex;flex-direction:column;gap:8px}
+.card{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:10px}
+.card h3{font-family:var(--display);font-weight:400;font-size:18px;margin:0 0 6px;display:flex;align-items:center;gap:8px;white-space:nowrap}
 .card h3 .tag{font-size:13px;background:var(--ink);color:#fff;padding:2px 8px;border-radius:999px;font-family:var(--body)}
 .org-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .org{border:3px solid var(--ink);border-radius:12px;background:#F4F7FA;padding:6px 4px 4px;text-align:center;font-family:var(--display);font-size:15px;color:var(--ink);transition:transform .1s}
-.org svg{width:100%;height:52px;display:block}
+.org svg{width:100%;height:46px;display:block}
+.org:disabled,.seg button:disabled{opacity:.55;cursor:default}
 .org.sel{background:var(--tab2);color:#fff;transform:translateY(-2px)}
 .org small{display:block;font-family:var(--body);font-size:11px;color:inherit;opacity:.85;white-space:nowrap}
 .seg{display:flex;border:3px solid var(--ink);border-radius:12px;overflow:hidden}
-.seg button{flex:1;padding:10px 6px;background:#F4F7FA;color:var(--ink);font-size:17px;line-height:1.2}
+.seg button{flex:1;padding:8px 6px;background:#F4F7FA;color:var(--ink);font-size:16px;line-height:1.2}
 .seg button small{display:block;font-family:var(--body);font-size:11px;opacity:.75}
 .seg button.sel{background:var(--tab2);color:#fff}
 .seg button+button{border-left:3px solid var(--ink)}
@@ -189,8 +190,9 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 /* ---------- 그림형 퀴즈 ---------- */
 #panel5 .q.tall{min-height:min(560px,calc(100dvh - 220px));display:flex;flex-direction:column}
 #panel5 .qbody{flex:1;display:flex;flex-direction:column;justify-content:center}
-.qart{min-height:200px;display:grid;place-items:center;margin:10px 0}
-.qart svg{width:min(420px,100%);height:auto;display:block}
+.qart{min-height:220px;display:grid;place-items:center;margin:10px 0}
+.qart svg{width:min(500px,100%);height:auto;display:block}
+#ctl3{justify-content:flex-end}
 .pic2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch;margin:10px 0}
 .piccard{border:3px solid var(--ink);border-radius:14px;background:#fff;padding:10px;cursor:pointer;text-align:center;position:relative;transition:transform .12s}
 .piccard svg{width:100%;height:auto;display:block;border-radius:8px}
@@ -237,11 +239,11 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
   </div>
   <div class="controls">
     <button class="btn" id="t1-prev">◀ 이전</button>
-    <button class="btn primary" id="t1-next">다음 ▶</button>
-    <button class="btn" id="t1-auto">▶ 자동 재생</button>
     <div class="steps" id="t1-steps"></div>
     <div class="spacer"></div>
+    <button class="btn" id="t1-pause">⏸ 일시 정지</button>
     <button class="btn ghost" id="t1-reset">↺ 처음부터</button>
+    <button class="btn primary" id="t1-next">다음 ▶</button>
   </div>
 </section>
 
@@ -264,18 +266,20 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
       <div class="card">
         <h3>어떤 환경인가요?</h3>
         <div class="seg" id="seg-oxy">
-          <button data-v="low" class="sel">산소 적음<small>분해가 비교적 느려질 수 있는 환경</small></button>
-          <button data-v="high">산소 많음<small>분해가 비교적 활발할 수 있는 환경</small></button>
+          <button data-v="low" class="sel">분해가 느린 환경<small>산소 공급·생물 활동이 적음</small></button>
+          <button data-v="high">분해가 빠른 환경<small>산소 공급·생물 활동이 많음</small></button>
         </div>
-        <div class="mini-note">이 실험은 다른 조건이 같을 때 산소량의 영향을 단순하게 비교한 모형이에요. 실제 분해 속도에는 온도, 물의 흐름, 산성도 등도 영향을 줘요.</div>
       </div>
-      <button class="btn primary big" id="t2-run" style="width:100%">🔬 실험 시작</button>
     </div>
     <div>
       <div class="stage-wrap" id="stage2">
         <svg id="svg2" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice"></svg>
         <div class="badge" id="badge2">실험 준비</div>
         <div class="caption" id="cap2">왼쪽에서 생물과 조건을 고른 뒤 <b>실험 시작</b>을 눌러 보세요.</div>
+      </div>
+      <div class="controls" style="justify-content:flex-end">
+        <button class="btn" id="t2-pause">⏸ 일시 정지</button>
+        <button class="btn primary big" id="t2-run">🔬 실험 시작</button>
       </div>
       <div class="result" id="result2">
         <div class="head" id="result2-head"><span id="result2-title"></span></div>
@@ -289,7 +293,7 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 <section class="panel" id="panel3">
   <div class="stage-wrap" id="stage3">
     <svg id="svg3" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice"></svg>
-    <div class="gauge-wrap" id="gauge3"><div class="gauge"><div class="fill" id="g3-fill"></div><div class="zone" id="g3-zone"></div><div class="needle" id="g3-needle"></div></div><div class="gauge-label" id="g3-label">초록 구간에서 뒤집기!</div></div>
+    <div class="gauge-wrap" id="gauge3"><div class="gauge"><div class="fill" id="g3-fill"></div><div class="zone" id="g3-zone"></div><div class="needle" id="g3-needle"></div></div><div class="gauge-label" id="g3-label">초록 구간에서 손잡이 눌러 뒤집기!</div></div>
     <div class="toast" id="toast3"></div>
     <div class="badge" id="badge3">붕어빵 가게</div>
     <div class="caption" id="cap3"></div>
@@ -311,8 +315,9 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
   </div>
   <div class="controls">
     <button class="btn" id="t4-clear">🧹 지우기</button>
-    <button class="btn primary big" id="t4-run">⏳ 화석화 시작</button>
+    <div class="spacer"></div>
     <button class="btn" id="t4-again" style="display:none">↺ 다시 체험하기</button>
+    <button class="btn primary big" id="t4-run">⏳ 화석화 시작</button>
   </div>
 </section>
 
@@ -327,7 +332,39 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 /* ================= 공통 ================= */
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+/* ---- 전역 일시 정지: sleep·tween·deposit·erode 는 정지 중 시간이 흐르지 않고,
+       진행 중인 CSS 전환은 현재 값으로 동결했다가 남은 시간만큼 이어서 재생 ---- */
+let _paused = false;
+const _cssActive = new Set();
+const _pauseBtns = [];
+function syncPauseBtns() { _pauseBtns.forEach(b => { b.textContent = _paused ? '▶ 재생' : '⏸ 일시 정지'; }); }
+function registerPauseBtn(btn) { _pauseBtns.push(btn); btn.addEventListener('click', () => setPaused(!_paused)); syncPauseBtns(); }
+function setPaused(p) {
+  if (p === _paused) return;
+  _paused = p;
+  if (p) {
+    _cssActive.forEach(rec => {
+      clearTimeout(rec.done);
+      const cs = getComputedStyle(rec.el);
+      const snap = {};
+      for (const k in rec.styles) snap[k] = cs[k] || rec.el.style[k];
+      rec.remaining = Math.max(0, rec.ms - (performance.now() - rec.t0));
+      rec.el.style.transition = 'none';
+      Object.assign(rec.el.style, snap);
+      rec.frozen = true;
+    });
+  } else {
+    const frozen = [..._cssActive].filter(r => r.frozen);
+    frozen.forEach(r => _cssActive.delete(r));
+    frozen.forEach(r => css(r.el, r.styles, r.remaining));
+  }
+  syncPauseBtns();
+}
+const sleep = ms => new Promise(r => {
+  let rem = ms, last = performance.now();
+  const step = now => { if (!_paused) rem -= now - last; last = now; if (rem <= 0) r(); else requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+});
 const SVGNS = 'http://www.w3.org/2000/svg';
 const rnd = (a, b) => a + Math.random() * (b - a);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -353,20 +390,27 @@ function tween(el, props, ms, ease = easeIO) {
     if (ms <= 0) { for (const k in props) el.setAttribute(k, props[k]); return res(); }
     const from = {}; for (const k in props) from[k] = parseFloat(el.getAttribute(k)) || 0;
     if (_tweens.has(el)) cancelAnimationFrame(_tweens.get(el));
-    const t0 = performance.now();
+    let elapsed = 0, last = performance.now();
     const step = now => {
-      const t = clamp((now - t0) / ms, 0, 1), k2 = ease(t);
+      if (!_paused) elapsed += now - last;
+      last = now;
+      const t = clamp(elapsed / ms, 0, 1), k2 = ease(t);
       for (const k in props) el.setAttribute(k, lerp(from[k], props[k], k2));
       if (t < 1) _tweens.set(el, requestAnimationFrame(step)); else { _tweens.delete(el); res(); }
     };
     _tweens.set(el, requestAnimationFrame(step));
   });
 }
-/* CSS transform / opacity / fill 은 CSS transition 으로 */
+/* CSS transform / opacity / fill 은 CSS transition 으로 (일시 정지 동결 대상 등록) */
 function css(el, styles, ms) {
   el.style.transition = ms > 0 ? `all ${ms}ms cubic-bezier(.4,0,.2,1)` : 'none';
   el.getBoundingClientRect();
   Object.assign(el.style, styles);
+  if (ms > 0) {
+    const rec = { el, styles, ms, t0: performance.now() };
+    _cssActive.add(rec);
+    rec.done = setTimeout(() => _cssActive.delete(rec), ms + 60);
+  }
 }
 
 /* 색 보간 */
@@ -581,12 +625,14 @@ function deposit(rect, topY, ms, fx, x0 = 0, x1 = 960, fromY = 150) {
   return new Promise(res => {
     const y0 = parseFloat(rect.getAttribute('y')), h0 = parseFloat(rect.getAttribute('height')) || 0, bottom = y0 + h0;
     const col = rect.getAttribute('fill');
-    const t0 = performance.now(); let lastSpawn = 0;
+    let elapsed = 0, last = performance.now(), lastSpawn = 0;
     const step = now => {
-      const t = clamp((now - t0) / ms, 0, 1);
+      if (!_paused) elapsed += now - last;
+      last = now;
+      const t = clamp(elapsed / ms, 0, 1);
       const y = lerp(y0, topY, t);
       attr(rect, { y, height: bottom - y });
-      if (t < 1 && now - lastSpawn > 28) {
+      if (!_paused && t < 1 && now - lastSpawn > 28) {
         lastSpawn = now;
         for (let i = 0; i < 3; i++) {
           const c = E('circle', { cx: rnd(x0, x1), cy: fromY - rnd(0, 40), r: rnd(2, 4.5), fill: col, stroke: '#24303A', 'stroke-width': 1 });
@@ -606,12 +652,14 @@ function erode(rect, ms, fx, x0 = 0, x1 = 960, toTop = null) {
     const y0 = parseFloat(rect.getAttribute('y')), h0 = parseFloat(rect.getAttribute('height')) || 0, bottom = y0 + h0;
     const target = toTop == null ? bottom : toTop;
     const col = rect.getAttribute('fill');
-    const t0 = performance.now(); let lastSpawn = 0;
+    let elapsed = 0, last = performance.now(), lastSpawn = 0;
     const step = now => {
-      const t = clamp((now - t0) / ms, 0, 1);
+      if (!_paused) elapsed += now - last;
+      last = now;
+      const t = clamp(elapsed / ms, 0, 1);
       const y = lerp(y0, target, t);
       attr(rect, { y, height: Math.max(0, bottom - y) });
-      if (t < 1 && now - lastSpawn > 40) {
+      if (!_paused && t < 1 && now - lastSpawn > 40) {
         lastSpawn = now;
         for (let i = 0; i < 3; i++) {
           const c = E('circle', { cx: rnd(x0, x1), cy: y, r: rnd(2, 4), fill: col, stroke: '#24303A', 'stroke-width': 1 });
@@ -744,21 +792,21 @@ function drawExplorer() {
   rain.appendChild(E('path', { d: 'M300 40 a40 40 0 0 1 78 -24 a46 46 0 0 1 90 12 a30 30 0 0 1 6 60 l-170 0 a34 34 0 0 1 -4 -48 Z', fill: '#8FA3B5', stroke: '#24303A', 'stroke-width': 4 }));
   svg.appendChild(rain);
   (function rainLoop() {
-    if (rain.style.opacity === '1') rain.querySelectorAll('line').forEach(l => { let y = +l.getAttribute('y1') + 9; if (y > 330) y = -20; const x = +l.getAttribute('x1'); attr(l, { y1: y, y2: y + 22, x2: x - 6 }); });
+    if (!_paused && rain.style.opacity === '1') rain.querySelectorAll('line').forEach(l => { let y = +l.getAttribute('y1') + 9; if (y > 330) y = -20; const x = +l.getAttribute('x1'); attr(l, { y1: y, y2: y + 22, x2: x - 6 }); });
     requestAnimationFrame(rainLoop);
   })();
-  (function flowLoop() { setInterval(() => { seep.forEach(s => { s.r -= .45; if (s.r < MR - 20) s.r = MR + 48; s.g.setAttribute('transform', `translate(${MX + s.dx * s.r},${MY + s.dy * s.r})`); }); }, 40); })();
+  (function flowLoop() { setInterval(() => { if (_paused) return; seep.forEach(s => { s.r -= .45; if (s.r < MR - 20) s.r = MR + 48; s.g.setAttribute('transform', `translate(${MX + s.dx * s.r},${MY + s.dy * s.r})`); }); }, 40); })();
 
   const STEPS = [
-    { badge: '시작', cap: '옛날 깊고 잔잔한 <b>호수</b>에 물고기가 살고 있었어요. 이 물고기의 뼈는 어떻게 화석으로 남을까요? <small>뼈가 광물화되어 남는 한 가지 과정을 살펴봐요.</small>' },
-    { badge: '① 죽음', cap: '<b>① 죽음</b> — 물고기가 죽어 호수 바닥으로 가라앉아요. 오래 드러나 있으면 다른 생물에게 먹히거나 물살에 흩어질 수 있어요.' },
-    { badge: '② 매몰', cap: '<b>② 매몰 완료</b> — 물고기가 퇴적물에 완전히 묻혔어요. 호수 바닥 아래를 <b>단면</b>으로 살펴볼게요.' },
-    { badge: '광물 충전·치환', cap: '뼈의 빈틈에 광물이 채워지거나(<b>광물 충전</b>) 원래 성분의 일부가 새로운 광물로 <b>치환</b>되면서 뼈의 형태가 보존될 수 있어요. 두 가지는 함께 일어나기도 하고, 어느 한쪽만 일어나기도 해요.' },
-    { badge: '⑤ 융기', cap: '<b>⑤ 융기</b> — 지각 변동으로 바다 밑에 있던 지층이 서서히 올라와 육지가 될 수 있어요. 이 과정에서 지층이 기울거나 휘어지기도 해요. <small>이 장면에서는 지층이 크게 변형되지 않은 채 올라오는 경우를 보여 줘요.</small>' },
-    { badge: '⑥ 풍화·침식', cap: '<b>⑥ 풍화·침식</b> — 비와 바람 등의 영향으로 위쪽 암석부터 조금씩 깎여 나가요.' },
-    { badge: '⑦ 노출·발견', cap: '<b>⑦ 노출·발견</b> — 위쪽 암석이 깎이면서 화석이 지표에 드러났어요. 이제 사람이 발견할 수 있어요! <small>화석은 그 전에 이미 만들어져 있었고, 발견은 드러난 화석을 찾는 일이에요.</small>' },
+    { badge: '시작', cap: '옛날 깊고 잔잔한 <b>호수</b>에 물고기가 살고 있었어요. 이 물고기의 뼈는 어떻게 화석으로 남을까요?' },
+    { badge: '① 죽음', cap: '<b>① 죽음</b> — 물고기가 죽어 호수 바닥으로 가라앉아요. 오래 드러나 있으면 다른 생물에게 먹히거나 물의 흐름에 흩어질 수 있어요.' },
+    { badge: '② 매몰', cap: '<b>② 매몰 완료</b> — 물고기가 퇴적물에 완전히 묻혔어요.' },
+    { badge: '광물 충전·치환', cap: '뼈의 빈틈에 광물이 채워지거나 원래 성분 일부가 다른 광물로 바뀌면서, 뼈의 형태가 오래 보존될 수 있어요.' },
+    { badge: '⑤ 융기', cap: '<b>⑤ 융기</b> — 지각 변동으로 땅속에 묻혀 있던 지층이 서서히 지표 가까이 올라와요. 이 과정에서 지층이 기울거나 휘어지기도 해요.' },
+    { badge: '⑥ 풍화·침식', cap: '<b>⑥ 풍화·침식</b> — 비와 바람 등의 영향으로 암석이 조금씩 깎여 나가요.' },
+    { badge: '⑦ 노출·발견', cap: '<b>⑦ 노출·발견</b> — 위쪽 암석이 깎이면서 화석이 지표에 드러났어요. 이제 사람이 발견할 수 있어요!' },
   ];
-  let cur = 0, auto = false, busy = false;
+  let cur = 0, busy = false;
   const dots = $('#t1-steps');
   STEPS.forEach((s) => { const d = document.createElement('div'); d.className = 'dot'; d.title = s.badge; dots.appendChild(d); });
   const setCap = (html, badge) => { $('#cap1').innerHTML = html; if (badge) $('#badge1').textContent = badge; };
@@ -790,7 +838,7 @@ function drawExplorer() {
     css(hills, { opacity: n >= 4 ? 1 : 0 }, 0);
     css(mag, { opacity: n === 3 ? 1 : 0 }, 0); css(flow, { opacity: 0 }, 0);
     crystals.forEach((c, i) => { const p = pores[i]; css(c, { transform: `translate(${p.getAttribute('cx')}px,${p.getAttribute('cy')}px) scale(${n >= 3 ? 1 : 0})` }, 0); });
-    css(boneDisc, { fill: n >= 3 ? '#8A8276' : '#F3EEE3' }, 0); setMagLabel(n >= 3 ? '광물 충전과 치환이 일어난 뼈의 모습' : '뼈의 단면 — 작은 빈틈이 있어요');
+    css(boneDisc, { fill: n >= 3 ? '#8A8276' : '#F3EEE3' }, 0); setMagLabel(n >= 3 ? '광물이 채워져 뼈의 형태가 단단하게 보존되었어요' : '뼈의 단면 — 작은 빈틈이 있어요');
     css(rain, { opacity: n === 5 ? 1 : 0 }, 0);
     css(person, { opacity: n === 6 ? 1 : 0 }, 0); css(sparkle, { opacity: n === 6 ? 1 : 0 }, 0);
   }
@@ -815,22 +863,22 @@ function drawExplorer() {
       css(ghost, { opacity: 1 }, 800);
       await deposit(layers[1], 228, 2600, fx, 20, 940, 150);
       await deposit(layers[2], 188, 2400, fx, 20, 940, 150);
-      setCap('오랜 시간이 흐르는 동안 <b>호수는 사라지고</b>, 물고기가 묻힌 지층은 <b>땅속</b>에 깊이 묻혀요.', '시간 경과');
+      setCap('오랜 시간이 흐르며 퇴적물이 계속 쌓이고, 물고기가 묻힌 지층은 <b>땅속 깊이</b> 묻혀요.', '시간 경과');
       scene.water.forEach(w => css(w, { opacity: 0 }, 1800)); await sleep(2000);
-      setCap('<b>④ 암석화</b> — 퇴적물이 눌리고 다져지며, 광물질이 알갱이 사이를 붙여 <b>퇴적암</b>으로 굳어요. 뼈에서는 어떤 변화가 일어날까요?', '④ 암석화');
+      setCap('<b>④ 암석화</b> — 오랜 시간 퇴적물이 눌리고 다져지며 <b>퇴적암</b>으로 굳어요. 묻힌 뼈도 주변의 물과 광물의 영향을 받아 변할 수 있어요.', '④ 암석화');
       layers.forEach((l, i) => css(l, { fill: ROCK[i] }, 1800)); await sleep(2000);
       css(mag, { opacity: 1 }, 600); await sleep(900);
-      setCap('<b>광물 충전</b> — 땅속으로 스며든 물은 암석과 접촉하면서 여러 광물질을 녹여요. 광물질이 녹은 <b>지하수</b>가 지층의 <b>틈을 따라</b> 이동해 뼈의 빈틈으로 들어가요.', '광물 충전');
-      setMagLabel('광물 성분이 녹은 물이 스며들어요'); css(flow, { opacity: 1 }, 600); await sleep(2600);
-      setMagLabel('빈틈에 광물질이 채워져요 — 광물 충전');
-      setCap('<b>광물 충전</b> — 지하수에 녹아 있던 광물질이 뼈의 빈틈에 <b>침전</b>해요. 빈틈이 채워지면서 뼈가 더 무겁고 단단해질 수 있어요.', '광물 충전');
-      crystals.forEach((c, i) => { const p = pores[i]; setTimeout(() => css(c, { transform: `translate(${p.getAttribute('cx')}px,${p.getAttribute('cy')}px) scale(1)` }, 500), i * 150); });
+      setCap('<b>광물 충전</b> — 퇴적층의 틈을 이동하는 물에는 여러 성분이 녹아 있어요. 이 물이 뼈의 작은 빈틈으로 스며들어요.', '광물 충전');
+      setMagLabel('여러 성분이 녹은 물이 스며들어요'); css(flow, { opacity: 1 }, 600); await sleep(2600);
+      setMagLabel('빈틈에 광물이 침전해 쌓여요 — 광물 충전');
+      setCap('<b>광물 충전</b> — 물에 녹아 있던 성분이 뼈의 빈틈에서 <b>광물로 침전</b>해 쌓여요. 빈틈이 채워지면서 뼈가 더욱 단단해질 수 있어요.', '광물 충전');
+      (async () => { for (let i = 0; i < crystals.length; i++) { const c = crystals[i], p = pores[i]; css(c, { transform: `translate(${p.getAttribute('cx')}px,${p.getAttribute('cy')}px) scale(1)` }, 500); await sleep(150); } })();
       await sleep(3000);
-      setCap('<b>치환</b> — 뼈의 원래 성분이 조금씩 녹아 나가고 그 자리에 새로운 광물이 생겨요. 뼈의 구조를 유지한 채 성분의 일부 또는 대부분이 바뀔 수 있어요.', '치환');
-      setMagLabel('뼈의 원래 성분을 새로운 광물이 대신해요 — 치환');
+      setCap('<b>경우에 따라 치환</b> — 경우에 따라 뼈의 원래 성분 일부가 녹아 없어지고, 그 자리를 <b>다른 광물이 대신</b>하기도 해요.', '치환');
+      setMagLabel('경우에 따라 원래 성분을 다른 광물이 대신해요');
       css(boneDisc, { fill: '#8A8276' }, 3200); setBone('#8A8276', 3200); await sleep(3400);
       css(flow, { opacity: 0 }, 600);
-      setMagLabel('광물 충전과 치환이 일어난 뼈의 모습');
+      setMagLabel('광물이 채워져 뼈의 형태가 단단하게 보존되었어요');
       setCap(STEPS[3].cap, STEPS[3].badge); await sleep(800);
     }
     if (n === 4) {
@@ -855,6 +903,7 @@ function drawExplorer() {
 
   async function go(n, animate = true) {
     if (busy) return; busy = true;
+    setPaused(false); // 단계 이동 시 해당 단계 애니메이션을 처음부터 재생
     n = clamp(n, 0, STEPS.length - 1);
     if (animate && n === cur + 1) await animateStep(n); else setState(n);
     cur = n;
@@ -863,14 +912,8 @@ function drawExplorer() {
   }
   $('#t1-next').onclick = () => go(cur + 1);
   $('#t1-prev').onclick = () => go(cur - 1, false);
-  $('#t1-reset').onclick = () => { auto = false; $('#t1-auto').textContent = '▶ 자동 재생'; go(0, false); };
-  $('#t1-auto').onclick = async () => {
-    if (auto) { auto = false; $('#t1-auto').textContent = '▶ 자동 재생'; return; }
-    auto = true; $('#t1-auto').textContent = '⏸ 멈춤';
-    if (cur === STEPS.length - 1) await go(0, false);
-    while (auto && cur < STEPS.length - 1) { await sleep(cur === 0 ? 1500 : 2800); if (!auto) break; await go(cur + 1); }
-    auto = false; $('#t1-auto').textContent = '▶ 자동 재생';
-  };
+  $('#t1-reset').onclick = () => go(0, false);
+  registerPauseBtn($('#t1-pause'));
   setState(0); $('#t1-prev').disabled = true;
 })();
 
@@ -890,7 +933,7 @@ function drawExplorer() {
   const slabFX = E('g', { class: 'slabfx' }); svg.appendChild(slabFX); // 고사리 인상 화석 앞면 뷰 오버레이
   // 산소 부족 표시: 어두운 물 덮개
   const dark = E('rect', { x: -300, y: 130, width: 1560, height: 260, fill: '#1E3A50' }); dark.style.opacity = 0; svg.insertBefore(dark, ground);
-  // 청소동물
+  // 저서성 동물 (게)
   const crab = E('g', { class: 'crab' }, [
     E('ellipse', { cx: 0, cy: 0, rx: 30, ry: 18, fill: '#E8553E', stroke: '#24303A', 'stroke-width': 3 }),
     E('path', { d: 'M-24 6 L-40 20 M-12 12 L-22 30 M12 12 L22 30 M24 6 L40 20 M-30 -8 L-46 -26 M30 -8 L46 -26', stroke: '#24303A', 'stroke-width': 4, 'stroke-linecap': 'round' }),
@@ -898,7 +941,18 @@ function drawExplorer() {
     E('circle', { cx: -9, cy: -12, r: 2, fill: '#24303A' }), E('circle', { cx: 11, cy: -12, r: 2, fill: '#24303A' }),
   ]);
   crab.style.opacity = 0; svg.appendChild(crab);
-  const scav = drawFish(.55, '#7FA6C9'); scav.style.opacity = 0; svg.appendChild(scav);
+  // 새우처럼 생긴 작은 저서성 동물
+  const drawShrimp = (col = '#E8935E') => E('g', { class: 'shrimp' }, [
+    E('path', { d: 'M-20 0 Q-24 -16 -8 -18 Q14 -20 20 -6 Q22 4 12 8 L-2 10 Q-16 10 -20 0 Z', fill: col, stroke: '#24303A', 'stroke-width': 3, 'stroke-linejoin': 'round' }),
+    E('path', { d: 'M-20 0 Q-32 4 -30 14 L-22 8 Z', fill: col, stroke: '#24303A', 'stroke-width': 2.5, 'stroke-linejoin': 'round' }),
+    E('path', { d: 'M-14 -14 Q-8 -6 -12 4 M-6 -17 Q0 -8 -4 6 M2 -18 Q8 -8 4 8', fill: 'none', stroke: '#24303A', 'stroke-width': 1.5, opacity: .6 }),
+    E('path', { d: 'M18 -10 Q32 -18 40 -12 M19 -5 Q34 -6 42 0', fill: 'none', stroke: '#24303A', 'stroke-width': 2, 'stroke-linecap': 'round' }),
+    E('path', { d: 'M-4 10 L-7 17 M2 10 L2 17 M8 8 L11 15', stroke: '#24303A', 'stroke-width': 2, 'stroke-linecap': 'round' }),
+    E('circle', { cx: 13, cy: -9, r: 2.2, fill: '#24303A' }),
+  ]);
+  const shrimpA = drawShrimp(), shrimpB = drawShrimp('#D97E6A');
+  shrimpA.style.opacity = 0; shrimpB.style.opacity = 0;
+  svg.appendChild(shrimpA); svg.appendChild(shrimpB);
   // 세균 (분해)
   const germs = E('g'); germs.style.opacity = 0; svg.appendChild(germs);
   for (let i = 0; i < 9; i++) germs.appendChild(E('g', { transform: `translate(${380 + i * 26},${350 + (i % 3) * 14})` }, [E('ellipse', { rx: 9, ry: 5, fill: '#B8E063', stroke: '#24303A', 'stroke-width': 2, transform: `rotate(${i * 40})` })]));
@@ -932,7 +986,7 @@ function drawExplorer() {
     placeOrg();
     layers.forEach((l, i) => { attr(l, { y: BOT[i], height: 0 }); css(l, { fill: SEDC[i] }, 0); });
     fx.innerHTML = ''; slabFX.innerHTML = ''; css(ground, { transform: 'none' }, 0); scene.water.forEach(w => css(w, { transform: 'none', opacity: 1 }, 0)); css(hillsG, { opacity: 0 }, 0);
-    css(dark, { opacity: 0 }, 0); css(crab, { opacity: 0 }, 0); css(scav, { opacity: 0 }, 0); css(germs, { opacity: 0 }, 0);
+    css(dark, { opacity: 0 }, 0); css(crab, { opacity: 0 }, 0); css(shrimpA, { opacity: 0 }, 0); css(shrimpB, { opacity: 0 }, 0); css(germs, { opacity: 0 }, 0);
     $('#badge2').textContent = '실험 준비'; $('#cap2').innerHTML = `<b>${ORGS[state.org].name}</b>${josa(ORGS[state.org].name, '을', '를')} 골랐어요. 조건을 정하고 <b>실험 시작</b>을 눌러 보세요.`;
     $('#result2').classList.remove('show');
   }
@@ -952,7 +1006,7 @@ function drawExplorer() {
     partial: { g: 1, title: '조각이 남았어요', desc: '오래 노출되는 동안 먹히거나 흩어졌지만 일부 조각이 묻혀 보존되었어요.' },
     fail: { g: 0, title: '화석으로 남기 어려웠어요', desc: '분해와 훼손이 계속되어 확인할 수 있는 흔적이 거의 남지 않았어요.' },
     impression: { g: 'i', title: '희귀한 흔적이 남았어요', desc: '매우 유리한 조건이 겹쳐 해파리 몸의 희미한 윤곽이 남았어요. 부드러운 몸이 보존되는 경우는 매우 드물어요.' },
-    plant: { g: 3, title: '고사리 잎의 인상 화석이 남았어요!', tag: '체화석', desc: '고사리 잎이 빠르게 묻혀 납작하게 눌렸어요. 잎의 원래 물질은 대부분 사라졌지만 잎이 눌렸던 모양이 암석에 남았어요.', note: '잎은 생물의 몸 일부이므로 잎의 모양이 남은 인상 화석도 체화석이에요.' },
+    plant: { g: 3, title: '고사리 잎의 인상 화석이 남았어요!', tag: '체화석', desc: '고사리 잎이 납작하게 눌리거나 잎 모양의 자국으로 남았어요. 압축 화석과 인상 화석은 모두 생물의 몸이나 몸의 형태가 남은 체화석이에요.' },
     plantPartial: { g: 1, title: '고사리 잎의 일부만 남았어요', tag: '체화석', desc: '잎이 일부 분해되거나 찢어진 뒤 묻혀 잎의 윤곽 일부만 인상으로 남았어요.', note: '잎은 생물의 몸 일부이므로 잎의 모양이 남은 인상 화석도 체화석이에요.' },
     plantFail: { g: 0, title: '알아볼 수 있는 잎 자국이 거의 남지 않았어요', desc: '오래 드러나 있는 동안 잎이 분해되고 흩어져 뚜렷한 인상 화석으로 남기 어려웠어요.' },
   };
@@ -961,7 +1015,7 @@ function drawExplorer() {
     $('#result2-head').className = 'head grade-' + R.g;
     $('#result2-title').innerHTML = R.title + (R.tag ? ' <span class="fossil-tag">' + R.tag + '</span>' : '');
     $('#result2-desc').innerHTML = R.desc + (R.note ? '<div class="mini-note">' + R.note + '</div>' : '');
-    $('#result2-list').innerHTML = explain().map(e => `<li><span class="chip ${e.ok ? 'good' : 'bad'}">${e.ok ? '유리' : '불리'}</span><span>${e.t}</span></li>`).join('');
+    $('#result2-list').innerHTML = explain().map(e => `<li><span class="chip ${e.chip ? '' : e.ok ? 'good' : 'bad'}">${e.chip || (e.ok ? '유리' : '불리')}</span><span>${e.t}</span></li>`).join('');
     $('#result2').classList.add('show');
     cap(`<b>${R.title}</b> — 아래 결과표에서 이유를 확인하고, 조건을 바꿔 다시 실험해 보세요.`, '결과');
   }
@@ -969,13 +1023,15 @@ function drawExplorer() {
     const hard = ORGS[state.org].hard, f = state.burial === 'fast', l = state.oxy === 'low';
     return [
       { ok: f, t: f ? '빠르게 묻혀 먹히거나 흩어질 가능성이 줄었어요.' : '느리게 묻혀 오래 드러나 있는 동안 먹히거나 흩어지고 부서졌어요.' },
-      { ok: l, t: l ? '산소가 적어, 다른 조건이 같다면 분해가 비교적 느려질 수 있는 환경이었어요.' : '산소가 많아, 다른 조건이 같다면 분해가 비교적 활발할 수 있는 환경이었어요.' },
-      { ok: hard || state.org === 'fern', t: hard ? `${ORGS[state.org].name}에게는 단단한 부분(${state.org === 'clam' ? '껍데기' : '뼈'})이 있어 연한 부분보다 오래 남을 수 있었어요.` : state.org === 'fern' ? '고사리는 단단한 부분은 없지만 잎이 눌린 모양(인상)이 남을 수 있어요.' : '해파리는 단단한 부분이 없어 연한 몸이 대부분 분해되었어요.' },
+      { ok: l, t: l ? '분해가 느린 환경(산소 공급·생물 활동 적음)이라 남은 부분이 사라지기 전에 보존될 가능성이 컸어요.' : '분해가 빠른 환경(산소 공급·생물 활동 많음)이라 남은 부분도 훼손될 가능성이 컸어요.' },
+      { chip: '몸의 특징', t: hard ? `${ORGS[state.org].name}에게는 단단한 부분(${state.org === 'clam' ? '껍데기' : '뼈'})이 있어 연한 부분보다 오래 남을 수 있어요.` : state.org === 'fern' ? '고사리는 단단한 부분은 없지만 잎이 눌린 모양(압축·인상)이 남을 수 있어요.' : '해파리는 단단한 부분이 없어 연한 몸이 대부분 분해돼요.' },
     ];
   }
 
+  // 실험 중 생물·조건 선택 잠금
+  const lockPicks = b => $$('#org-grid button.org, #seg-burial button, #seg-oxy button').forEach(x => { x.disabled = b; });
   async function run() {
-    if (busy) return; busy = true; $('#t2-run').disabled = true;
+    if (busy) return; busy = true; $('#t2-run').disabled = true; lockPicks(true); setPaused(false);
     showIdle(); $('#result2').classList.remove('show');
     if (state.org === 'fern') { await runFern(); return; }
     const hard = ORGS[state.org].hard, fast = state.burial === 'fast', low = state.oxy === 'low';
@@ -990,35 +1046,44 @@ function drawExplorer() {
     css(orgG, { transform: `translate(470px,${oy}px)` + rot }, 1400); await sleep(1600);
     // 2. 매몰
     if (fast) {
-      cap('<b>빠른 매몰</b> — 퇴적물이 유해를 빠르게 덮어요. 먹히거나 물살에 흩어질 가능성이 줄어들어요.', '매몰');
+      cap('<b>빠른 매몰</b> — 퇴적물이 유해를 빠르게 덮어요. 먹히거나 물의 흐름에 흩어질 가능성이 줄어들어요.', '매몰');
       await deposit(layers[0], 272, 2600, fx, 20, 940, 150);
     } else {
-      cap('<b>느린 매몰</b> — 유해가 바닥에 오래 드러나 있어요. 청소동물에게 먹히거나 물살에 흩어지고 부서질 수 있어요.', '방치');
+      const SLOWCAP = {
+        dino: '유해가 바닥에 오래 드러나 있어요. 오래 드러나 있으면 다른 동물에게 먹히거나 뼈가 흩어질 수 있어요.',
+        clam: '유해가 바닥에 오래 드러나 있어요. 껍데기가 흩어지거나 부서질 수 있어요.',
+        jelly: '유해가 바닥에 오래 드러나 있어요. 다른 동물에게 먹히거나 분해되어 형태가 사라질 수 있어요.',
+      };
+      cap('<b>느린 매몰</b> — ' + (SLOWCAP[state.org] || SLOWCAP.jelly), '방치');
       css(crab, { transform: 'translate(-60px,372px)', opacity: 1 }, 0); await sleep(50);
       css(crab, { transform: 'translate(400px,372px)', opacity: 1 }, 1500);
-      css(scav, { transform: 'translate(1050px,300px) scale(-1,1)', opacity: 1 }, 0); await sleep(50);
-      css(scav, { transform: 'translate(560px,330px) scale(-1,1)', opacity: 1 }, 1500);
+      css(shrimpA, { transform: 'translate(1020px,372px) scale(-1.2,1.2)', opacity: 1 }, 0);
+      css(shrimpB, { transform: 'translate(-80px,368px) scale(1.1,1.1)', opacity: 1 }, 0); await sleep(50);
+      css(shrimpA, { transform: 'translate(580px,368px) scale(-1.2,1.2)', opacity: 1 }, 1500);
+      css(shrimpB, { transform: 'translate(330px,370px) scale(1.1,1.1)', opacity: 1 }, 1800);
       await sleep(1600);
       for (let i = 0; i < 3; i++) { css(crab, { transform: 'translate(400px,362px) rotate(-8deg)', opacity: 1 }, 150); await sleep(160); css(crab, { transform: 'translate(400px,372px)', opacity: 1 }, 150); await sleep(160); }
       css(softOf(), { opacity: 0 }, 1200);
       piecesOf().forEach(p => pieceStyle(p, { transform: `translate(${rnd(-90, 90)}px,${rnd(-10, 14)}px) rotate(${rnd(-60, 60)}deg)` }, 1400));
       await sleep(1500);
-      css(crab, { transform: 'translate(1050px,372px)', opacity: 0 }, 1200); css(scav, { transform: 'translate(-100px,300px) scale(-1,1)', opacity: 0 }, 1200);
+      css(crab, { transform: 'translate(1050px,372px)', opacity: 0 }, 1200);
+      css(shrimpA, { transform: 'translate(1080px,372px) scale(-1.2,1.2)', opacity: 0 }, 1200);
+      css(shrimpB, { transform: 'translate(-120px,368px) scale(1.1,1.1)', opacity: 0 }, 1200);
       cap('한참 뒤에야 퇴적물이 남은 조각을 덮어요.', '매몰');
       await deposit(layers[0], 272, 3000, fx, 20, 940, 150);
     }
     // 단면 보기: 복제본을 지층 위에 반투명하게
     ghostG.innerHTML = ''; body = org.cloneNode(true); ghostG.appendChild(body);
     css(ghostG, { transform: orgG.style.transform, opacity: 0 }, 0); css(orgG, { opacity: 0 }, 0);
-    cap('완전히 묻혔어요. 지층 속을 <b>단면</b>으로 들여다볼게요.', '매몰');
+    cap('유해가 퇴적물에 완전히 묻혔어요.', '매몰');
     css(ghostG, { opacity: .75 }, 900); await sleep(1200);
     // 3. 분해 환경
     if (low) {
-      cap('<b>산소가 적은 환경</b> — 다른 조건이 같다면 분해가 비교적 느리게 일어날 수 있어요. 연한 부분이 사라지는 동안 단단한 부분이나 몸의 흔적이 남을 가능성이 커져요.', '분해 느림');
+      cap('<b>분해가 느린 환경</b> — 산소 공급과 생물의 활동이 적어 분해가 비교적 느리게 진행돼요.', '분해 느림');
       css(dark, { opacity: .45 }, 1200);
       css(softOf(), { opacity: 0 }, 2500); await sleep(2600);
     } else {
-      cap('<b>산소가 많은 환경</b> — 다른 조건이 같다면 분해가 비교적 빠르게 일어날 수 있어요. 연한 부분이 사라지고 남은 부분도 훼손될 가능성이 커져요.', '분해 빠름');
+      cap('<b>분해가 빠른 환경</b> — 산소 공급과 생물의 활동이 많아 분해가 빠르게 진행돼요.', '분해 빠름');
       css(germs, { opacity: 1 }, 400); bubbles(fxWater, 380, 600, 160, 370, 30, 2200);
       css(softOf(), { opacity: 0 }, 1200);
       await sleep(1400);
@@ -1027,23 +1092,28 @@ function drawExplorer() {
     }
     if (hard && !fast && low) { const ps = piecesOf(); ps.slice(0, ps.length - 1).forEach(p => pieceStyle(p, { opacity: 0 }, 900)); await sleep(900); }
     // 4. 시간 경과: 지층이 계속 쌓이고 굳음 (압축·교결)
-    cap('오랜 시간이 흐르며 그 위로 퇴적물이 계속 쌓여요.', '화석화 작용');
+    cap('오랜 시간이 흐르며 그 위로 퇴적물이 계속 쌓여요.', '퇴적층 형성');
     css(dark, { opacity: 0 }, 1200);
     await deposit(layers[1], 228, 1800, fx, 20, 940, 150); await deposit(layers[2], 188, 1600, fx, 20, 940, 150);
-    cap('퇴적물이 <b>압축되고 교결</b>되어 암석으로 굳어요. 남은 뼈의 빈틈에는 광물이 채워질 수도 있어요.', '암석화');
+    const MINCAP = {
+      dino: '남은 뼈의 빈틈에는 광물이 침전해 채워질 수 있어요.',
+      clam: '껍데기는 그대로 남거나, 껍데기 성분 일부가 변하기도 해요.',
+      jelly: '남은 것이 있다면 눌린 자국 정도의 희미한 흔적이에요.',
+    };
+    cap(`퇴적물이 <b>압축되고 교결</b>되어 암석으로 굳어요. ${MINCAP[state.org] || ''}`, '암석화');
     const v = verdict(); const boneCol = '#8A8276';
     layers.forEach((l, i) => css(l, { fill: ROCKC[i] }, 2200));
     body.querySelectorAll('.hard path, .hard ellipse').forEach(p => { if (p.getAttribute('fill') && p.getAttribute('fill') !== 'none') css(p, { fill: boneCol }, 2200); if (p.getAttribute('stroke') && p.getAttribute('stroke') !== '#24303A') css(p, { stroke: boneCol }, 2200); });
     await sleep(2400);
     // 5. 융기 → 침식 → 노출
-    cap('지층이 지표 가까이 <b>올라온</b> 뒤 위쪽 암석이 침식돼요. 무엇이 남았을까요?', '융기');
+    cap('지각 변동으로 지층이 서서히 <b>지표 가까이 올라와요</b>.', '융기');
     await uplift(ground, scene.water, 60, 2200, () => css(hillsG, { opacity: 1 }, 1800));
-    cap('지층이 지표 가까이 올라온 뒤 위쪽 암석이 <b>침식</b>돼요. 무엇이 남았을까요?', '침식');
+    cap('지표에 드러난 암석이 비와 바람에 <b>깎여 나가요</b>. 무엇이 남았을까요?', '침식');
     await erode(layers[2], 900, fx); await erode(layers[1], 900, fx); await erode(layers[0], 1100, fx);
     css(ghostG, { opacity: 1 }, 400);
     if (v === 'impression') { const imp = E('ellipse', { cx: 0, cy: 0, rx: 62, ry: 26, fill: 'none', stroke: '#B7A98E', 'stroke-width': 5, 'stroke-dasharray': '10 6', opacity: 0 }); ghostG.appendChild(imp); css(imp, { opacity: 1 }, 800); }
     showResult(v);
-    busy = false; $('#t2-run').disabled = false;
+    busy = false; $('#t2-run').disabled = false; lockPicks(false);
   }
 
   /* ---- 고사리 전용 화석화: 잎 낙하 → 침강 → 매몰 → 압착 → 암석화 → 갈라짐 → 인상 ---- */
@@ -1063,7 +1133,7 @@ function drawExplorer() {
     css(orgG, { transform: 'translate(480px,368px) rotate(90deg)' }, 2200); await sleep(2400);
     // 3. 매몰 (조건 반영)
     if (!fast) {
-      cap('잎이 바닥에 오래 드러나 있어요. 그동안 잎이 분해되고 찢어져요…', '방치');
+      cap('<b>느린 매몰</b> — 잎이 바닥에 오래 드러나 있어요. 잎이 분해되거나 물의 흐름에 찢어지고 흩어질 수 있어요.', '방치');
       css(germs, { opacity: 1 }, 400); bubbles(fxWater, 380, 600, 160, 370, 22, 2200);
       org.querySelectorAll('.soft path').forEach((p, i) => css(p, { opacity: i % 2 ? 0 : .55 }, 1600));
       await sleep(1900); css(germs, { opacity: 0 }, 500);
@@ -1073,8 +1143,8 @@ function drawExplorer() {
       cap('새로운 고운 퇴적물이 잎을 <b>빠르게</b> 덮어요.', '매몰');
       await deposit(layers[0], 272, 2600, fx, 20, 940, 150);
     }
-    if (low) { cap('<b>산소가 적은 환경</b> — 분해가 비교적 느려 잎의 모양이 유지될 가능성이 커져요.', '분해 느림'); css(dark, { opacity: .45 }, 1000); await sleep(1500); }
-    else { cap('<b>산소가 많은 환경</b> — 묻힌 뒤에도 잎의 조직이 비교적 빠르게 분해돼요.', '분해 빠름'); css(germs, { opacity: 1 }, 400); await sleep(1500); css(germs, { opacity: 0 }, 400); }
+    if (low) { cap('<b>분해가 느린 환경</b> — 산소 공급과 생물의 활동이 적어 분해가 비교적 느리게 진행돼요. 잎의 모양이 유지될 가능성이 커져요.', '분해 느림'); css(dark, { opacity: .45 }, 1000); await sleep(1500); }
+    else { cap('<b>분해가 빠른 환경</b> — 산소 공급과 생물의 활동이 많아 묻힌 잎의 조직도 비교적 빠르게 분해돼요.', '분해 빠름'); css(germs, { opacity: 1 }, 400); await sleep(1500); css(germs, { opacity: 0 }, 400); }
     // 단면 보기: 잎을 반투명하게
     ghostG.innerHTML = '';
     const flat = drawFern(.85);
@@ -1083,13 +1153,15 @@ function drawExplorer() {
     ghostG.appendChild(flat); ghostG.style.transformOrigin = '0 0';
     css(ghostG, { transform: 'translate(480px,368px) rotate(90deg) scale(1,1)', opacity: .8 }, 0);
     css(orgG, { opacity: 0 }, 0);
-    // 4. 퇴적층이 쌓이며 납작하게 눌림 (깃 모양 배열은 유지)
-    cap('위로 퇴적층이 계속 쌓이면서 잎이 <b>납작하게 눌려요</b>. 깃 모양의 잎 배열은 그대로 남아요.', '눌림');
+    // 4. 퇴적층이 쌓이며 납작하게 눌림 (조건에 따라 남는 정도가 다름)
+    cap('위로 퇴적층이 계속 쌓이면서 잎이 <b>납작하게 눌려요</b>.', '퇴적층 형성');
     css(dark, { opacity: 0 }, 1000);
     const dep1 = deposit(layers[1], 228, 2400, fx, 20, 940, 150);
     css(ghostG, { transform: 'translate(480px,371px) rotate(90deg) scale(.5,1)' }, 2400);
     await dep1;
-    cap('잎의 연한 조직과 원래 성분은 대부분 사라지고, <b>눌린 모양</b>만 남아요.', '눌림');
+    cap(v === 'plant' ? '잎이 납작하게 눌리며 <b>깃 모양의 잎 배열</b>이 비교적 선명하게 남아요.'
+      : v === 'plantPartial' ? '남은 잎 조각이 퇴적물에 눌려 <b>일부 모양만</b> 남아요.'
+        : '잎이 분해되고 흩어져 <b>희미한 흔적만</b> 남거나 화석으로 남지 못해요.', '눌림');
     const dep2 = deposit(layers[2], 188, 2200, fx, 20, 940, 150);
     css(ghostG, { transform: 'translate(480px,373px) rotate(90deg) scale(.22,1)' }, 2200);
     flat.querySelectorAll('path').forEach(p => { if (p.getAttribute('fill') && p.getAttribute('fill') !== 'none') css(p, { fill: '#7A6248' }, 2200); css(p, { stroke: '#5A4634' }, 2200); });
@@ -1098,8 +1170,9 @@ function drawExplorer() {
     cap('퇴적물이 <b>압축되고 교결</b>되어 암석으로 굳어요.', '암석화');
     layers.forEach((l, i) => css(l, { fill: ROCKC[i] }, 2000)); await sleep(2200);
     // 6. 융기·침식 후 암석이 갈라짐
-    cap('지층이 지표 가까이 올라온 뒤 위쪽 암석이 <b>침식</b>돼요.', '융기·침식');
+    cap('지각 변동으로 지층이 서서히 <b>지표 가까이 올라와요</b>.', '융기');
     await uplift(ground, scene.water, 60, 2000, () => css(hillsG, { opacity: 1 }, 1600));
+    cap('지표에 드러난 암석이 비와 바람에 <b>깎여 나가요</b>.', '침식');
     await erode(layers[2], 800, fx); await erode(layers[1], 800, fx);
     css(ghostG, { opacity: 0 }, 300);
     // 7. 갈라진 암석 면에 인상이 드러남 (앞면 뷰)
@@ -1124,9 +1197,10 @@ function drawExplorer() {
     ]);
     lbl.style.opacity = 0; slabFX.appendChild(lbl); css(lbl, { opacity: 1 }, 500);
     showResult(v);
-    busy = false; $('#t2-run').disabled = false;
+    busy = false; $('#t2-run').disabled = false; lockPicks(false);
   }
   $('#t2-run').onclick = run;
+  registerPauseBtn($('#t2-pause'));
   showIdle();
 })();
 
@@ -1151,10 +1225,9 @@ function drawExplorer() {
       E('radialGradient', { id: 'bread-burnt', cx: .4, cy: .35, r: .8 }, [E('stop', { offset: 0, 'stop-color': '#4A2E1C' }), E('stop', { offset: 1, 'stop-color': '#1F120A' })]),
     ]));
     svg.appendChild(E('rect', { x: -300, y: -300, width: 1560, height: 1200, fill: '#FFE9C7' }));
-    // 가게 배경: 카운터, 간판
+    // 가게 배경: 카운터
     svg.appendChild(E('rect', { x: -300, y: 430, width: 1560, height: 300, fill: '#B9744A', stroke: '#24303A', 'stroke-width': 4 }));
     svg.appendChild(E('rect', { x: -300, y: 430, width: 1560, height: 18, fill: '#8A5230' }));
-    svg.appendChild(E('g', { class: 'sign' }, [E('rect', { x: 660, y: 30, width: 280, height: 64, rx: 14, fill: '#E8553E', stroke: '#24303A', 'stroke-width': 4 }), E('text', { x: 800, y: 73, 'text-anchor': 'middle', 'font-family': 'Jua', 'font-size': 27, fill: '#fff', text: '몰드·캐스트 붕어빵집' })]));
     // 불판 받침
     svg.appendChild(E('rect', { x: 120, y: 400, width: 500, height: 36, rx: 8, fill: '#2C2C34', stroke: '#24303A', 'stroke-width': 4 }));
     const flames = E('g', { class: 'flames' }); flames.style.opacity = 0;
@@ -1165,7 +1238,11 @@ function drawExplorer() {
     mold.style.transformOrigin = '370px 312px';
     const bottom = E('g', { class: 'bottom' }, [
       E('rect', { x: 140, y: 214, width: 460, height: 196, rx: 24, fill: 'url(#iron)', stroke: '#24303A', 'stroke-width': 5 }),
-      E('rect', { x: 40, y: 292, width: 110, height: 26, rx: 10, fill: '#2C2C34', stroke: '#24303A', 'stroke-width': 4 }),
+      E('g', {}, [
+        E('rect', { class: 'handle', x: 38, y: 290, width: 114, height: 30, rx: 14, fill: '#2C2C34', stroke: '#24303A', 'stroke-width': 4 }),
+        E('rect', { x: 38, y: 290, width: 28, height: 30, rx: 13, fill: '#4A4A56', stroke: '#24303A', 'stroke-width': 3 }),
+        E('path', { d: 'M84 296 L84 314 M100 296 L100 314 M116 296 L116 314', stroke: '#6A6A78', 'stroke-width': 4, 'stroke-linecap': 'round' }),
+      ]),
       E('g', { transform: 'translate(370,312) scale(1,.94)' }, [
         E('path', { class: 'cavity', d: FISH, fill: '#2A2A32', stroke: '#1A1A20', 'stroke-width': 4 }),
         E('g', { 'clip-path': 'url(#fishclip)' }, [
@@ -1177,7 +1254,11 @@ function drawExplorer() {
     ]);
     const lid = E('g', { class: 'lid' }, [
       E('rect', { x: 140, y: 214, width: 460, height: 196, rx: 24, fill: 'url(#iron)', stroke: '#24303A', 'stroke-width': 5 }),
-      E('rect', { x: 590, y: 292, width: 110, height: 26, rx: 10, fill: '#2C2C34', stroke: '#24303A', 'stroke-width': 4 }),
+      E('g', {}, [
+        E('rect', { class: 'handle', x: 588, y: 290, width: 114, height: 30, rx: 14, fill: '#2C2C34', stroke: '#24303A', 'stroke-width': 4 }),
+        E('rect', { x: 674, y: 290, width: 28, height: 30, rx: 13, fill: '#4A4A56', stroke: '#24303A', 'stroke-width': 3 }),
+        E('path', { d: 'M624 296 L624 314 M640 296 L640 314 M656 296 L656 314', stroke: '#6A6A78', 'stroke-width': 4, 'stroke-linecap': 'round' }),
+      ]),
       E('path', { d: FISH, transform: 'translate(370,312) scale(1,.94)', fill: 'none', stroke: '#24303A', 'stroke-width': 4, opacity: .5 }),
       E('text', { x: 370, y: 324, 'text-anchor': 'middle', 'font-family': 'Jua', 'font-size': 30, fill: '#9A9AA6', text: '붕어빵' }),
     ]);
@@ -1254,19 +1335,46 @@ function drawExplorer() {
     stepBake(1);
   }
   let doneness = [];
+  /* 손잡이 안내: 손가락 포인터 + 회전 화살표 + 문구 */
+  function showFlipHint() {
+    const g = E('g', { class: 'fliphint' });
+    g.appendChild(E('rect', { x: 14, y: 234, width: 224, height: 38, rx: 10, fill: '#FFFDF8', stroke: '#24303A', 'stroke-width': 3 }));
+    g.appendChild(E('text', { x: 126, y: 260, 'text-anchor': 'middle', 'font-family': 'Jua', 'font-size': 18, fill: '#24303A', text: '손잡이를 눌러 뒤집어요' }));
+    g.appendChild(E('text', { x: 158, y: 340, 'font-size': 30, fill: '#E8553E', text: '↻' }));
+    const hand = E('text', { x: 72, y: 368, 'font-size': 40, text: '👆' });
+    hand.style.transformBox = 'fill-box'; hand.style.transformOrigin = 'center';
+    hand.style.animation = 'presspt .7s ease-in-out infinite alternate';
+    g.appendChild(hand);
+    svg.appendChild(g);
+    return g;
+  }
   function stepBake(round) {
     phase = 'bake' + round;
     const first = round === 1;
-    setCap(first ? '<b>④ 굽기</b> — 게이지가 <b>초록 구간</b>에 들어왔을 때 <b>뒤집기</b>! 너무 빠르면 덜 익고, 놓치면 타 버려요.' : '<b>④ 굽기</b> — 뒷면도 구워요. 초록 구간에서 <b>꺼내기</b>!', first ? '④ 굽기' : '④ 굽기 (뒷면)');
+    setCap(first ? '<b>④ 굽기</b> — 게이지가 <b>초록 구간</b>에 들어왔을 때 <b>손잡이를 눌러 뒤집기</b>! 너무 빠르면 덜 익고, 놓치면 타 버려요.' : '<b>④ 굽기</b> — 뒷면도 구워요. 초록 구간에서 <b>손잡이를 눌러 꺼내요</b>!', first ? '④ 굽기' : '④ 굽기 (뒷면)');
     css(S.flames, { opacity: 1 }, 300); css(S.steam, { opacity: .8 }, 800);
+    buttons([]);
+    const hint = showFlipHint();
+    const handles = Array.from(svg.querySelectorAll('.handle'));
+    const st = $('#stage3');
     const gw = $('#gauge3'); gw.classList.add('show');
     const zone = [58, 82]; $('#g3-zone').style.left = zone[0] + '%'; $('#g3-zone').style.width = (zone[1] - zone[0]) + '%';
-    $('#g3-label').textContent = first ? '초록 구간에서 뒤집기!' : '초록 구간에서 꺼내기!';
+    $('#g3-label').textContent = first ? '초록 구간에서 손잡이 눌러 뒤집기!' : '초록 구간에서 손잡이 눌러 꺼내기!';
     let v = 0, t0 = performance.now(), dur = 4200, live = true;
-    const loop = now => { if (!live) return; v = Math.min(100, (now - t0) / dur * 100); $('#g3-fill').style.width = v + '%'; $('#g3-needle').style.left = `calc(${v}% - 2px)`; if (v >= 100) { live = false; finish('burnt'); return; } gaugeRAF = requestAnimationFrame(loop); };
+    const loop = now => {
+      if (!live) return;
+      v = Math.min(100, (now - t0) / dur * 100); $('#g3-fill').style.width = v + '%'; $('#g3-needle').style.left = `calc(${v}% - 2px)`;
+      const inZone = v >= zone[0] && v <= zone[1];
+      hint.style.filter = inZone ? 'drop-shadow(0 0 8px #FFD24D)' : '';
+      handles.forEach(h => h.setAttribute('fill', inZone ? '#E8A93B' : '#2C2C34'));
+      if (v >= 100) { live = false; finish('burnt'); return; }
+      gaugeRAF = requestAnimationFrame(loop);
+    };
     gaugeRAF = requestAnimationFrame(loop);
     const finish = async (kind) => {
-      doneness.push(kind); buttons([]);
+      doneness.push(kind);
+      hint.remove(); st.onpointerdown = null; st.onkeydown = null; st.classList.remove('hint');
+      handles.forEach(h => h.setAttribute('fill', '#2C2C34'));
       if (kind === 'raw') toast(first ? '앗, 아직 덜 익었는데 뒤집었어요!' : '덜 익은 채로 꺼냈어요!', 'bad');
       else if (kind === 'burnt') toast(first ? '너무 늦었어요… 한쪽이 탔어요!' : '뒷면이 타 버렸어요!', 'bad');
       else toast(first ? '뒤집기 성공!' : '완벽하게 구웠어요!', 'good');
@@ -1275,7 +1383,12 @@ function drawExplorer() {
       else { css(S.mold, { transform: 'rotate(360deg)' }, 800); await sleep(1400); gw.classList.remove('show'); css(S.flames, { opacity: 0 }, 400); stepOpen(); }
     };
     const act = () => { if (!live) return; live = false; cancelAnimationFrame(gaugeRAF); finish(v < zone[0] ? 'raw' : v > zone[1] ? 'burnt' : 'good'); };
-    buttons([[first ? '🔄 뒤집기!' : '🍞 꺼내기!', act, 'primary big']]);
+    // 손잡이·틀 본체(무대 전체) 클릭/터치 + Enter/Space 키 지원
+    st.classList.add('hint');
+    st.onpointerdown = ev => { ev.preventDefault(); act(); };
+    st.tabIndex = 0;
+    st.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act(); } };
+    st.focus({ preventScroll: true });
     S.flames.querySelectorAll('path').forEach((p, i) => { p.style.transformBox = 'fill-box'; p.style.transformOrigin = 'bottom center'; p.style.animation = `flick ${.35 + i * .04}s ease-in-out infinite alternate`; });
   }
   async function stepOpen() {
@@ -1293,7 +1406,6 @@ function drawExplorer() {
     css(S.bread, { transform: 'translate(370px,312px) scale(.94)', opacity: 1 }, 300); await sleep(400);
     css(S.bread, { transform: 'translate(730px,310px) scale(.94)', opacity: 1 }, 900); await sleep(1000);
     // 라벨
-    css(svg.querySelector('.sign'), { opacity: 0 }, 400);
     const L = S.labels; L.innerHTML = '';
     const card = (x, y, w, title, sub, col) => E('g', {}, [
       E('rect', { x, y, width: w, height: 84, rx: 14, fill: '#fff', stroke: '#24303A', 'stroke-width': 4 }),
@@ -1307,7 +1419,7 @@ function drawExplorer() {
     css(L, { opacity: 1 }, 600);
     css(S.steam, { opacity: 0 }, 600);
     setCap((outcome === 'good' ? '' : '재료가 어떻든 <b>모양은 틀이 정해요</b>. ') + '<b>몰드</b>는 붕어빵 모양으로 <b>움푹 파인 틀</b>, <b>캐스트</b>는 그 틀을 채워 만들어진 <b>붕어빵</b>이에요. 화석의 몰드와 캐스트도 이와 <b>비슷한 관계</b>예요.', '몰드 vs 캐스트');
-    buttons([['🐚 실제 화석에서는?', fossilA, 'primary big'], ['↺ 다시 굽기', start]]);
+    buttons([['↺ 다시 굽기', start], ['🐚 실제 화석에서는?', fossilA, 'primary big']]);
   }
 
   /* ---------- 실제 화석: 암모나이트 ---------- */
@@ -1363,7 +1475,7 @@ function drawExplorer() {
     buttons([['다음 ▶ 굳어요', fossilB, 'primary']]);
   }
   async function fossilB() {
-    setCap('<b>② 암석화</b> — 지층이 계속 쌓여 퇴적물이 <b>압축되고 교결</b>되어 <b>퇴적암</b>으로 굳어요. 껍데기는 암석이 된 지층 속에 꼭 끼어 있어요.', '화석 ②');
+    setCap('<b>② 암석화</b> — 지층이 계속 쌓이면서 껍데기를 둘러싼 퇴적물이 <b>압축되고 교결</b>되어 <b>퇴적암</b>으로 굳어요.', '화석 ②');
     const RC = ['#A88F62', '#9E9282', '#B39A6A', '#8F7A50'];
     R.rock.querySelectorAll('.band').forEach((b, i) => css(b, { fill: RC[i] }, 2000)); css(R.rock.querySelector('.grains'), { opacity: .35 }, 2000);
     svg.querySelector('.rocktitle').textContent = '지층 단면 (굳어서 퇴적암이 됨)';
@@ -1405,7 +1517,7 @@ function drawExplorer() {
       if (kind === 'mold') { fo.appendChild(E('rect', { x: -100, y: -100, width: 200, height: 200, rx: 30, fill: '#8A8276', stroke: '#24303A', 'stroke-width': 5 })); fo.appendChild(ammonite('#3A3632', '#B5AEA3')); }
       else { fo.appendChild(ammonite('#9AA5B1', '#4A5763')); }
       g.appendChild(fo);
-      g.appendChild(E('text', { x: 320, y: 322, 'text-anchor': 'middle', 'font-family': 'Jua', 'font-size': 20, fill: '#24303A', text: kind === 'mold' ? '암석에 남은 빈 자국' : '빈 자국을 채운 돌' }));
+      g.appendChild(E('text', { x: 320, y: 322, 'text-anchor': 'middle', 'font-family': 'Jua', 'font-size': 20, fill: '#24303A', text: kind === 'mold' ? '암석에 남은 빈 자국' : '빈 공간을 채워 굳은 물질' }));
       g.appendChild(E('text', { x: 220, y: 380, 'text-anchor': 'middle', 'font-family': 'Noto Sans KR', 'font-size': 16, fill: '#4A5763', text: kind === 'mold' ? '생물의 겉모양이 찍힌 "틀"' : '틀 속을 채워 생물 모양이 된 "모형"' }));
       return g;
     };
@@ -1416,7 +1528,7 @@ function drawExplorer() {
     buttons([['↺ 처음부터 (붕어빵 굽기)', start], ['🐚 화석 과정 다시 보기', fossilA]]);
   }
   // 불꽃 애니메이션 keyframes
-  const st = document.createElement('style'); st.textContent = '@keyframes flick{from{transform:scaleY(.8) scaleX(1.05)}to{transform:scaleY(1.15) scaleX(.9)}} @keyframes bob{from{transform:translate(0,-202px)}to{transform:translate(0,-190px)}}'; document.head.appendChild(st);
+  const st = document.createElement('style'); st.textContent = '@keyframes flick{from{transform:scaleY(.8) scaleX(1.05)}to{transform:scaleY(1.15) scaleX(.9)}} @keyframes bob{from{transform:translate(0,-202px)}to{transform:translate(0,-190px)}} @keyframes presspt{from{transform:translateY(0)}to{transform:translateY(-10px)}}'; document.head.appendChild(st);
   tabInit[3] = () => { if (phase === 'idle') start(); };
 })();
 
@@ -1585,8 +1697,8 @@ function drawExplorer() {
       burrows.forEach(b => { const [x, y] = b[Math.floor(b.length / 2)]; ctx.strokeStyle = '#E8553E'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(x, y, 34, 0, 7); ctx.stroke(); });
     }
   }
-  const CAPS_FOOT = [[0, '부드러운 퇴적물에 발자국이 남았어요. 자국이 물이나 다른 생물에 의해 <b>흐트러지기 전에 덮여야</b> 해요.', '① 발자국 유지'], [.14, '<b>새로운 퇴적물</b>이 발자국을 덮어요. 자국이 흐트러지지 않고 보존될 가능성이 커져요.', '② 매몰'], [.34, '<b>옆에서 자른 단면</b>으로 볼게요. 오목한 발자국 위에 새로운 퇴적물이 쌓이고 있어요.', '단면 보기'], [.46, '그 위로 지층이 <b>계속 쌓여요</b>.', '② 매몰'], [.52, '오랜 시간이 지나 퇴적물이 <b>압축되고 교결</b>되어 단단한 암석으로 굳어요.', '③ 암석화'], [.66, '지층이 지표 가까이 드러난 뒤 <b>위쪽 암석이 침식</b>되면서 발자국이 남은 층의 경계가 나타나요.', '④ 침식'], [.84, '다시 <b>위에서 본 모습</b>이에요.', '⑤ 노출'], [.9, '<b>발자국 화석!</b> 생물의 몸은 없지만 생물이 <b>걸어간 행동</b>이 기록된 <b>생흔 화석</b>이에요.', '⑤ 생흔 화석']];
-  const CAPS_BUR = [[0, '생물이 떠난 굴이 <b>주변과 다른 퇴적물로 채워지거나</b>, 생물이 이동하며 뒤채움한 흔적이 남아요.', '① 굴이 채워짐'], [.25, '그 위로 <b>새 지층</b>이 계속 쌓여요.', '② 매몰'], [.5, '오랜 시간이 지나 퇴적물이 <b>압축되고 교결</b>되어 암석으로 굳어요. 굴을 채운 물질은 주변과 색, 알갱이 크기 또는 단단함이 달라 <b>구별될 수</b> 있어요.', '③ 암석화'], [.7, '위층이 <b>침식</b>되어 굴이 있던 지층이 드러나면…', '④ 침식'], [.95, '<b>굴 화석!</b> 생물의 몸은 남아 있지 않지만, 생물이 <b>굴을 파고 생활했던 행동</b>이 기록된 <b>생흔 화석</b>이에요.', '⑤ 생흔 화석']];
+  const CAPS_FOOT = [[0, '부드러운 퇴적물에 발자국이 남았어요. 자국이 물이나 다른 생물에 의해 <b>흐트러지기 전에 덮여야</b> 해요.', '① 발자국 형성'], [.14, '<b>새로운 퇴적물</b>이 발자국을 덮어요. 자국이 흐트러지지 않고 보존될 가능성이 커져요.', '② 매몰'], [.34, '<b>옆에서 자른 단면</b>으로 볼게요. 오목한 발자국 위에 새로운 퇴적물이 쌓이고 있어요.', '② 매몰'], [.46, '그 위로 지층이 <b>계속 쌓여요</b>.', '③ 퇴적층 형성'], [.52, '오랜 시간이 지나 퇴적물이 <b>압축되고 교결</b>되어 단단한 암석으로 굳어요.', '④ 암석화'], [.66, '지층이 지표 가까이 드러난 뒤 <b>암석이 침식</b>되면서 발자국이 남은 층의 경계가 나타나요.', '⑤ 침식·노출'], [.84, '다시 <b>위에서 본 모습</b>이에요.', '⑤ 침식·노출'], [.9, '<b>발자국 화석!</b> 생물의 몸은 없지만 생물이 <b>걸어간 행동</b>이 기록된 <b>생흔 화석</b>이에요. <small>움푹한 발자국은 몰드로, 그 자국을 채운 퇴적물은 캐스트로 남을 수도 있어요.</small>', '발자국 화석']];
+  const CAPS_BUR = [[0, '생물이 떠난 굴이 <b>주변과 다른 퇴적물로 채워지거나</b>, 생물이 이동하며 뒤채움한 흔적이 남아요.', '① 굴이 채워짐'], [.25, '그 위로 <b>새 지층</b>이 계속 쌓여요.', '② 퇴적층 형성'], [.5, '오랜 시간이 지나 퇴적물이 <b>압축되고 교결</b>되어 암석으로 굳어요. 굴을 채운 물질은 주변과 색, 알갱이 크기 또는 단단함이 달라 <b>구별될 수</b> 있어요.', '③ 암석화'], [.7, '위층이 <b>침식</b>되어 굴이 있던 지층이 드러나면…', '④ 침식·노출'], [.95, '<b>굴 화석!</b> 생물의 몸은 남아 있지 않지만, 생물이 <b>굴을 파고 생활했던 행동</b>이 기록된 <b>생흔 화석</b>이에요. <small>굴의 모양만으로 굴을 만든 정확한 생물을 알아내기 어려운 경우도 있어요.</small>', '굴 화석']];
   function runAnim() {
     if (mode === 'foot' && prints.length === 0) { hint.style.display = ''; hint.firstChild.textContent = '먼저 진흙 위를 드래그해서 발자국을 남겨요!'; return; }
     if (mode === 'burrow' && burrows.length === 0) { hint.style.display = ''; hint.firstChild.textContent = '먼저 퇴적물 속을 드래그해서 굴을 파요!'; return; }
@@ -1709,9 +1821,9 @@ function drawExplorer() {
   }
 
   const QS = [
-    { type: 'pic2', tag: '화석화 조건', q: '어느 쪽이 화석으로 남을 가능성이 더 높을까요? 그림을 눌러 골라 보세요.', options: [{ label: '빠르게 묻힘', art: artBuried }, { label: '오랫동안 노출됨', art: artExposed }], ans: 0, exp: '빨리 묻히면 먹히거나 물살에 흩어지고 분해될 가능성이 줄어들어요.' },
+    { type: 'pic2', tag: '화석화 조건', q: '어느 쪽이 화석으로 남을 가능성이 더 높을까요? 그림을 눌러 골라 보세요.', options: [{ label: '빠르게 묻힘', art: artBuried }, { label: '오랫동안 노출됨', art: artExposed }], ans: 0, exp: '빨리 묻히면 먹히거나 물의 흐름에 흩어지고 분해될 가능성이 줄어들어요.' },
     { type: 'mc', tag: '몰드·캐스트', q: '조개 모양이 암석에 움푹 파인 빈 공간으로 남았어요. 무엇일까요?', art: artMold, choices: ['몰드', '캐스트'], ans: 0, exp: '움푹 남은 빈 공간은 몰드, 그 공간이 다른 물질로 채워져 굳은 모양은 캐스트예요.' },
-    { type: 'ox', tag: '인상 화석 O·X', q: '고사리 잎이 눌려 남은 인상 화석은 체화석이다.', art: artFernRock, ans: 0, exp: '잎은 생물의 몸 일부이므로 잎의 모양이 남은 인상 화석도 체화석이에요.' },
+    { type: 'ox', tag: '인상 화석 O·X', q: '고사리 잎이 눌려 남은 인상 화석은 체화석이에요. 맞으면 O, 틀리면 X를 골라 보세요.', art: artFernRock, ans: 0, exp: '잎은 생물의 몸 일부이므로 잎의 모양이 남은 인상 화석도 체화석이에요.' },
     { type: 'mc', tag: '생흔 화석', q: '생물이 살아 있을 때 판 굴이 지층에 남았어요. 어떤 화석일까요?', art: artBurrow, choices: ['체화석', '생흔 화석'], ans: 1, exp: '굴은 생물의 몸이 아니라 생물이 살아 있을 때 한 행동이 남은 기록이에요.' },
   ];
   let queue = QS.map((_, i) => i), pos = 0, results = QS.map(() => null);
@@ -1778,10 +1890,10 @@ function drawExplorer() {
     const wrong = QS.map((_, i) => i).filter(i => !results[i]);
     const msg = score === QS.length ? '완벽해요! 화석의 핵심 기록을 모두 해독했어요.' : score >= 2 ? '좋아요! 헷갈린 문제만 다시 확인해 볼까요?' : '괜찮아요! 핵심 장면을 다시 보면 금방 알 수 있어요.';
     const box = document.createElement('div'); box.className = 'q';
-    box.innerHTML = `<div class="score show">${QS.length}문제 중 ${score}문제 정답!</div><div style="text-align:center;margin-top:10px;font-size:16px">${msg}</div><div class="review">${QS.map((q, i) => `<span class="rv ${results[i] ? 'ok' : 'no'}">Q${i + 1} ${results[i] ? '○' : '✕'}</span>`).join('')}</div><div class="qctl" style="justify-content:center;flex-wrap:wrap;gap:10px">${wrong.length ? '<button class="btn warn big" id="q-wrong">틀린 문제만 다시 보기</button>' : ''}<button class="btn big" id="q-back">체험으로 돌아가기</button><button class="btn primary big" id="q-restart">↺ 처음부터 다시 풀기</button></div>`;
+    box.innerHTML = `<div class="score show">${QS.length}문제 중 ${score}문제 정답!</div><div style="text-align:center;margin-top:10px;font-size:16px">${msg}</div><div class="review">${QS.map((q, i) => `<span class="rv ${results[i] ? 'ok' : 'no'}">Q${i + 1} ${results[i] ? '○' : '✕'}</span>`).join('')}</div><div class="qctl" style="justify-content:center;flex-wrap:wrap;gap:10px">${wrong.length ? '<button class="btn warn big" id="q-wrong">틀린 문제만 다시 보기</button>' : ''}<button class="btn big" id="q-back">화석화 조건 실험으로 돌아가기</button><button class="btn primary big" id="q-restart">↺ 처음부터 다시 풀기</button></div>`;
     quiz.appendChild(box);
     const w = box.querySelector('#q-wrong'); if (w) w.onclick = () => { queue = wrong; pos = 0; render(); };
-    box.querySelector('#q-back').onclick = () => $('.tab[data-tab="1"]').click();
+    box.querySelector('#q-back').onclick = () => $('.tab[data-tab="2"]').click();
     box.querySelector('#q-restart').onclick = () => { queue = QS.map((_, i) => i); pos = 0; results = QS.map(() => null); render(); };
   }
   render();
