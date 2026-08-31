@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>화석 이야기</title>
+<title>화석 탐구실</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -70,7 +70,7 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 .note{margin-top:14px;padding:12px 16px;border-left:6px solid var(--tab1);background:#fff;border-radius:8px;font-size:15px;color:var(--ink-2)}
 .note b{color:var(--ink)}
 
-/* ---------- 탭2 실험실 ---------- */
+/* ---------- 탭2 화석으로 잘 남으려면? ---------- */
 .lab-grid{display:grid;grid-template-columns:1fr;gap:14px}
 @media(min-width:900px){.lab-grid{grid-template-columns:300px 1fr}}
 .lab-side{display:flex;flex-direction:column;gap:8px}
@@ -84,7 +84,7 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 .org.sel{background:var(--tab2);color:#fff;transform:translateY(-2px)}
 .org small{display:block;font-family:var(--body);font-size:11px;color:inherit;opacity:.85;white-space:nowrap}
 .seg{display:flex;border:3px solid var(--ink);border-radius:12px;overflow:hidden}
-.seg button{flex:1;padding:8px 6px;background:#F4F7FA;color:var(--ink);font-size:16px;line-height:1.2}
+.seg button{flex:1;padding:8px 6px;background:#F4F7FA;color:var(--ink);font-size:16px;line-height:1.2;word-break:keep-all}
 .seg button small{display:block;font-family:var(--body);font-size:11px;opacity:.75}
 .seg button.sel{background:var(--tab2);color:#fff}
 .seg button+button{border-left:3px solid var(--ink)}
@@ -190,6 +190,17 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 /* ---------- 그림형 퀴즈 ---------- */
 #panel5 .q.tall{min-height:min(560px,calc(100dvh - 220px));display:flex;flex-direction:column}
 #panel5 .qbody{flex:1;display:flex;flex-direction:column;justify-content:center}
+/* 탭2 결과 패널 */
+.result .rwrap{padding:10px 14px 12px}
+.rbadge{font-family:var(--display);font-size:14px;padding:3px 12px;border-radius:999px;color:#fff;display:inline-block;border:2px solid var(--ink)}
+.rbadge.b-high{background:var(--ok)} .rbadge.b-mid{background:var(--warn);color:var(--ink)} .rbadge.b-low{background:#B9744A} .rbadge.b-fail{background:var(--bad)} .rbadge.b-rare{background:#8C7BB5}
+.rtitle{font-family:var(--display);font-size:21px;margin:4px 0 2px}
+.rdesc{font-size:14px;color:var(--ink-2);line-height:1.5}
+.rchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.rchip{border:2px solid var(--ink);border-radius:999px;padding:3px 12px;font-size:13px;background:#F4F7FA}
+.rchip.good{background:#E4F3E8;border-color:var(--ok)} .rchip.bad{background:#FBE5E2;border-color:var(--bad)}
+#stage2{transition:width .5s ease}
+#panel2.resulted .stage-wrap{width:min(100%,max(380px,calc((100vh - 430px)*16/9)));width:min(100%,max(380px,calc((100dvh - 430px)*16/9)))}
 .qart{min-height:220px;display:grid;place-items:center;margin:10px 0}
 .qart svg{width:min(500px,100%);height:auto;display:block}
 #ctl3{justify-content:flex-end}
@@ -211,7 +222,8 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 .oxbtn.right{background:var(--ok);color:#fff} .oxbtn.right small{color:#fff}
 .oxbtn.wrong{background:var(--bad);color:#fff} .oxbtn.wrong small{color:#fff}
 #panel5 .choices .choice{font-family:var(--display);font-size:19px;padding:14px;text-align:center}
-.fossil-tag{display:inline-block;background:#fff;color:var(--ink);border-radius:999px;padding:2px 12px;font-size:14px;font-family:var(--body);font-weight:700;margin-left:8px;vertical-align:middle}
+.fossil-tag{display:inline-block;background:#FFF3D6;color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;font-size:14px;font-family:var(--body);font-weight:700;margin-left:8px;vertical-align:middle}
+.fossil-tag[hidden]{display:none}
 @keyframes popok{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
 .pop{animation:popok .45s ease}
 @media(max-width:600px){.pic2{grid-template-columns:1fr}.oxbtn{width:92px;height:92px}}
@@ -219,11 +231,11 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 </head>
 <body>
 <header class="top">
-  <div class="brand"><h1>화석 이야기</h1><span class="sub">생물의 몸과 흔적은 어떻게 지층에 기록될까?</span></div>
+  <div class="brand"><h1>화석 탐구실</h1><span class="sub">생물의 몸과 흔적은 어떻게 지층에 기록될까?</span></div>
 </header>
 <nav class="tabs" role="tablist">
-  <button class="tab active" data-tab="1" role="tab"><span class="num">1</span>화석이 남는 과정</button>
-  <button class="tab" data-tab="2" role="tab"><span class="num">2</span>화석화 조건 실험</button>
+  <button class="tab active" data-tab="1" role="tab"><span class="num">1</span>화석 형성 과정</button>
+  <button class="tab" data-tab="2" role="tab"><span class="num">2</span>화석으로 잘 남으려면?</button>
   <button class="tab" data-tab="3" role="tab"><span class="num">3</span>몰드·캐스트</button>
   <button class="tab" data-tab="4" role="tab"><span class="num">4</span>생흔 화석</button>
   <button class="tab" data-tab="5" role="tab"><span class="num">5</span>핵심 퀴즈</button>
@@ -241,8 +253,8 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
     <button class="btn" id="t1-prev">◀ 이전</button>
     <div class="steps" id="t1-steps"></div>
     <div class="spacer"></div>
-    <button class="btn" id="t1-pause">⏸ 일시 정지</button>
     <button class="btn ghost" id="t1-reset">↺ 처음부터</button>
+    <button class="btn" id="t1-pause">⏸ 일시 정지</button>
     <button class="btn primary" id="t1-next">다음 ▶</button>
   </div>
 </section>
@@ -259,14 +271,14 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
       <div class="card">
         <h3>얼마나 빨리 묻히나요?</h3>
         <div class="seg" id="seg-burial">
-          <button data-v="fast" class="sel">빠르게 매몰<small>바로 퇴적물에 덮임</small></button>
+          <button data-v="fast">빠르게 매몰<small>바로 퇴적물에 덮임</small></button>
           <button data-v="slow">느리게 매몰<small>바닥에 오래 방치</small></button>
         </div>
       </div>
       <div class="card">
-        <h3>어떤 환경인가요?</h3>
+        <h3>분해는 얼마나 빠를까요?</h3>
         <div class="seg" id="seg-oxy">
-          <button data-v="low" class="sel">분해가 느린 환경<small>산소 공급·생물 활동이 적음</small></button>
+          <button data-v="low">분해가 느린 환경<small>산소 공급·생물 활동이 적음</small></button>
           <button data-v="high">분해가 빠른 환경<small>산소 공급·생물 활동이 많음</small></button>
         </div>
       </div>
@@ -274,16 +286,22 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
     <div>
       <div class="stage-wrap" id="stage2">
         <svg id="svg2" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice"></svg>
-        <div class="badge" id="badge2">실험 준비</div>
-        <div class="caption" id="cap2">왼쪽에서 생물과 조건을 고른 뒤 <b>실험 시작</b>을 눌러 보세요.</div>
+        <div class="badge" id="badge2">준비</div>
+        <div class="caption" id="cap2">왼쪽에서 <b>생물</b>과 조건을 모두 고르면 <b>⏳ 시간을 앞으로!</b> 버튼이 켜져요.</div>
       </div>
+      <div class="result" id="result2"><div class="rwrap">
+        <span class="rbadge" id="r2-badge"></span><span class="fossil-tag" id="r2-tag" hidden>체화석</span>
+        <div class="rtitle" id="result2-title"></div>
+        <div class="rdesc" id="result2-desc"></div>
+        <div class="rchips" id="result2-list"></div>
+        <div class="mini-note">실제 자연의 화석화 과정을 단순화하여 보여 주는 모형입니다.</div>
+      </div></div>
       <div class="controls" style="justify-content:flex-end">
-        <button class="btn" id="t2-pause">⏸ 일시 정지</button>
-        <button class="btn primary big" id="t2-run">🔬 실험 시작</button>
-      </div>
-      <div class="result" id="result2">
-        <div class="head" id="result2-head"><span id="result2-title"></span></div>
-        <div class="body"><div id="result2-desc"></div><ul id="result2-list"></ul><div class="mini-note">이 결과는 화석으로 남을 가능성을 단순화하여 보여 주는 모형이에요.</div></div>
+        <button class="btn ghost" id="t2-restart" style="display:none">↺ 처음부터</button>
+        <button class="btn" id="t2-pause" style="display:none">⏸ 일시 정지</button>
+        <button class="btn" id="t2-replay" style="display:none">↺ 같은 조건 다시 보기</button>
+        <button class="btn primary big" id="t2-change" style="display:none">조건 바꾸기 ▶</button>
+        <button class="btn primary big" id="t2-run" disabled>⏳ 시간을 앞으로!</button>
       </div>
     </div>
   </div>
@@ -335,6 +353,7 @@ const $$ = s => Array.from(document.querySelectorAll(s));
 /* ---- 전역 일시 정지: sleep·tween·deposit·erode 는 정지 중 시간이 흐르지 않고,
        진행 중인 CSS 전환은 현재 값으로 동결했다가 남은 시간만큼 이어서 재생 ---- */
 let _paused = false;
+let _animEpoch = 0; // 증가 시 진행 중인 sleep/tween/deposit/erode 가 즉시 종료됨 (장면 중단용)
 const _cssActive = new Set();
 const _pauseBtns = [];
 function syncPauseBtns() { _pauseBtns.forEach(b => { b.textContent = _paused ? '▶ 재생' : '⏸ 일시 정지'; }); }
@@ -362,7 +381,8 @@ function setPaused(p) {
 }
 const sleep = ms => new Promise(r => {
   let rem = ms, last = performance.now();
-  const step = now => { if (!_paused) rem -= now - last; last = now; if (rem <= 0) r(); else requestAnimationFrame(step); };
+  const ep = _animEpoch;
+  const step = now => { if (!_paused) rem -= now - last; last = now; if (rem <= 0 || ep !== _animEpoch) r(); else requestAnimationFrame(step); };
   requestAnimationFrame(step);
 });
 const SVGNS = 'http://www.w3.org/2000/svg';
@@ -391,7 +411,9 @@ function tween(el, props, ms, ease = easeIO) {
     const from = {}; for (const k in props) from[k] = parseFloat(el.getAttribute(k)) || 0;
     if (_tweens.has(el)) cancelAnimationFrame(_tweens.get(el));
     let elapsed = 0, last = performance.now();
+    const ep = _animEpoch;
     const step = now => {
+      if (ep !== _animEpoch) { _tweens.delete(el); return res(); }
       if (!_paused) elapsed += now - last;
       last = now;
       const t = clamp(elapsed / ms, 0, 1), k2 = ease(t);
@@ -626,7 +648,9 @@ function deposit(rect, topY, ms, fx, x0 = 0, x1 = 960, fromY = 150) {
     const y0 = parseFloat(rect.getAttribute('y')), h0 = parseFloat(rect.getAttribute('height')) || 0, bottom = y0 + h0;
     const col = rect.getAttribute('fill');
     let elapsed = 0, last = performance.now(), lastSpawn = 0;
+    const ep = _animEpoch;
     const step = now => {
+      if (ep !== _animEpoch) return res();
       if (!_paused) elapsed += now - last;
       last = now;
       const t = clamp(elapsed / ms, 0, 1);
@@ -653,7 +677,9 @@ function erode(rect, ms, fx, x0 = 0, x1 = 960, toTop = null) {
     const target = toTop == null ? bottom : toTop;
     const col = rect.getAttribute('fill');
     let elapsed = 0, last = performance.now(), lastSpawn = 0;
+    const ep = _animEpoch;
     const step = now => {
+      if (ep !== _animEpoch) return res();
       if (!_paused) elapsed += now - last;
       last = now;
       const t = clamp(elapsed / ms, 0, 1);
@@ -908,6 +934,7 @@ function drawExplorer() {
     if (animate && n === cur + 1) await animateStep(n); else setState(n);
     cur = n;
     $('#t1-prev').disabled = cur === 0; $('#t1-next').disabled = cur === STEPS.length - 1;
+    $('#t1-next').textContent = cur === STEPS.length - 2 ? '결과 보기 ▶' : '다음 ▶';
     busy = false;
   }
   $('#t1-next').onclick = () => go(cur + 1);
@@ -917,7 +944,7 @@ function drawExplorer() {
   setState(0); $('#t1-prev').disabled = true;
 })();
 
-/* ================= 탭2: 화석화 조건 실험 ================= */
+/* ================= 탭2: 화석으로 잘 남으려면? ================= */
 (function () {
   const svg = $('#svg2');
   const scene = drawSeaScene(svg, 's2');
@@ -931,6 +958,7 @@ function drawExplorer() {
   const fx = E('g', { class: 'fx' }); ground.appendChild(fx);
   const fxWater = E('g', { class: 'fxw' }); svg.appendChild(fxWater);
   const slabFX = E('g', { class: 'slabfx' }); svg.appendChild(slabFX); // 고사리 인상 화석 앞면 뷰 오버레이
+  const focusG = E('g', { class: 'focus' }); svg.appendChild(focusG); // 결과 위치 강조 링
   // 산소 부족 표시: 어두운 물 덮개
   const dark = E('rect', { x: -300, y: 130, width: 1560, height: 260, fill: '#1E3A50' }); dark.style.opacity = 0; svg.insertBefore(dark, ground);
   // 저서성 동물 (게)
@@ -957,21 +985,31 @@ function drawExplorer() {
   const germs = E('g'); germs.style.opacity = 0; svg.appendChild(germs);
   for (let i = 0; i < 9; i++) germs.appendChild(E('g', { transform: `translate(${380 + i * 26},${350 + (i % 3) * 14})` }, [E('ellipse', { rx: 9, ry: 5, fill: '#B8E063', stroke: '#24303A', 'stroke-width': 2, transform: `rotate(${i * 40})` })]));
 
-  const state = { org: 'dino', burial: 'fast', oxy: 'low' };
+  const state = { org: null, burial: null, oxy: null }; // 모두 골라야 시작 가능
+  const updateRunBtn = () => { $('#t2-run').disabled = !(state.org && state.burial && state.oxy); };
   // 생물 선택 UI
   const grid = $('#org-grid');
   for (const k in ORGS) {
-    const b = document.createElement('button'); b.className = 'org' + (k === state.org ? ' sel' : ''); b.dataset.k = k;
+    const b = document.createElement('button'); b.className = 'org'; b.dataset.k = k;
     const s = E('svg', { viewBox: '-90 -70 180 140' }); s.appendChild(E('g', { transform: k === 'fern' ? 'scale(.8)' : k === 'jelly' ? 'translate(0,-20)' : k === 'dino' ? 'scale(.55)' : '' }, [ORGS[k].draw(1)]));
     b.appendChild(s); b.insertAdjacentHTML('beforeend', `${ORGS[k].name}<small>${{ jelly: '✕ 연함', fern: '△ 잎 자국', clam: '○ 껍데기', dino: '○ 뼈·이빨' }[k]}</small>`);
-    b.onclick = () => { state.org = k; $$('#org-grid .org').forEach(x => x.classList.toggle('sel', x === b)); $('#org-hint').textContent = ORGS[k].hint; if (!busy) showIdle(); };
+    b.onclick = () => { state.org = k; $$('#org-grid button.org').forEach(x => x.classList.toggle('sel', x === b)); $('#org-hint').textContent = ORGS[k].hint; updateRunBtn(); if (!busy) showIdle(); };
     grid.appendChild(b);
   }
-  $('#org-hint').textContent = ORGS.dino.hint;
-  $$('#seg-burial button').forEach(b => b.onclick = () => { state.burial = b.dataset.v; $$('#seg-burial button').forEach(x => x.classList.toggle('sel', x === b)); });
-  $$('#seg-oxy button').forEach(b => b.onclick = () => { state.oxy = b.dataset.v; $$('#seg-oxy button').forEach(x => x.classList.toggle('sel', x === b)); });
+  $('#org-hint').textContent = '생물을 골라 보세요.';
+  $$('#seg-burial button').forEach(b => b.onclick = () => { state.burial = b.dataset.v; $$('#seg-burial button').forEach(x => x.classList.toggle('sel', x === b)); updateRunBtn(); });
+  $$('#seg-oxy button').forEach(b => b.onclick = () => { state.oxy = b.dataset.v; $$('#seg-oxy button').forEach(x => x.classList.toggle('sel', x === b)); updateRunBtn(); });
 
-  let busy = false, org = null, ghost = null;
+  let busy = false, org = null, ghost = null, aborted = false;
+  const CANCEL = Symbol('cancel');
+  /* 우하단 버튼 상태: idle(시간을 앞으로) / run(처음부터·일시정지) / result(다시 보기·조건 바꾸기) */
+  function t2Mode(m) {
+    $('#t2-run').style.display = m === 'idle' ? '' : 'none';
+    $('#t2-restart').style.display = m === 'run' ? '' : 'none';
+    $('#t2-pause').style.display = m === 'run' ? '' : 'none';
+    $('#t2-replay').style.display = m === 'result' ? '' : 'none';
+    $('#t2-change').style.display = m === 'result' ? '' : 'none';
+  }
   function placeOrg() {
     orgG.innerHTML = ''; ghostG.innerHTML = '';
     org = ORGS[state.org].draw({ fern: .85, dino: .7, clam: 1.1, jelly: .85 }[state.org]);
@@ -983,14 +1021,21 @@ function drawExplorer() {
     css(ghostG, { opacity: 0 }, 0);
   }
   function showIdle() {
-    placeOrg();
+    orgG.innerHTML = ''; ghostG.innerHTML = '';
+    if (state.org) placeOrg();
     layers.forEach((l, i) => { attr(l, { y: BOT[i], height: 0 }); css(l, { fill: SEDC[i] }, 0); });
-    fx.innerHTML = ''; slabFX.innerHTML = ''; css(ground, { transform: 'none' }, 0); scene.water.forEach(w => css(w, { transform: 'none', opacity: 1 }, 0)); css(hillsG, { opacity: 0 }, 0);
+    fx.innerHTML = ''; slabFX.innerHTML = ''; focusG.innerHTML = ''; css(ground, { transform: 'none' }, 0); scene.water.forEach(w => css(w, { transform: 'none', opacity: 1 }, 0)); css(hillsG, { opacity: 0 }, 0);
     css(dark, { opacity: 0 }, 0); css(crab, { opacity: 0 }, 0); css(shrimpA, { opacity: 0 }, 0); css(shrimpB, { opacity: 0 }, 0); css(germs, { opacity: 0 }, 0);
-    $('#badge2').textContent = '실험 준비'; $('#cap2').innerHTML = `<b>${ORGS[state.org].name}</b>${josa(ORGS[state.org].name, '을', '를')} 골랐어요. 조건을 정하고 <b>실험 시작</b>을 눌러 보세요.`;
+    svg.style.transformOrigin = '50% 50%'; css(svg, { transform: 'none' }, 0);
+    $('#panel2').classList.remove('resulted');
+    $('#cap2').classList.remove('hidden');
+    $('#badge2').textContent = '준비';
+    $('#cap2').innerHTML = state.org
+      ? `<b>${ORGS[state.org].name}</b>${josa(ORGS[state.org].name, '을', '를')} 골랐어요. 조건을 정하고 <b>⏳ 시간을 앞으로!</b>를 눌러 보세요.`
+      : '왼쪽에서 <b>생물</b>과 조건을 모두 고르면 <b>⏳ 시간을 앞으로!</b> 버튼이 켜져요.';
     $('#result2').classList.remove('show');
   }
-  const cap = (t, badge) => { $('#cap2').innerHTML = t; if (badge) $('#badge2').textContent = badge; };
+  const cap = (t, badge) => { if (aborted) throw CANCEL; $('#cap2').innerHTML = t; if (badge) $('#badge2').textContent = badge; };
   const pieces = () => Array.from(org.querySelectorAll('.piece'));
   const pieceStyle = (p, s, ms) => { p.style.transformBox = 'fill-box'; p.style.transformOrigin = 'center'; css(p, s, ms); };
 
@@ -1000,38 +1045,53 @@ function drawExplorer() {
     if (!hard) return f && l ? 'impression' : 'fail';
     if (f && l) return 'perfect'; if (f && !l) return 'damaged'; if (!f && l) return 'partial'; return 'fail';
   }
+  const BADGE = { high: ['✔ 보존 가능성 높음', 'b-high'], mid: ['◑ 보존 가능성 보통', 'b-mid'], low: ['△ 보존 가능성 낮음', 'b-low'], fail: ['✕ 보존 실패', 'b-fail'], rare: ['★ 희귀 보존', 'b-rare'] };
+  const FEATURE = { dino: '뼈와 이빨', clam: '단단한 껍데기', fern: '납작한 잎', jelly: '부드러운 몸' };
   const RESULT = {
-    perfect: { g: 3, title: '보존 상태가 좋아요', desc: '빠르게 묻히고 훼손이 적어 단단한 부분이 비교적 온전하게 남았어요.' },
-    damaged: { g: 2, title: '일부만 보존되었어요', desc: '분해와 훼손으로 단단한 부분 일부가 손상되었지만 확인할 수 있는 흔적이 남았어요.' },
-    partial: { g: 1, title: '조각이 남았어요', desc: '오래 노출되는 동안 먹히거나 흩어졌지만 일부 조각이 묻혀 보존되었어요.' },
-    fail: { g: 0, title: '화석으로 남기 어려웠어요', desc: '분해와 훼손이 계속되어 확인할 수 있는 흔적이 거의 남지 않았어요.' },
-    impression: { g: 'i', title: '희귀한 흔적이 남았어요', desc: '매우 유리한 조건이 겹쳐 해파리 몸의 희미한 윤곽이 남았어요. 부드러운 몸이 보존되는 경우는 매우 드물어요.' },
-    plant: { g: 3, title: '고사리 잎의 인상 화석이 남았어요!', tag: '체화석', desc: '고사리 잎이 납작하게 눌리거나 잎 모양의 자국으로 남았어요. 압축 화석과 인상 화석은 모두 생물의 몸이나 몸의 형태가 남은 체화석이에요.' },
-    plantPartial: { g: 1, title: '고사리 잎의 일부만 남았어요', tag: '체화석', desc: '잎이 일부 분해되거나 찢어진 뒤 묻혀 잎의 윤곽 일부만 인상으로 남았어요.', note: '잎은 생물의 몸 일부이므로 잎의 모양이 남은 인상 화석도 체화석이에요.' },
-    plantFail: { g: 0, title: '알아볼 수 있는 잎 자국이 거의 남지 않았어요', desc: '오래 드러나 있는 동안 잎이 분해되고 흩어져 뚜렷한 인상 화석으로 남기 어려웠어요.' },
+    perfect: { grade: 'high', title: { dino: '뼈가 비교적 잘 남았어요', clam: '껍데기가 비교적 잘 남았어요' }, desc: { dino: '빠르게 묻히고 분해가 느려 단단한 뼈와 이빨이 비교적 온전하게 남았어요.', clam: '빠르게 묻히고 분해가 느려 단단한 껍데기가 비교적 온전하게 남았어요.' } },
+    damaged: { grade: 'mid', title: { dino: '뼈 일부가 남았어요', clam: '껍데기 일부가 남았어요' }, desc: { dino: '분해와 훼손으로 뼈 일부가 손상되었지만 확인할 수 있는 흔적이 남았어요.', clam: '분해와 훼손으로 껍데기 일부가 손상되었지만 확인할 수 있는 흔적이 남았어요.' } },
+    partial: { grade: 'low', title: { dino: '흩어진 뼛조각만 남았어요', clam: '부서진 껍데기 조각만 남았어요' }, desc: { dino: '오래 드러나 있는 동안 먹히거나 흩어졌지만 일부 뼛조각이 묻혀 남았어요.', clam: '오래 드러나 있는 동안 흩어지고 부서졌지만 일부 껍데기 조각이 묻혀 남았어요.' } },
+    fail: { grade: 'fail', title: '화석으로 남기 어려웠어요', desc: { jelly: '부드러운 몸이 분해되어 형태가 남지 않았어요.', default: '분해와 훼손이 계속되어 확인할 수 있는 흔적이 거의 남지 않았어요.' } },
+    impression: { grade: 'rare', title: '희미한 몸의 인상이 남았어요', desc: '빠르게 묻히고 분해가 느린 특별한 조건에서 해파리의 희미한 윤곽이 드물게 남았어요.' },
+    plant: { grade: 'high', tag: true, title: '잎이 눌려 압축 화석으로 남았어요', desc: '빠르게 묻히고 분해가 느려 잎이 납작하게 눌린 채 남았어요. 압축 화석은 생물의 몸이 남은 체화석이에요.' },
+    plantPartial: { grade: 'mid', tag: true, title: '잎 모양의 인상 화석이 남았어요', desc: '잎의 일부가 분해된 뒤 묻혀 잎 모양의 자국이 남았어요. 인상 화석도 몸의 형태가 남은 체화석이에요.' },
+    plantFail: { grade: 'fail', title: '잎의 형태가 사라졌어요', desc: '오래 드러나 있는 동안 잎이 분해되고 흩어져 뚜렷한 흔적으로 남지 못했어요.' },
   };
   function showResult(v) {
+    if (aborted) throw CANCEL;
     const R = RESULT[v];
-    $('#result2-head').className = 'head grade-' + R.g;
-    $('#result2-title').innerHTML = R.title + (R.tag ? ' <span class="fossil-tag">' + R.tag + '</span>' : '');
-    $('#result2-desc').innerHTML = R.desc + (R.note ? '<div class="mini-note">' + R.note + '</div>' : '');
-    $('#result2-list').innerHTML = explain().map(e => `<li><span class="chip ${e.chip ? '' : e.ok ? 'good' : 'bad'}">${e.chip || (e.ok ? '유리' : '불리')}</span><span>${e.t}</span></li>`).join('');
+    const pick = x => typeof x === 'string' ? x : (x[state.org] || x.default);
+    const [btxt, bcls] = BADGE[R.grade];
+    $('#r2-badge').textContent = btxt; $('#r2-badge').className = 'rbadge ' + bcls;
+    $('#r2-tag').hidden = !R.tag;
+    $('#result2-title').textContent = pick(R.title);
+    $('#result2-desc').textContent = pick(R.desc);
+    const f = state.burial === 'fast', l = state.oxy === 'low';
+    $('#result2-list').innerHTML = [
+      `<span class="rchip ${f ? 'good' : 'bad'}">${f ? '빠른 매몰 · 유리' : '느린 매몰 · 불리'}</span>`,
+      `<span class="rchip ${l ? 'good' : 'bad'}">${l ? '분해 느림 · 유리' : '분해 빠름 · 불리'}</span>`,
+      `<span class="rchip">몸의 특징 · ${FEATURE[state.org]}</span>`,
+    ].join('');
     $('#result2').classList.add('show');
-    cap(`<b>${R.title}</b> — 아래 결과표에서 이유를 확인하고, 조건을 바꿔 다시 실험해 보세요.`, '결과');
-  }
-  function explain() {
-    const hard = ORGS[state.org].hard, f = state.burial === 'fast', l = state.oxy === 'low';
-    return [
-      { ok: f, t: f ? '빠르게 묻혀 먹히거나 흩어질 가능성이 줄었어요.' : '느리게 묻혀 오래 드러나 있는 동안 먹히거나 흩어지고 부서졌어요.' },
-      { ok: l, t: l ? '분해가 느린 환경(산소 공급·생물 활동 적음)이라 남은 부분이 사라지기 전에 보존될 가능성이 컸어요.' : '분해가 빠른 환경(산소 공급·생물 활동 많음)이라 남은 부분도 훼손될 가능성이 컸어요.' },
-      { chip: '몸의 특징', t: hard ? `${ORGS[state.org].name}에게는 단단한 부분(${state.org === 'clam' ? '껍데기' : '뼈'})이 있어 연한 부분보다 오래 남을 수 있어요.` : state.org === 'fern' ? '고사리는 단단한 부분은 없지만 잎이 눌린 모양(압축·인상)이 남을 수 있어요.' : '해파리는 단단한 부분이 없어 연한 몸이 대부분 분해돼요.' },
-    ];
+    // 장면을 화석 위치로 확대하고 강조 링 표시 (설명은 결과 패널에서 한 번만)
+    $('#cap2').classList.add('hidden');
+    $('#badge2').textContent = '결과';
+    $('#panel2').classList.add('resulted');
+    focusG.innerHTML = '';
+    const fy = state.org === 'fern' ? 245 : 315;
+    const fr = state.org === 'fern' ? 195 : 115;
+    focusG.appendChild(E('circle', { cx: 470, cy: fy, r: fr, fill: 'none', stroke: '#FFE082', 'stroke-width': 6, opacity: .9 }));
+    focusG.appendChild(E('circle', { cx: 470, cy: fy, r: fr + 14, fill: 'none', stroke: '#FFE082', 'stroke-width': 2, opacity: .5 }));
+    if (state.org !== 'fern') { svg.style.transformOrigin = `49% ${Math.round(fy / 540 * 100)}%`; css(svg, { transform: 'scale(1.9)' }, 1100); }
+    t2Mode('result');
   }
 
-  // 실험 중 생물·조건 선택 잠금
+  // 진행 중 생물·조건 선택 잠금
   const lockPicks = b => $$('#org-grid button.org, #seg-burial button, #seg-oxy button').forEach(x => { x.disabled = b; });
-  async function run() {
-    if (busy) return; busy = true; $('#t2-run').disabled = true; lockPicks(true); setPaused(false);
+  async function run() { try { await runInner(); } catch (e) { if (e !== CANCEL) throw e; } }
+  async function runInner() {
+    if (busy || !(state.org && state.burial && state.oxy)) return;
+    busy = true; aborted = false; lockPicks(true); setPaused(false); t2Mode('run');
     showIdle(); $('#result2').classList.remove('show');
     if (state.org === 'fern') { await runFern(); return; }
     const hard = ORGS[state.org].hard, fast = state.burial === 'fast', low = state.oxy === 'low';
@@ -1113,7 +1173,7 @@ function drawExplorer() {
     css(ghostG, { opacity: 1 }, 400);
     if (v === 'impression') { const imp = E('ellipse', { cx: 0, cy: 0, rx: 62, ry: 26, fill: 'none', stroke: '#B7A98E', 'stroke-width': 5, 'stroke-dasharray': '10 6', opacity: 0 }); ghostG.appendChild(imp); css(imp, { opacity: 1 }, 800); }
     showResult(v);
-    busy = false; $('#t2-run').disabled = false; lockPicks(false);
+    busy = false;
   }
 
   /* ---- 고사리 전용 화석화: 잎 낙하 → 침강 → 매몰 → 압착 → 암석화 → 갈라짐 → 인상 ---- */
@@ -1197,10 +1257,26 @@ function drawExplorer() {
     ]);
     lbl.style.opacity = 0; slabFX.appendChild(lbl); css(lbl, { opacity: 1 }, 500);
     showResult(v);
-    busy = false; $('#t2-run').disabled = false; lockPicks(false);
+    busy = false;
   }
   $('#t2-run').onclick = run;
+  $('#t2-replay').onclick = run; // 같은 조건 다시 보기
+  $('#t2-restart').onclick = () => { // 진행 중단 후 선택 화면으로
+    if (!busy) return;
+    aborted = true; _animEpoch++;
+    setPaused(false);
+    busy = false; lockPicks(false); updateRunBtn(); t2Mode('idle');
+    showIdle();
+  };
+  $('#t2-change').onclick = () => { // 조건 바꾸기: 선택 영역 재활성화 + 시선 이동
+    lockPicks(false); updateRunBtn(); t2Mode('idle');
+    showIdle();
+    const side = document.querySelector('#panel2 .lab-side');
+    if (side) side.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    const first = $('#org-grid button.org'); if (first) first.focus();
+  };
   registerPauseBtn($('#t2-pause'));
+  t2Mode('idle');
   showIdle();
 })();
 
@@ -1890,7 +1966,7 @@ function drawExplorer() {
     const wrong = QS.map((_, i) => i).filter(i => !results[i]);
     const msg = score === QS.length ? '완벽해요! 화석의 핵심 기록을 모두 해독했어요.' : score >= 2 ? '좋아요! 헷갈린 문제만 다시 확인해 볼까요?' : '괜찮아요! 핵심 장면을 다시 보면 금방 알 수 있어요.';
     const box = document.createElement('div'); box.className = 'q';
-    box.innerHTML = `<div class="score show">${QS.length}문제 중 ${score}문제 정답!</div><div style="text-align:center;margin-top:10px;font-size:16px">${msg}</div><div class="review">${QS.map((q, i) => `<span class="rv ${results[i] ? 'ok' : 'no'}">Q${i + 1} ${results[i] ? '○' : '✕'}</span>`).join('')}</div><div class="qctl" style="justify-content:center;flex-wrap:wrap;gap:10px">${wrong.length ? '<button class="btn warn big" id="q-wrong">틀린 문제만 다시 보기</button>' : ''}<button class="btn big" id="q-back">화석화 조건 실험으로 돌아가기</button><button class="btn primary big" id="q-restart">↺ 처음부터 다시 풀기</button></div>`;
+    box.innerHTML = `<div class="score show">${QS.length}문제 중 ${score}문제 정답!</div><div style="text-align:center;margin-top:10px;font-size:16px">${msg}</div><div class="review">${QS.map((q, i) => `<span class="rv ${results[i] ? 'ok' : 'no'}">Q${i + 1} ${results[i] ? '○' : '✕'}</span>`).join('')}</div><div class="qctl" style="justify-content:center;flex-wrap:wrap;gap:10px">${wrong.length ? '<button class="btn warn big" id="q-wrong">틀린 문제만 다시 보기</button>' : ''}<button class="btn big" id="q-back">'화석으로 잘 남으려면?' 탭으로 돌아가기</button><button class="btn primary big" id="q-restart">↺ 처음부터 다시 풀기</button></div>`;
     quiz.appendChild(box);
     const w = box.querySelector('#q-wrong'); if (w) w.onclick = () => { queue = wrong; pos = 0; render(); };
     box.querySelector('#q-back').onclick = () => $('.tab[data-tab="2"]').click();
