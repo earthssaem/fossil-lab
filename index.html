@@ -450,6 +450,26 @@ function drawFern(scale = 1) {
   g.appendChild(soft);
   return g;
 }
+/* 공룡: soft = 몸, hard = 뼈 (조각 3개) */
+function drawDino(scale = 1) {
+  const g = E('g', { class: 'org dino', transform: `scale(${scale})` });
+  const c = '#7FBF6A';
+  const soft = E('g', { class: 'soft' }, [
+    E('path', { d: 'M-110 -6 L-60 -22 C-40 -50 30 -50 60 -30 L86 -62 C104 -68 126 -58 126 -42 L124 -14 L98 -8 L74 -2 C70 20 40 34 10 30 L-10 30 L-24 56 L-8 60 L-36 62 L-40 30 C-60 26 -80 14 -110 -6 Z', fill: c, stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }),
+    E('path', { d: 'M20 30 L26 56 L42 58 L14 62 L8 32', fill: c, stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }),
+    E('circle', { cx: 100, cy: -46, r: 6, fill: '#fff', stroke: '#24303A', 'stroke-width': 3 }), E('circle', { cx: 102, cy: -46, r: 2.5, fill: '#24303A' }),
+    E('path', { d: 'M92 -22 L118 -26', stroke: '#24303A', 'stroke-width': 3, 'stroke-linecap': 'round' }),
+    ...[-30, -10, 10].map(x => E('circle', { cx: x, cy: -26, r: 5, fill: '#5F9E4B' })),
+  ]);
+  const bone = (d, w = 6) => [E('path', { d, fill: 'none', stroke: '#F3EEE3', 'stroke-width': w, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }), E('path', { d, fill: 'none', stroke: '#24303A', 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' })];
+  const hard = E('g', { class: 'hard' }, [
+    E('g', { class: 'piece skull' }, [E('path', { d: 'M78 -40 L100 -62 L124 -58 L124 -30 L100 -22 L84 -28 Z', fill: '#F3EEE3', stroke: '#24303A', 'stroke-width': 3 }), E('path', { d: 'M92 -30 L96 -24 M104 -30 L108 -24 M116 -32 L118 -26', stroke: '#24303A', 'stroke-width': 1.5 })]),
+    E('g', { class: 'piece spine' }, [...bone('M-104 -8 C-60 -12 -20 -18 20 -20 C50 -22 66 -32 80 -40'), ...bone('M-20 -18 Q-26 0 -14 16 M0 -20 Q-4 2 6 18 M20 -20 Q18 0 26 14 M40 -24 Q42 -6 48 8', 4)]),
+    E('g', { class: 'piece legs' }, [...bone('M-10 -8 L-24 30 L-34 58 M-30 58 L-42 60 M20 -10 L22 30 L18 58 M14 58 L38 58', 5)]),
+  ]);
+  g.appendChild(hard); g.appendChild(soft);
+  return g;
+}
 /* 고사리 인상 화석: 납작한 암석 판 표면에 눌린 잎 자국 (quality: 'full' | 'partial' | 'faint') */
 function drawFernImprint(quality = 'full', withSlab = true) {
   const g = E('g', { class: 'fern-imprint' });
@@ -479,8 +499,10 @@ const ORGS = {
   jelly: { name: '해파리', hard: false, draw: drawJelly, hint: '몸이 부드럽고 단단한 부분이 거의 없어요.', color: '#F6B7DC' },
   fern: { name: '고사리', hard: false, draw: drawFern, hint: '단단한 뼈나 껍데기는 없지만 잎의 모양이 눌려 남을 수 있어요.', color: '#6FAF57' },
   clam: { name: '조개', hard: true, draw: drawClam, hint: '단단한 껍데기가 있어요.', color: '#F1DFC4' },
-  fish: { name: '물고기', hard: true, draw: drawFish, hint: '살은 부드럽지만 뼈가 있어요.', color: '#F28C3A' },
+  dino: { name: '공룡', hard: true, draw: drawDino, hint: '크고 단단한 뼈와 이빨이 있어요.', color: '#7FBF6A' },
 };
+/* 받침 유무에 따른 조사 선택 (받침 있으면 a, 없으면 b) */
+const josa = (w, a, b) => ((w.charCodeAt(w.length - 1) - 0xAC00) % 28 ? a : b);
 
 /* 깊고 잔잔한 호수·지층 배경 (탭1·2 공용) */
 function drawSeaScene(svg, id) {
@@ -881,28 +903,28 @@ function drawExplorer() {
   const germs = E('g'); germs.style.opacity = 0; svg.appendChild(germs);
   for (let i = 0; i < 9; i++) germs.appendChild(E('g', { transform: `translate(${380 + i * 26},${350 + (i % 3) * 14})` }, [E('ellipse', { rx: 9, ry: 5, fill: '#B8E063', stroke: '#24303A', 'stroke-width': 2, transform: `rotate(${i * 40})` })]));
 
-  const state = { org: 'fish', burial: 'fast', oxy: 'low' };
+  const state = { org: 'dino', burial: 'fast', oxy: 'low' };
   // 생물 선택 UI
   const grid = $('#org-grid');
   for (const k in ORGS) {
     const b = document.createElement('button'); b.className = 'org' + (k === state.org ? ' sel' : ''); b.dataset.k = k;
-    const s = E('svg', { viewBox: '-90 -70 180 140' }); s.appendChild(E('g', { transform: k === 'fern' ? 'scale(.8)' : k === 'jelly' ? 'translate(0,-20)' : '' }, [ORGS[k].draw(1)]));
-    b.appendChild(s); b.insertAdjacentHTML('beforeend', `${ORGS[k].name}<small>${{ jelly: '✕ 연함', fern: '△ 잎 자국', clam: '○ 껍데기', fish: '○ 뼈' }[k]}</small>`);
+    const s = E('svg', { viewBox: '-90 -70 180 140' }); s.appendChild(E('g', { transform: k === 'fern' ? 'scale(.8)' : k === 'jelly' ? 'translate(0,-20)' : k === 'dino' ? 'scale(.55)' : '' }, [ORGS[k].draw(1)]));
+    b.appendChild(s); b.insertAdjacentHTML('beforeend', `${ORGS[k].name}<small>${{ jelly: '✕ 연함', fern: '△ 잎 자국', clam: '○ 껍데기', dino: '○ 뼈·이빨' }[k]}</small>`);
     b.onclick = () => { state.org = k; $$('#org-grid .org').forEach(x => x.classList.toggle('sel', x === b)); $('#org-hint').textContent = ORGS[k].hint; if (!busy) showIdle(); };
     grid.appendChild(b);
   }
-  $('#org-hint').textContent = ORGS.fish.hint;
+  $('#org-hint').textContent = ORGS.dino.hint;
   $$('#seg-burial button').forEach(b => b.onclick = () => { state.burial = b.dataset.v; $$('#seg-burial button').forEach(x => x.classList.toggle('sel', x === b)); });
   $$('#seg-oxy button').forEach(b => b.onclick = () => { state.oxy = b.dataset.v; $$('#seg-oxy button').forEach(x => x.classList.toggle('sel', x === b)); });
 
   let busy = false, org = null, ghost = null;
   function placeOrg() {
     orgG.innerHTML = ''; ghostG.innerHTML = '';
-    org = ORGS[state.org].draw({ fern: .85, fish: 1, clam: 1.1, jelly: .85 }[state.org]);
+    org = ORGS[state.org].draw({ fern: .85, dino: .7, clam: 1.1, jelly: .85 }[state.org]);
     orgG.appendChild(org);
     orgG.style.transformOrigin = '0 0';
     css(orgG, { transform: 'translate(470px,250px)', opacity: 1 }, 0); orgG.style.opacity = 1;
-    ghost = ORGS[state.org].draw({ fern: .85, fish: 1, clam: 1.1, jelly: .85 }[state.org]); ghost.querySelector('.soft').remove();
+    ghost = ORGS[state.org].draw({ fern: .85, dino: .7, clam: 1.1, jelly: .85 }[state.org]); ghost.querySelector('.soft').remove();
     ghostG.appendChild(ghost); ghostG.style.transformOrigin = '0 0';
     css(ghostG, { opacity: 0 }, 0);
   }
@@ -911,7 +933,7 @@ function drawExplorer() {
     layers.forEach((l, i) => { attr(l, { y: BOT[i], height: 0 }); css(l, { fill: SEDC[i] }, 0); });
     fx.innerHTML = ''; slabFX.innerHTML = ''; css(ground, { transform: 'none' }, 0); scene.water.forEach(w => css(w, { transform: 'none', opacity: 1 }, 0)); css(hillsG, { opacity: 0 }, 0);
     css(dark, { opacity: 0 }, 0); css(crab, { opacity: 0 }, 0); css(scav, { opacity: 0 }, 0); css(germs, { opacity: 0 }, 0);
-    $('#badge2').textContent = '실험 준비'; $('#cap2').innerHTML = `<b>${ORGS[state.org].name}</b>를 골랐어요. 조건을 정하고 <b>실험 시작</b>을 눌러 보세요.`;
+    $('#badge2').textContent = '실험 준비'; $('#cap2').innerHTML = `<b>${ORGS[state.org].name}</b>${josa(ORGS[state.org].name, '을', '를')} 골랐어요. 조건을 정하고 <b>실험 시작</b>을 눌러 보세요.`;
     $('#result2').classList.remove('show');
   }
   const cap = (t, badge) => { $('#cap2').innerHTML = t; if (badge) $('#badge2').textContent = badge; };
@@ -961,8 +983,9 @@ function drawExplorer() {
     const softOf = () => body.querySelector('.soft');
     const piecesOf = () => Array.from(body.querySelectorAll('.piece'));
     // 1. 죽음
-    cap(`${ORGS[state.org].name}가 죽어 호수 바닥으로 가라앉아요.`, '죽음');
-    const rot = state.org === 'fish' ? ' rotate(180deg)' : '';
+    const nm = ORGS[state.org].name;
+    cap(`${nm}${josa(nm, '이', '가')} 죽어 호수 바닥으로 가라앉아요.`, '죽음');
+    const rot = state.org === 'dino' ? ' rotate(180deg)' : '';
     const oy = state.org === 'jelly' ? 310 : 330;
     css(orgG, { transform: `translate(470px,${oy}px)` + rot }, 1400); await sleep(1600);
     // 2. 매몰
