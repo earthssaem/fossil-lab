@@ -199,8 +199,14 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 .rchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .rchip{border:2px solid var(--ink);border-radius:999px;padding:3px 12px;font-size:13px;background:#F4F7FA}
 .rchip.good{background:#E4F3E8;border-color:var(--ok)} .rchip.bad{background:#FBE5E2;border-color:var(--bad)}
-#stage2{transition:width .5s ease}
-#panel2.resulted .stage-wrap{width:min(100%,max(380px,calc((100vh - 430px)*16/9)));width:min(100%,max(380px,calc((100dvh - 430px)*16/9)))}
+/* 탭2: 데스크톱에서는 오른쪽 영역이 화면 높이를 꽉 채우도록 유연한 높이 사용 */
+@media(min-width:900px){
+  #panel2.active{display:flex;flex-direction:column}
+  #panel2 .lab-grid{flex:1 1 auto;min-height:0}
+  #panel2 .lab-grid>div:last-child{display:flex;flex-direction:column;min-height:0}
+  #panel2 .stage-wrap{flex:1 1 auto;min-height:250px;aspect-ratio:auto;width:100%}
+  #panel2 .result,#panel2 .controls{flex:0 0 auto}
+}
 .qart{min-height:220px;display:grid;place-items:center;margin:10px 0}
 .qart svg{width:min(500px,100%);height:auto;display:block}
 #ctl3{justify-content:flex-end}
