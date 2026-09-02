@@ -72,7 +72,7 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 
 /* ---------- 탭2 화석으로 잘 남으려면? ---------- */
 .lab-grid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:900px){.lab-grid{grid-template-columns:300px 1fr}}
+@media(min-width:900px){.lab-grid{grid-template-columns:minmax(260px,320px) minmax(0,1fr)}}
 .lab-side{display:flex;flex-direction:column;gap:8px}
 .card{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:10px}
 .card h3{font-family:var(--display);font-weight:400;font-size:18px;margin:0 0 6px;display:flex;align-items:center;gap:8px;white-space:nowrap}
@@ -199,12 +199,12 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 .rchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .rchip{border:2px solid var(--ink);border-radius:999px;padding:3px 12px;font-size:13px;background:#F4F7FA}
 .rchip.good{background:#E4F3E8;border-color:var(--ok)} .rchip.bad{background:#FBE5E2;border-color:var(--bad)}
-/* 탭2: 데스크톱에서는 오른쪽 영역이 화면 높이를 꽉 채우도록 유연한 높이 사용 */
+/* 탭2: 데스크톱에서는 오른쪽 영역이 화면 높이에 맞춰 자라되, 16:9 비율은 유지해 장면이 지나치게 길쭉해지지 않도록 함 */
 @media(min-width:900px){
   #panel2.active{display:flex;flex-direction:column}
   #panel2 .lab-grid{flex:1 1 auto;min-height:0}
-  #panel2 .lab-grid>div:last-child{display:flex;flex-direction:column;min-height:0}
-  #panel2 .stage-wrap{flex:1 1 auto;min-height:250px;aspect-ratio:auto;width:100%}
+  #panel2 .lab-grid>div:last-child{display:flex;flex-direction:column;min-height:0;justify-content:center}
+  #panel2 .stage-wrap{flex:0 1 auto;min-height:250px;max-height:100%;aspect-ratio:16/9;width:100%;margin:0 auto}
   #panel2 .result,#panel2 .controls{flex:0 0 auto}
 }
 .qart{min-height:220px;display:grid;place-items:center;margin:10px 0}
@@ -458,15 +458,23 @@ $$('.tab').forEach(b => b.addEventListener('click', () => {
 
 /* ---- 공용 그림: 생물 ---- */
 /* 물고기: soft(몸) / hard(뼈) 그룹.  중심 (0,0), 길이 ~150 */
-function drawFish(scale = 1, color = '#F28C3A') {
+function drawFish(scale = 1, color = '#F28C3A', dead = false) {
   const g = E('g', { class: 'org fish', transform: `scale(${scale})` });
+  const eyeOpen = E('g', { class: 'eye-open' }, [
+    E('circle', { cx: -46, cy: -8, r: 7, fill: '#fff', stroke: '#24303A', 'stroke-width': 3 }),
+    E('circle', { cx: -44, cy: -8, r: 3, fill: '#24303A' }),
+  ]);
+  const eyeDead = E('g', { class: 'eye-dead' }, [
+    E('path', { d: 'M-52 -14 L-38 -2 M-38 -14 L-52 -2', fill: 'none', stroke: '#24303A', 'stroke-width': 3, 'stroke-linecap': 'round' }),
+  ]);
+  eyeOpen.style.opacity = dead ? 0 : 1;
+  eyeDead.style.opacity = dead ? 1 : 0;
   const soft = E('g', { class: 'soft' }, [
     E('path', { d: 'M-70 0 C-40 -38 40 -38 62 0 C40 38 -40 38 -70 0 Z', fill: color, stroke: '#24303A', 'stroke-width': 4 }),
     E('path', { d: 'M62 0 L92 -26 L86 0 L92 26 Z', fill: color, stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }),
     E('path', { d: 'M-20 -28 L-4 -46 L18 -30', fill: color, stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }),
     E('path', { d: 'M-8 22 L4 40 L22 26', fill: color, stroke: '#24303A', 'stroke-width': 4, 'stroke-linejoin': 'round' }),
-    E('circle', { cx: -46, cy: -8, r: 7, fill: '#fff', stroke: '#24303A', 'stroke-width': 3 }),
-    E('circle', { cx: -44, cy: -8, r: 3, fill: '#24303A' }),
+    E('g', { class: 'eye' }, [eyeOpen, eyeDead]),
     E('path', { d: 'M-56 8 Q-50 14 -44 8', fill: 'none', stroke: '#24303A', 'stroke-width': 3, 'stroke-linecap': 'round' }),
   ]);
   const hard = E('g', { class: 'hard' }, [
@@ -843,6 +851,7 @@ function drawExplorer() {
   STEPS.forEach((s) => { const d = document.createElement('div'); d.className = 'dot'; d.title = s.badge; dots.appendChild(d); });
   const setCap = (html, badge) => { $('#cap1').innerHTML = html; if (badge) $('#badge1').textContent = badge; };
   const soft = fish.querySelector('.soft');
+  const eyeOpen = fish.querySelector('.eye-open'), eyeDead = fish.querySelector('.eye-dead');
   const setBone = (col, ms) => [fish, ghostFish].forEach(f => f.querySelectorAll('.hard path').forEach(p => {
     if (p.getAttribute('fill') && p.getAttribute('fill') !== 'none') css(p, { fill: col }, ms);
     if (p.getAttribute('stroke') && p.getAttribute('stroke') !== '#24303A') css(p, { stroke: col }, ms);
@@ -858,6 +867,7 @@ function drawExplorer() {
     css(fishG, { transform: n === 0 ? 'translate(470px,240px)' : `translate(470px,${FY}px) rotate(180deg)` }, 0);
     css(ghost, { transform: `translate(470px,${FY}px) rotate(180deg)`, opacity: n === 2 ? .5 : (n >= 3 && n <= 5) ? 1 : 0 }, 0);
     css(soft, { opacity: n <= 1 ? 1 : 0 }, 0);
+    css(eyeOpen, { opacity: n === 0 ? 1 : 0 }, 0); css(eyeDead, { opacity: n === 0 ? 0 : 1 }, 0);
     setBone(n >= 6 ? '#6E675C' : n >= 3 ? '#8A8276' : '#F3EEE3', 0);
     layers.forEach((l, i) => css(l, { fill: n >= 3 ? ROCK[i] : SED[i] }, 0));
     if (n <= 1) setLayers([380, 272, 228]);
@@ -880,7 +890,9 @@ function drawExplorer() {
     $$('#t1-steps .dot').forEach((d, i) => { d.classList.toggle('on', i === n); d.classList.toggle('done', i < n); });
     setCap(STEPS[n].cap, STEPS[n].badge);
     if (n === 1) {
-      css(fishG, { transform: `translate(470px,${FY}px) rotate(180deg)` }, 1600); await sleep(1700);
+      css(fishG, { transform: `translate(470px,${FY}px) rotate(180deg)` }, 1600);
+      css(eyeOpen, { opacity: 0 }, 900); css(eyeDead, { opacity: 1 }, 900);
+      await sleep(1700);
     }
     if (n === 2) {
       setCap('<b>② 매몰</b> — 호수로 흘러든 고운 모래와 진흙이 물고기를 덮어요. 빨리 묻힐수록 먹히거나 흩어질 가능성이 줄어들어요.', '② 매몰');
@@ -990,8 +1002,11 @@ function drawExplorer() {
   // 세균 (분해)
   const germs = E('g'); germs.style.opacity = 0; svg.appendChild(germs);
   for (let i = 0; i < 9; i++) germs.appendChild(E('g', { transform: `translate(${380 + i * 26},${350 + (i % 3) * 14})` }, [E('ellipse', { rx: 9, ry: 5, fill: '#B8E063', stroke: '#24303A', 'stroke-width': 2, transform: `rotate(${i * 40})` })]));
+  // '느리게 매몰' 선택 시 위협적으로 다가오는 연출용 붉은 섬광
+  const scareFlash = E('rect', { x: -300, y: -300, width: 1560, height: 1200, fill: '#D9483B' }); scareFlash.style.opacity = 0; scareFlash.style.pointerEvents = 'none'; svg.appendChild(scareFlash);
 
   const state = { org: null, burial: null, oxy: null }; // 모두 골라야 시작 가능
+  let previewSeq = 0; // '느리게 매몰' 선택 시 재생되는 위협 연출(scarePreview) 취소용
   const updateRunBtn = () => { $('#t2-run').disabled = !(state.org && state.burial && state.oxy); };
   // 생물 선택 UI
   const grid = $('#org-grid');
@@ -1003,7 +1018,12 @@ function drawExplorer() {
     grid.appendChild(b);
   }
   $('#org-hint').textContent = '생물을 골라 보세요.';
-  $$('#seg-burial button').forEach(b => b.onclick = () => { state.burial = b.dataset.v; $$('#seg-burial button').forEach(x => x.classList.toggle('sel', x === b)); updateRunBtn(); });
+  $$('#seg-burial button').forEach(b => b.onclick = () => {
+    state.burial = b.dataset.v;
+    $$('#seg-burial button').forEach(x => x.classList.toggle('sel', x === b));
+    updateRunBtn();
+    if (!busy) { if (state.burial === 'slow') scarePreview(); else showIdle(); }
+  });
   $$('#seg-oxy button').forEach(b => b.onclick = () => { state.oxy = b.dataset.v; $$('#seg-oxy button').forEach(x => x.classList.toggle('sel', x === b)); updateRunBtn(); });
 
   let busy = false, org = null, ghost = null, aborted = false;
@@ -1027,11 +1047,12 @@ function drawExplorer() {
     css(ghostG, { opacity: 0 }, 0);
   }
   function showIdle() {
+    previewSeq++; // 진행 중인 위협 연출(scarePreview)이 있으면 취소
     orgG.innerHTML = ''; ghostG.innerHTML = '';
     if (state.org) placeOrg();
     layers.forEach((l, i) => { attr(l, { y: BOT[i], height: 0 }); css(l, { fill: SEDC[i] }, 0); });
     fx.innerHTML = ''; slabFX.innerHTML = ''; focusG.innerHTML = ''; css(ground, { transform: 'none' }, 0); scene.water.forEach(w => css(w, { transform: 'none', opacity: 1 }, 0)); css(hillsG, { opacity: 0 }, 0);
-    css(dark, { opacity: 0 }, 0); css(crab, { opacity: 0 }, 0); css(shrimpA, { opacity: 0 }, 0); css(shrimpB, { opacity: 0 }, 0); css(germs, { opacity: 0 }, 0);
+    css(dark, { opacity: 0 }, 0); css(crab, { opacity: 0 }, 0); css(shrimpA, { opacity: 0 }, 0); css(shrimpB, { opacity: 0 }, 0); css(germs, { opacity: 0 }, 0); css(scareFlash, { opacity: 0 }, 0);
     svg.style.transformOrigin = '50% 50%'; css(svg, { transform: 'none' }, 0);
     $('#panel2').classList.remove('resulted');
     $('#cap2').classList.remove('hidden');
@@ -1040,6 +1061,41 @@ function drawExplorer() {
       ? `<b>${ORGS[state.org].name}</b>${josa(ORGS[state.org].name, '을', '를')} 골랐어요. 조건을 정하고 <b>⏳ 시간을 앞으로!</b>를 눌러 보세요.`
       : '왼쪽에서 <b>생물</b>과 조건을 모두 고르면 <b>⏳ 시간을 앞으로!</b> 버튼이 켜져요.';
     $('#result2').classList.remove('show');
+  }
+  /* '느리게 매몰'을 고르는 순간, 다른 동물들이 위협적으로 달려드는 미리보기 연출 */
+  async function scarePreview() {
+    showIdle();
+    const seq = ++previewSeq;
+    $('#badge2').textContent = '⚠ 위험!';
+    $('#cap2').innerHTML = '<b>느리게 매몰</b> — 유해가 바닥에 오래 드러나 있으면 <b>다른 동물에게 먹히거나 흩어질 수 있어요!</b>';
+    css(crab, { transform: 'translate(-90px,372px) scale(1)', opacity: 1 }, 0);
+    css(shrimpA, { transform: 'translate(1050px,368px) scale(-1.25,1.25)', opacity: 1 }, 0);
+    css(shrimpB, { transform: 'translate(-110px,366px) scale(1.25,1.25)', opacity: 1 }, 0);
+    await sleep(30); if (seq !== previewSeq) return;
+    css(crab, { transform: 'translate(430px,368px) scale(1.3)' }, 650);
+    css(shrimpA, { transform: 'translate(560px,364px) scale(-1.25,1.25)' }, 700);
+    css(shrimpB, { transform: 'translate(380px,368px) scale(1.25,1.25)' }, 750);
+    await sleep(500); if (seq !== previewSeq) return;
+    css(scareFlash, { opacity: .3 }, 60);
+    for (let i = 0; i < 4; i++) {
+      css(svg, { transform: `translate(${i % 2 ? 6 : -6}px,${i % 2 ? -3 : 3}px)` }, 55);
+      await sleep(60); if (seq !== previewSeq) return;
+    }
+    css(svg, { transform: 'none' }, 80);
+    css(scareFlash, { opacity: 0 }, 300);
+    for (let i = 0; i < 3; i++) {
+      css(crab, { transform: 'translate(430px,358px) rotate(-12deg) scale(1.3)' }, 120); await sleep(130); if (seq !== previewSeq) return;
+      css(crab, { transform: 'translate(430px,368px) scale(1.3)' }, 120); await sleep(130); if (seq !== previewSeq) return;
+    }
+    await sleep(450); if (seq !== previewSeq) return;
+    css(crab, { transform: 'translate(-130px,372px)', opacity: 0 }, 800);
+    css(shrimpA, { transform: 'translate(1090px,368px) scale(-1.25,1.25)', opacity: 0 }, 800);
+    css(shrimpB, { transform: 'translate(-150px,366px) scale(1.25,1.25)', opacity: 0 }, 800);
+    await sleep(850); if (seq !== previewSeq) return;
+    $('#badge2').textContent = '준비';
+    $('#cap2').innerHTML = state.org
+      ? `<b>${ORGS[state.org].name}</b>${josa(ORGS[state.org].name, '을', '를')} 골랐어요. 조건을 정하고 <b>⏳ 시간을 앞으로!</b>를 눌러 보세요.`
+      : '왼쪽에서 <b>생물</b>과 조건을 모두 고르면 <b>⏳ 시간을 앞으로!</b> 버튼이 켜져요.';
   }
   const cap = (t, badge) => { if (aborted) throw CANCEL; $('#cap2').innerHTML = t; if (badge) $('#badge2').textContent = badge; };
   const pieces = () => Array.from(org.querySelectorAll('.piece'));
@@ -1356,7 +1412,7 @@ function drawExplorer() {
       E('path', { class: 'breadFill', d: FISH, fill: 'url(#bread)', stroke: '#8A5230', 'stroke-width': 6 }),
       E('path', { d: FISH, fill: 'none', stroke: '#24303A', 'stroke-width': 3 }),
       ...[-60, -20, 20].map(x => E('path', { d: `M${x} -40 q10 12 0 24 M${x + 20} -22 q10 12 0 24 M${x} -4 q10 12 0 24 M${x + 20} 14 q10 12 0 24`, fill: 'none', stroke: '#A96A2C', 'stroke-width': 3, 'stroke-linecap': 'round' })),
-      E('circle', { cx: -100, cy: -14, r: 8, fill: '#fff', stroke: '#24303A', 'stroke-width': 3 }), E('circle', { cx: -98, cy: -14, r: 3.5, fill: '#24303A' }),
+      E('circle', { cx: -100, cy: -14, r: 8, fill: '#D9A050', stroke: '#8A5230', 'stroke-width': 3 }), E('circle', { cx: -98, cy: -14, r: 3.5, fill: '#8A5230' }),
       E('path', { d: 'M-90 20 q16 10 32 0', fill: 'none', stroke: '#24303A', 'stroke-width': 3, 'stroke-linecap': 'round' }),
     ]);
     bread.style.transformOrigin = '0 0'; css(bread, { transform: 'translate(370px,312px) scale(.85)', opacity: 0 }, 0);
@@ -1591,7 +1647,7 @@ function drawExplorer() {
       // 붕어빵 쪽 (작게)
       const bf = E('g', { transform: 'translate(120,215) scale(.4)' });
       if (kind === 'mold') { bf.appendChild(E('rect', { x: -200, y: -110, width: 400, height: 220, rx: 24, fill: '#55555F', stroke: '#24303A', 'stroke-width': 6 })); bf.appendChild(E('path', { d: FISH, fill: '#2A2A32', stroke: '#1A1A20', 'stroke-width': 5 })); }
-      else { bf.appendChild(E('path', { d: FISH, fill: '#E2A64C', stroke: '#8A5230', 'stroke-width': 8 })); bf.appendChild(E('circle', { cx: -100, cy: -14, r: 9, fill: '#fff', stroke: '#24303A', 'stroke-width': 3 })); bf.appendChild(E('circle', { cx: -98, cy: -14, r: 4, fill: '#24303A' })); }
+      else { bf.appendChild(E('path', { d: FISH, fill: '#E2A64C', stroke: '#8A5230', 'stroke-width': 8 })); bf.appendChild(E('circle', { cx: -100, cy: -14, r: 9, fill: '#D9A050', stroke: '#8A5230', 'stroke-width': 3 })); bf.appendChild(E('circle', { cx: -98, cy: -14, r: 4, fill: '#8A5230' })); }
       g.appendChild(bf);
       g.appendChild(E('text', { x: 120, y: 322, 'text-anchor': 'middle', 'font-family': 'Jua', 'font-size': 20, fill: '#24303A', text: kind === 'mold' ? '붕어빵 틀' : '붕어빵' }));
       g.appendChild(E('text', { x: 220, y: 226, 'text-anchor': 'middle', 'font-family': 'Jua', 'font-size': 30, fill: '#8A8276', text: '=' }));
@@ -1842,7 +1898,7 @@ function drawExplorer() {
     s.appendChild(E('rect', { width: 300, height: 190, fill: '#CFE8F5' }));
     s.appendChild(E('rect', { y: 118, width: 300, height: 72, fill: '#C9A96B' }));
     s.appendChild(E('path', { d: 'M0 118 L300 118', stroke: '#24303A', 'stroke-width': 3 }));
-    s.appendChild(E('g', { transform: 'translate(150,132) rotate(180) scale(.5)' }, [drawFish(1)]));
+    s.appendChild(E('g', { transform: 'translate(150,132) rotate(180) scale(.5)' }, [drawFish(1, '#F28C3A', true)]));
     s.appendChild(E('path', { d: 'M36 136 Q150 92 264 136 L264 156 L36 156 Z', fill: '#DDBE7C', stroke: '#24303A', 'stroke-width': 3, opacity: .95 }));
     for (let i = 0; i < 14; i++) s.appendChild(E('circle', { cx: 40 + ((i * 47) % 220), cy: 26 + ((i * 31) % 58), r: 2.2 + (i % 3), fill: '#DDBE7C', stroke: '#24303A', 'stroke-width': 1 }));
     return s;
