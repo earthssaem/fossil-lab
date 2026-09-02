@@ -199,13 +199,11 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 .rchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .rchip{border:2px solid var(--ink);border-radius:999px;padding:3px 12px;font-size:13px;background:#F4F7FA}
 .rchip.good{background:#E4F3E8;border-color:var(--ok)} .rchip.bad{background:#FBE5E2;border-color:var(--bad)}
-/* 탭2: 데스크톱에서는 오른쪽 영역이 화면 높이에 맞춰 자라되, 16:9 비율은 유지해 장면이 지나치게 길쭉해지지 않도록 함 */
+/* 탭2: 패널이 화면 높이를 억지로 채우지 않고 내용(카드·장면·결과)만큼만 차지하도록 함.
+   그래야 결과가 없을 때 아래에 빈 공간이 남지 않고, 결과가 나와 설명이 길어지면 그만큼만 자연스럽게 늘어남 */
 @media(min-width:900px){
-  #panel2.active{display:flex;flex-direction:column}
-  #panel2 .lab-grid{flex:1 1 auto;min-height:0}
-  #panel2 .lab-grid>div:last-child{display:flex;flex-direction:column;min-height:0;justify-content:flex-start}
-  #panel2 .stage-wrap{flex:0 1 auto;min-height:250px;max-height:100%;aspect-ratio:16/9;width:100%;margin:0 auto}
-  #panel2 .result,#panel2 .controls{flex:0 0 auto}
+  #panel2.active{flex:0 1 auto}
+  #panel2 .stage-wrap{min-height:250px;max-height:620px;aspect-ratio:16/9;width:100%;margin:0 auto}
 }
 .qart{min-height:220px;display:grid;place-items:center;margin:10px 0}
 .qart svg{width:min(500px,100%);height:auto;display:block}
