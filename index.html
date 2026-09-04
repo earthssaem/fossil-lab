@@ -1874,13 +1874,12 @@ function drawExplorer() {
   const quiz = $('#quiz');
 
   /* --- 문항 그림 (기존 그리기 함수 재사용·변형) --- */
-  function artBuried() { // 빠르게 묻히는 물고기
+  function artBuried() { // 빠르게 묻혀 완전히 가려진 물고기 (부드러운 흙 둔덕만 보임)
     const s = E('svg', { viewBox: '0 0 300 190' });
     s.appendChild(E('rect', { width: 300, height: 190, fill: '#CFE8F5' }));
     s.appendChild(E('rect', { y: 118, width: 300, height: 72, fill: '#C9A96B' }));
     s.appendChild(E('path', { d: 'M0 118 L300 118', stroke: '#24303A', 'stroke-width': 3 }));
-    s.appendChild(E('g', { transform: 'translate(150,132) rotate(180) scale(.5)' }, [drawFish(1, '#F28C3A', true)]));
-    s.appendChild(E('path', { d: 'M36 136 Q150 92 264 136 L264 156 L36 156 Z', fill: '#DDBE7C', stroke: '#24303A', 'stroke-width': 3, opacity: .95 }));
+    s.appendChild(E('path', { d: 'M42 118 Q62 84 112 92 Q152 74 192 92 Q238 84 258 118 Z', fill: '#DDBE7C', stroke: '#24303A', 'stroke-width': 3, 'stroke-linejoin': 'round' }));
     for (let i = 0; i < 14; i++) s.appendChild(E('circle', { cx: 40 + ((i * 47) % 220), cy: 26 + ((i * 31) % 58), r: 2.2 + (i % 3), fill: '#DDBE7C', stroke: '#24303A', 'stroke-width': 1 }));
     return s;
   }
