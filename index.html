@@ -51,6 +51,9 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 .caption{position:absolute;left:12px;right:12px;bottom:12px;background:rgba(255,253,248,.94);border:3px solid var(--ink);border-radius:12px;padding:10px 16px;font-size:clamp(14px,1.9vw,21px);line-height:1.45;font-weight:500;pointer-events:none;transition:opacity .3s}
 .caption b{color:var(--accent-2)}
 .caption small{display:block;font-size:.78em;color:var(--ink-2);font-weight:400}
+.caption .cap-line{display:flex;align-items:baseline;column-gap:.35em}
+.caption .cap-line b{flex:none;white-space:nowrap}
+.caption .cap-rest{flex:1 1 auto;min-width:0}
 .caption.hidden{opacity:0}
 .badge{position:absolute;top:12px;left:12px;background:var(--ink);color:#fff;font-family:var(--display);font-size:clamp(14px,1.8vw,20px);padding:6px 14px;border-radius:999px;pointer-events:none}
 .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
@@ -354,6 +357,15 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 /* ================= 공통 ================= */
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
+/* 캡션 텍스트가 '<b>배지</b> — 설명…' 형태로 시작하면, 줄바꿈된 다음 줄이
+   배지 아래가 아니라 설명 시작 위치에 맞춰 정렬되도록(내어쓰기) 감싸준다 */
+function hangCap(html) {
+  const m = html.match(/^<b>(.*?)<\/b>\s*—\s*/);
+  if (!m) return html;
+  // 줄 맨 앞 공백은 브라우저가 지워버리므로, 라벨과의 간격은 CSS gap으로 주고
+  // cap-rest는 '—'로 바로 시작한다
+  return `<span class="cap-line"><b>${m[1]}</b><span class="cap-rest">— ${html.slice(m[0].length)}</span></span>`;
+}
 /* ---- 전역 일시 정지: sleep·tween·deposit·erode 는 정지 중 시간이 흐르지 않고,
        진행 중인 CSS 전환은 현재 값으로 동결했다가 남은 시간만큼 이어서 재생 ---- */
 let _paused = false;
@@ -590,7 +602,16 @@ function drawSeaScene(svg, id) {
   ]);
   svg.appendChild(defs);
   svg.appendChild(E('rect', { x: -300, y: -300, width: 1560, height: 1200, fill: '#BFE3F5' }));
-  const sun = E('circle', { cx: 840, cy: 70, r: 38, fill: '#FFE082', stroke: '#24303A', 'stroke-width': 4 });
+  const SUNX = 840, SUNY = 70, SUNR = 38, sunRays = [];
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * Math.PI * 2;
+    const r1 = SUNR + 8, r2 = SUNR + (i % 2 ? 20 : 27);
+    const x1 = SUNX + Math.cos(a) * r1, y1 = SUNY + Math.sin(a) * r1;
+    const x2 = SUNX + Math.cos(a) * r2, y2 = SUNY + Math.sin(a) * r2;
+    sunRays.push(E('line', { x1, y1, x2, y2, stroke: '#24303A', 'stroke-width': 9, 'stroke-linecap': 'round' }));
+    sunRays.push(E('line', { x1, y1, x2, y2, stroke: '#FFE082', 'stroke-width': 5, 'stroke-linecap': 'round' }));
+  }
+  const sun = E('g', { class: 'sun' }, [...sunRays, E('circle', { cx: SUNX, cy: SUNY, r: SUNR, fill: '#FFE082', stroke: '#24303A', 'stroke-width': 4 })]);
   const clouds = E('g', { class: 'clouds' }, [
     E('path', { d: 'M120 90 a26 26 0 0 1 50 -16 a30 30 0 0 1 58 8 a20 20 0 0 1 4 40 l-110 0 a22 22 0 0 1 -2 -32 Z', fill: '#fff', stroke: '#24303A', 'stroke-width': 4 }),
     E('path', { d: 'M560 60 a20 20 0 0 1 40 -12 a24 24 0 0 1 46 6 a16 16 0 0 1 3 32 l-88 0 a18 18 0 0 1 -1 -26 Z', fill: '#fff', stroke: '#24303A', 'stroke-width': 4 }),
@@ -842,12 +863,12 @@ function drawExplorer() {
     { badge: '광물 충전·치환', cap: '뼈의 빈틈에 광물이 채워지거나 원래 성분 일부가 다른 광물로 바뀌면서, 뼈의 형태가 오래 보존될 수 있어요.' },
     { badge: '⑤ 융기', cap: '<b>⑤ 융기</b> — 지각 변동으로 땅속에 묻혀 있던 지층이 서서히 지표 가까이 올라와요. 이 과정에서 지층이 기울거나 휘어지기도 해요.' },
     { badge: '⑥ 풍화·침식', cap: '<b>⑥ 풍화·침식</b> — 비와 바람 등의 영향으로 암석이 조금씩 깎여 나가요.' },
-    { badge: '⑦ 노출·발견', cap: '<b>⑦ 노출·발견</b> — 위쪽 암석이 깎이면서 화석이 지표에 드러났어요. 이제 사람이 발견할 수 있어요!' },
+    { badge: '⑦ 노출·발견', cap: '<b>⑦ 노출·발견</b> — 위쪽 암석이 깎이면서 화석이 지표에 드러났어요. 이제 화석을 발견할 수 있어요!' },
   ];
   let cur = 0, busy = false;
   const dots = $('#t1-steps');
   STEPS.forEach((s) => { const d = document.createElement('div'); d.className = 'dot'; d.title = s.badge; dots.appendChild(d); });
-  const setCap = (html, badge) => { $('#cap1').innerHTML = html; if (badge) $('#badge1').textContent = badge; };
+  const setCap = (html, badge) => { $('#cap1').innerHTML = hangCap(html); if (badge) $('#badge1').textContent = badge; };
   const soft = fish.querySelector('.soft');
   const eyeOpen = fish.querySelector('.eye-open'), eyeDead = fish.querySelector('.eye-dead');
   const setBone = (col, ms) => [fish, ghostFish].forEach(f => f.querySelectorAll('.hard path').forEach(p => {
@@ -1053,7 +1074,7 @@ function drawExplorer() {
       : '왼쪽에서 <b>생물</b>과 조건을 모두 고르면 <b>⏳ 시간을 앞으로!</b> 버튼이 켜져요.';
     $('#result2').classList.remove('show');
   }
-  const cap = (t, badge) => { if (aborted) throw CANCEL; $('#cap2').innerHTML = t; if (badge) $('#badge2').textContent = badge; };
+  const cap = (t, badge) => { if (aborted) throw CANCEL; $('#cap2').innerHTML = hangCap(t); if (badge) $('#badge2').textContent = badge; };
   const pieces = () => Array.from(org.querySelectorAll('.piece'));
   const pieceStyle = (p, s, ms) => { p.style.transformBox = 'fill-box'; p.style.transformOrigin = 'center'; css(p, s, ms); };
 
@@ -1307,7 +1328,7 @@ function drawExplorer() {
   const svg = $('#svg3'), ctl = $('#ctl3'), cap = $('#cap3'), badge = $('#badge3');
   const FISH = 'M-150 0 C-130 -62 -40 -80 30 -54 L62 -30 L142 -72 C118 -36 118 36 142 72 L62 30 C-40 80 -130 62 -150 0 Z';
   const toast = (t, cls) => { const e = $('#toast3'); e.textContent = t; e.className = 'toast show ' + (cls || ''); setTimeout(() => e.classList.remove('show'), 1400); };
-  const setCap = (t, b) => { cap.innerHTML = t; if (b) badge.textContent = b; };
+  const setCap = (t, b) => { cap.innerHTML = hangCap(t); if (b) badge.textContent = b; };
   const buttons = (arr) => { ctl.innerHTML = ''; arr.forEach(([label, fn, cls]) => { const b = document.createElement('button'); b.className = 'btn ' + (cls || ''); b.innerHTML = label; b.onclick = fn; ctl.appendChild(b); }); };
   const svgPt = (ev) => { const p = svg.createSVGPoint(); p.x = ev.clientX; p.y = ev.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); };
   let phase = 'idle', holdTimer = null, gaugeRAF = null;
