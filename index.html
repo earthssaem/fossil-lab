@@ -1000,11 +1000,10 @@ function drawExplorer() {
   // 세균 (분해)
   const germs = E('g'); germs.style.opacity = 0; svg.appendChild(germs);
   for (let i = 0; i < 9; i++) germs.appendChild(E('g', { transform: `translate(${380 + i * 26},${350 + (i % 3) * 14})` }, [E('ellipse', { rx: 9, ry: 5, fill: '#B8E063', stroke: '#24303A', 'stroke-width': 2, transform: `rotate(${i * 40})` })]));
-  // '느리게 매몰' 선택 시 위협적으로 다가오는 연출용 붉은 섬광
+  // '느리게 매몰' 진행 중 동물이 위협적으로 다가올 때 쓰는 붉은 섬광
   const scareFlash = E('rect', { x: -300, y: -300, width: 1560, height: 1200, fill: '#D9483B' }); scareFlash.style.opacity = 0; scareFlash.style.pointerEvents = 'none'; svg.appendChild(scareFlash);
 
   const state = { org: null, burial: null, oxy: null }; // 모두 골라야 시작 가능
-  let previewSeq = 0; // '느리게 매몰' 선택 시 재생되는 위협 연출(scarePreview) 취소용
   const updateRunBtn = () => { $('#t2-run').disabled = !(state.org && state.burial && state.oxy); };
   // 생물 선택 UI
   const grid = $('#org-grid');
@@ -1012,16 +1011,11 @@ function drawExplorer() {
     const b = document.createElement('button'); b.className = 'org'; b.dataset.k = k;
     const s = E('svg', { viewBox: '-90 -70 180 140' }); s.appendChild(E('g', { transform: k === 'fern' ? 'scale(.8)' : k === 'jelly' ? 'translate(0,-20)' : k === 'dino' ? 'scale(.55)' : '' }, [ORGS[k].draw(1)]));
     b.appendChild(s); b.insertAdjacentHTML('beforeend', `${ORGS[k].name}<small>${{ jelly: '✕ 연함', fern: '△ 잎 자국', clam: '○ 껍데기', dino: '○ 뼈·이빨' }[k]}</small>`);
-    b.onclick = () => { state.org = k; $$('#org-grid button.org').forEach(x => x.classList.toggle('sel', x === b)); $('#org-hint').textContent = ORGS[k].hint; updateRunBtn(); if (!busy) { if (state.burial === 'slow') scarePreview(); else showIdle(); } };
+    b.onclick = () => { state.org = k; $$('#org-grid button.org').forEach(x => x.classList.toggle('sel', x === b)); $('#org-hint').textContent = ORGS[k].hint; updateRunBtn(); if (!busy) showIdle(); };
     grid.appendChild(b);
   }
   $('#org-hint').textContent = '생물을 골라 보세요.';
-  $$('#seg-burial button').forEach(b => b.onclick = () => {
-    state.burial = b.dataset.v;
-    $$('#seg-burial button').forEach(x => x.classList.toggle('sel', x === b));
-    updateRunBtn();
-    if (!busy) { if (state.burial === 'slow' && state.org) scarePreview(); else showIdle(); }
-  });
+  $$('#seg-burial button').forEach(b => b.onclick = () => { state.burial = b.dataset.v; $$('#seg-burial button').forEach(x => x.classList.toggle('sel', x === b)); updateRunBtn(); });
   $$('#seg-oxy button').forEach(b => b.onclick = () => { state.oxy = b.dataset.v; $$('#seg-oxy button').forEach(x => x.classList.toggle('sel', x === b)); updateRunBtn(); });
 
   let busy = false, org = null, ghost = null, aborted = false;
@@ -1045,7 +1039,6 @@ function drawExplorer() {
     css(ghostG, { opacity: 0 }, 0);
   }
   function showIdle() {
-    previewSeq++; // 진행 중인 위협 연출(scarePreview)이 있으면 취소
     orgG.innerHTML = ''; ghostG.innerHTML = '';
     if (state.org) placeOrg();
     layers.forEach((l, i) => { attr(l, { y: BOT[i], height: 0 }); css(l, { fill: SEDC[i] }, 0); });
@@ -1059,41 +1052,6 @@ function drawExplorer() {
       ? `<b>${ORGS[state.org].name}</b>${josa(ORGS[state.org].name, '을', '를')} 골랐어요. 조건을 정하고 <b>⏳ 시간을 앞으로!</b>를 눌러 보세요.`
       : '왼쪽에서 <b>생물</b>과 조건을 모두 고르면 <b>⏳ 시간을 앞으로!</b> 버튼이 켜져요.';
     $('#result2').classList.remove('show');
-  }
-  /* '느리게 매몰'을 고르는 순간, 다른 동물들이 위협적으로 달려드는 미리보기 연출 */
-  async function scarePreview() {
-    showIdle();
-    const seq = ++previewSeq;
-    $('#badge2').textContent = '⚠ 위험!';
-    $('#cap2').innerHTML = '<b>느리게 매몰</b> — 유해가 바닥에 오래 드러나 있으면 <b>다른 동물에게 먹히거나 흩어질 수 있어요!</b>';
-    css(crab, { transform: 'translate(-90px,372px) scale(1)', opacity: 1 }, 0);
-    css(shrimpA, { transform: 'translate(1050px,368px) scale(-1.25,1.25)', opacity: 1 }, 0);
-    css(shrimpB, { transform: 'translate(-110px,366px) scale(1.25,1.25)', opacity: 1 }, 0);
-    await sleep(30); if (seq !== previewSeq) return;
-    css(crab, { transform: 'translate(430px,368px) scale(1.3)' }, 650);
-    css(shrimpA, { transform: 'translate(560px,364px) scale(-1.25,1.25)' }, 700);
-    css(shrimpB, { transform: 'translate(380px,368px) scale(1.25,1.25)' }, 750);
-    await sleep(500); if (seq !== previewSeq) return;
-    css(scareFlash, { opacity: .3 }, 60);
-    for (let i = 0; i < 4; i++) {
-      css(svg, { transform: `translate(${i % 2 ? 6 : -6}px,${i % 2 ? -3 : 3}px)` }, 55);
-      await sleep(60); if (seq !== previewSeq) return;
-    }
-    css(svg, { transform: 'none' }, 80);
-    css(scareFlash, { opacity: 0 }, 300);
-    for (let i = 0; i < 3; i++) {
-      css(crab, { transform: 'translate(430px,358px) rotate(-12deg) scale(1.3)' }, 120); await sleep(130); if (seq !== previewSeq) return;
-      css(crab, { transform: 'translate(430px,368px) scale(1.3)' }, 120); await sleep(130); if (seq !== previewSeq) return;
-    }
-    await sleep(450); if (seq !== previewSeq) return;
-    css(crab, { transform: 'translate(-130px,372px)', opacity: 0 }, 800);
-    css(shrimpA, { transform: 'translate(1090px,368px) scale(-1.25,1.25)', opacity: 0 }, 800);
-    css(shrimpB, { transform: 'translate(-150px,366px) scale(1.25,1.25)', opacity: 0 }, 800);
-    await sleep(850); if (seq !== previewSeq) return;
-    $('#badge2').textContent = '준비';
-    $('#cap2').innerHTML = state.org
-      ? `<b>${ORGS[state.org].name}</b>${josa(ORGS[state.org].name, '을', '를')} 골랐어요. 조건을 정하고 <b>⏳ 시간을 앞으로!</b>를 눌러 보세요.`
-      : '왼쪽에서 <b>생물</b>과 조건을 모두 고르면 <b>⏳ 시간을 앞으로!</b> 버튼이 켜져요.';
   }
   const cap = (t, badge) => { if (aborted) throw CANCEL; $('#cap2').innerHTML = t; if (badge) $('#badge2').textContent = badge; };
   const pieces = () => Array.from(org.querySelectorAll('.piece'));
@@ -1182,6 +1140,10 @@ function drawExplorer() {
       css(shrimpA, { transform: 'translate(580px,368px) scale(-1.2,1.2)', opacity: 1 }, 1500);
       css(shrimpB, { transform: 'translate(330px,370px) scale(1.1,1.1)', opacity: 1 }, 1800);
       await sleep(1600);
+      css(scareFlash, { opacity: .3 }, 60);
+      for (let i = 0; i < 4; i++) { css(svg, { transform: `translate(${i % 2 ? 6 : -6}px,${i % 2 ? -3 : 3}px)` }, 55); await sleep(60); }
+      css(svg, { transform: 'none' }, 80);
+      css(scareFlash, { opacity: 0 }, 300);
       for (let i = 0; i < 3; i++) { css(crab, { transform: 'translate(400px,362px) rotate(-8deg)', opacity: 1 }, 150); await sleep(160); css(crab, { transform: 'translate(400px,372px)', opacity: 1 }, 150); await sleep(160); }
       css(softOf(), { opacity: 0 }, 1200);
       piecesOf().forEach(p => pieceStyle(p, { transform: `translate(${rnd(-90, 90)}px,${rnd(-10, 14)}px) rotate(${rnd(-60, 60)}deg)` }, 1400));
