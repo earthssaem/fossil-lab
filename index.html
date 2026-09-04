@@ -1012,7 +1012,7 @@ function drawExplorer() {
     const b = document.createElement('button'); b.className = 'org'; b.dataset.k = k;
     const s = E('svg', { viewBox: '-90 -70 180 140' }); s.appendChild(E('g', { transform: k === 'fern' ? 'scale(.8)' : k === 'jelly' ? 'translate(0,-20)' : k === 'dino' ? 'scale(.55)' : '' }, [ORGS[k].draw(1)]));
     b.appendChild(s); b.insertAdjacentHTML('beforeend', `${ORGS[k].name}<small>${{ jelly: '✕ 연함', fern: '△ 잎 자국', clam: '○ 껍데기', dino: '○ 뼈·이빨' }[k]}</small>`);
-    b.onclick = () => { state.org = k; $$('#org-grid button.org').forEach(x => x.classList.toggle('sel', x === b)); $('#org-hint').textContent = ORGS[k].hint; updateRunBtn(); if (!busy) showIdle(); };
+    b.onclick = () => { state.org = k; $$('#org-grid button.org').forEach(x => x.classList.toggle('sel', x === b)); $('#org-hint').textContent = ORGS[k].hint; updateRunBtn(); if (!busy) { if (state.burial === 'slow') scarePreview(); else showIdle(); } };
     grid.appendChild(b);
   }
   $('#org-hint').textContent = '생물을 골라 보세요.';
@@ -1020,7 +1020,7 @@ function drawExplorer() {
     state.burial = b.dataset.v;
     $$('#seg-burial button').forEach(x => x.classList.toggle('sel', x === b));
     updateRunBtn();
-    if (!busy) { if (state.burial === 'slow') scarePreview(); else showIdle(); }
+    if (!busy) { if (state.burial === 'slow' && state.org) scarePreview(); else showIdle(); }
   });
   $$('#seg-oxy button').forEach(b => b.onclick = () => { state.oxy = b.dataset.v; $$('#seg-oxy button').forEach(x => x.classList.toggle('sel', x === b)); updateRunBtn(); });
 
