@@ -164,7 +164,6 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 .score.show{display:block}
 .qtop{display:flex;gap:10px;align-items:center;margin-bottom:8px}
 .qtop .qn{background:var(--tab5);color:#fff;border-radius:8px;padding:2px 12px;font-family:var(--display);font-size:16px}
-.qtop .qtab{font-size:13px;color:var(--ink-2);background:#EEF3F0;border-radius:999px;padding:2px 10px}
 .q h3{font-size:21px;line-height:1.45}
 .qbody .choices{grid-template-columns:1fr 1fr}
 .choice{font-size:16px;padding:12px 14px}
@@ -1931,7 +1930,7 @@ function drawExplorer() {
   function artBurrow() { // 지층 단면 속 굴 화석
     const s = E('svg', { viewBox: '0 0 300 200' });
     [['#C9B58A', 0, 52], ['#B39A6A', 52, 54], ['#9E9282', 106, 50], ['#A88F62', 156, 44]].forEach(([c, y, h]) => s.appendChild(E('rect', { x: 0, y, width: 300, height: h, fill: c, stroke: '#24303A', 'stroke-width': 2 })));
-    const path = 'M42 20 C72 58 50 88 90 108 C130 128 118 158 158 170 C198 182 220 148 258 156';
+    const path = 'M42 0 C72 58 50 88 90 108 C130 128 118 158 158 170 C198 182 220 148 258 156';
     s.appendChild(E('path', { d: path, fill: 'none', stroke: '#24303A', 'stroke-width': 26, 'stroke-linecap': 'round' }));
     s.appendChild(E('path', { d: path, fill: 'none', stroke: '#6E8B74', 'stroke-width': 20, 'stroke-linecap': 'round' }));
     s.appendChild(E('rect', { x: 0, y: 0, width: 300, height: 200, fill: 'none', stroke: '#24303A', 'stroke-width': 4 }));
@@ -1951,7 +1950,7 @@ function drawExplorer() {
     if (pos >= queue.length) return renderEnd();
     const qi = queue[pos], Q = QS[qi];
     const box = document.createElement('div'); box.className = 'q tall';
-    box.innerHTML = `<div class="qtop"><span class="qn">Q${qi + 1} / ${QS.length}</span><span class="qtab">${Q.tag}</span></div><h3>${Q.q}</h3><div class="qbody"></div><div class="qfeed" hidden></div><div class="qctl"><button class="btn ok big" id="q-next" style="display:none">다음 문제 ▶</button></div>`;
+    box.innerHTML = `<div class="qtop"><span class="qn">Q${qi + 1} / ${QS.length}</span></div><h3>${Q.q}</h3><div class="qbody"></div><div class="qfeed" hidden></div><div class="qctl"><button class="btn ok big" id="q-next" style="display:none">다음 문제 ▶</button></div>`;
     quiz.appendChild(box);
     const body = box.querySelector('.qbody'), feed = box.querySelector('.qfeed'), next = box.querySelector('#q-next');
     let answered = false;
