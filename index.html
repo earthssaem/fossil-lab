@@ -58,6 +58,11 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 .caption .cap-s{display:inline-block;max-width:100%}
 .caption.hidden{opacity:0}
 .badge{position:absolute;top:12px;left:12px;background:var(--ink);color:#fff;font-family:var(--display);font-size:clamp(14px,1.8vw,20px);padding:6px 14px;border-radius:999px;pointer-events:none}
+/* 탭4: 단계 배지 아래에 '옆에서 본 단면' 같은 보기 배지를 세로로 쌓아 서로 겹치지 않게 함 */
+.badge-stack{position:absolute;top:12px;left:12px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;pointer-events:none}
+.badge-stack .badge{position:static}
+.badge.sub{font-size:clamp(12px,1.4vw,16px);padding:4px 12px;background:rgba(36,48,58,.82)}
+.badge.sub[hidden]{display:none}
 .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
 .controls .spacer{flex:1}
 .btn{font-size:19px;padding:10px 20px;border-radius:12px;background:#fff;color:var(--ink);border:3px solid var(--ink);box-shadow:0 4px 0 var(--ink);transition:transform .08s,box-shadow .08s;user-select:none;-webkit-user-select:none}
@@ -363,7 +368,7 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
   <div class="stage-wrap" id="stage4">
     <canvas id="cv4" width="960" height="540"></canvas>
     <div class="overlay-hint" id="hint4"><span>진흙 위를 손가락으로 드래그해 걸어가 보세요</span></div>
-    <div class="badge" id="badge4">체험</div>
+    <div class="badge-stack"><div class="badge" id="badge4">체험</div><div class="badge sub" id="view4" hidden>옆에서 본 단면</div></div>
     <div class="caption hidden" id="cap4"></div>
   </div>
   <div class="controls">
@@ -1723,10 +1728,33 @@ function drawExplorer() {
 /* ================= 탭4: 생흔 화석 체험 ================= */
 (function () {
   const cv = $('#cv4'), ctx = cv.getContext('2d'), W = 960, H = 540;
-  const cap = $('#cap4'), badge = $('#badge4'), hint = $('#hint4');
+  const cap = $('#cap4'), badge = $('#badge4'), view = $('#view4'), hint = $('#hint4');
+  const DUR = { foot: 17000, burrow: 13000 }; // 화석화 애니메이션 길이(ms)
   let mode = 'foot', foot = 'dino', prints = [], burrows = [], drawing = false, lastPt = null, dist = 0, side = 0, animT = -1, animRAF = null, done = false;
   const grains = []; for (let i = 0; i < 260; i++) grains.push([rnd(0, W), rnd(0, H), rnd(1, 3)]);
   const edgeNoise = []; for (let i = 0; i <= 60; i++) edgeNoise.push(rnd(-30, 30));
+  /* 퇴적물 알갱이 입자: 위치·위상·속도를 미리 정해 두고 시간(초)에 따라 이어지는 궤적으로 움직임 (매 프레임 위치가 튀지 않음) */
+  const PARTS = []; for (let i = 0; i < 80; i++) PARTS.push({ x: rnd(0, W), ph: Math.random(), sp: rnd(.75, 1.3), r: rnd(2, 3.4), sw: rnd(3, 9), so: rnd(0, 6.28) });
+  /* 위(fromY)에서 알갱이가 천천히 떨어져 landY(쌓이는 층의 윗면)에 닿으면 사라짐 */
+  function fallGrains(col, sec, landY, fromY = -8, n = 46, x0 = 0, x1 = W) {
+    if (landY - fromY < 10) return;
+    const S0 = 320; ctx.fillStyle = col;
+    for (let i = 0; i < n; i++) {
+      const p = PARTS[i]; const y = fromY + (p.ph * S0 + sec * 120 * p.sp) % S0; if (y > landY - 2) continue;
+      const x = x0 + ((p.x + Math.sin(sec * 1.7 + p.so) * p.sw) % (x1 - x0) + (x1 - x0)) % (x1 - x0);
+      ctx.beginPath(); ctx.arc(x, y, p.r, 0, 7); ctx.fill();
+    }
+  }
+  /* 깎인 알갱이가 표면(topY)에서 떨어져 나와 위·옆으로 날려 가며 옅어짐 */
+  function blowGrains(col, sec, topY, n = 34, x0 = 0, x1 = W) {
+    ctx.save(); ctx.fillStyle = col;
+    for (let i = 0; i < n; i++) {
+      const p = PARTS[i + 40]; const age = (p.ph + sec * .55 * p.sp) % 1;
+      const x = x0 + (p.x % (x1 - x0)) + age * 110 + Math.sin(age * 9 + p.so) * 4, y = topY - 3 - age * 60;
+      ctx.globalAlpha = 1 - age; ctx.beginPath(); ctx.arc(x, y, p.r * (1 - age * .4), 0, 7); ctx.fill();
+    }
+    ctx.restore();
+  }
 
   /* --- 발 모양 --- */
   const FEET = {
@@ -1781,22 +1809,36 @@ function drawExplorer() {
     if (frac <= 0) return;
     ctx.strokeStyle = col; ctx.lineWidth = 24; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     burrows.forEach(b => {
-      let minY = Infinity, maxY = -Infinity; b.forEach(([, y]) => { minY = Math.min(minY, y); maxY = Math.max(maxY, y); });
-      const level = lerp(maxY + 14, minY - 14, frac); // 채워진 높이 (이 선 아래만 채워짐)
+      const level = burrowLevel(b, frac);
       ctx.save(); ctx.beginPath(); ctx.rect(0, level, W, H - level); ctx.clip();
       ctx.beginPath(); b.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
       ctx.restore();
     });
   }
-  /* 새 퇴적물 알갱이 몇 개가 굴 입구(표면)로 들어가는 모습 */
-  function drawEntranceGrains(col, t) {
-    ctx.fillStyle = col;
-    burrows.forEach(b => {
-      const [ex] = b[0];
-      for (let k = 0; k < 5; k++) {
-        const cyc = (t * 2.2 + k / 5) % 1;
-        const y = SED.surface - 40 + cyc * 52, x = ex + Math.sin(cyc * 6 + k * 1.3) * 5;
-        ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill();
+  /* 굴 채움 높이(이 선 아래만 채워짐) */
+  function burrowLevel(b, frac) {
+    let minY = Infinity, maxY = -Infinity; b.forEach(([, y]) => { minY = Math.min(minY, y); maxY = Math.max(maxY, y); });
+    return lerp(maxY + 14, minY - 14, frac);
+  }
+  /* 새 퇴적물 알갱이가 물속에서 굴 입구로 떨어져 들어온 뒤, 굴을 따라 흘러가 아직 채워지지 않은 곳(채움 경계)에 닿으면 쌓임 */
+  function drawBurrowInflow(col, sec, frac) {
+    const DROP = 48; // 입구 위 물속에서 떨어지는 거리
+    ctx.fillStyle = col; ctx.strokeStyle = '#24303A'; ctx.lineWidth = 1;
+    burrows.forEach((b, bi) => {
+      const level = burrowLevel(b, frac), [ex, ey] = b[0];
+      // 굴 경로의 누적 길이와, 채움 경계에 처음 닿는 지점까지의 길이(sEnd)
+      const cum = [0]; for (let i = 1; i < b.length; i++) cum.push(cum[i - 1] + Math.hypot(b[i][0] - b[i - 1][0], b[i][1] - b[i - 1][1]));
+      let sEnd = cum[cum.length - 1];
+      if (ey >= level) sEnd = 0;
+      else for (let i = 1; i < b.length; i++) { if (b[i][1] >= level) { const f = clamp((level - b[i - 1][1]) / (b[i][1] - b[i - 1][1] || 1), 0, 1); sEnd = cum[i - 1] + (cum[i] - cum[i - 1]) * f; break; } }
+      const L = DROP + sEnd;
+      for (let k = 0; k < 8; k++) {
+        const p = PARTS[(k + bi * 8) % PARTS.length]; const d = (p.ph * L + sec * 95 * p.sp) % L;
+        let x, y;
+        if (d < DROP) { x = ex + Math.sin(sec * 2 + p.so) * 4; y = ey - DROP + d; }
+        else { const sIn = d - DROP; let i = 1; while (i < cum.length - 1 && cum[i] < sIn) i++;
+          const f = clamp((sIn - cum[i - 1]) / (cum[i] - cum[i - 1] || 1), 0, 1); x = lerp(b[i - 1][0], b[i][0], f); y = lerp(b[i - 1][1], b[i][1], f); }
+        ctx.beginPath(); ctx.arc(x, y, p.r + 1, 0, 7); ctx.fill(); ctx.stroke();
       }
     });
   }
@@ -1845,7 +1887,11 @@ function drawExplorer() {
     drawPrints(hexLerp('#5A3A1E', '#4E4840', rockT));
     if (t >= .14 && t < .84) { // 덮임 (반투명 → 불투명)
       const cover = clamp((t - .14) / .2, 0, 1);
-      ctx.save(); ctx.globalAlpha = ctx.globalAlpha * cover; ctx.fillStyle = hexLerp('#E0BC7A', '#A89B8C', rockT); ctx.fillRect(0, 0, W, H);
+      const base = ctx.globalAlpha, covC = hexLerp('#E0BC7A', '#A89B8C', rockT);
+      ctx.save(); ctx.globalAlpha = base * cover; ctx.fillStyle = covC; ctx.fillRect(0, 0, W, H);
+      // 알갱이가 하나둘 내려앉아 점점 많아지며 발자국을 덮음
+      ctx.globalAlpha = base * Math.min(1, cover * 1.6); ctx.fillStyle = covC; const nS = Math.floor(clamp(cover * 1.15, 0, 1) * grains.length);
+      for (let i = 0; i < nS; i++) { const [x, y, r] = grains[i]; ctx.beginPath(); ctx.arc((x * 7 + 31) % W, (y * 3 + 17) % H, r + 1.6, 0, 7); ctx.fill(); }
       ctx.globalAlpha = Math.min(ctx.globalAlpha, .12); ctx.fillStyle = '#000'; grains.forEach(([x, y, r]) => { ctx.beginPath(); ctx.arc(x + 7, y + 3, r, 0, 7); ctx.fill(); }); ctx.restore();
     }
   }
@@ -1877,12 +1923,11 @@ function drawExplorer() {
     mudProfile(sy); ctx.strokeStyle = '#24303A'; ctx.lineWidth = 3.5; ctx.stroke();
     if (coverTop != null && coverTop < sy) { ctx.strokeStyle = 'rgba(36,48,58,.7)'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(0, coverTop); ctx.lineTo(W, coverTop); ctx.stroke(); }
     if (cover2Top != null) { ctx.strokeStyle = 'rgba(36,48,58,.7)'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(0, cover2Top); ctx.lineTo(W, cover2Top); ctx.stroke(); }
-    // 떨어지는 알갱이 (덮이는 동안)
-    if (t >= .40 && t < .46 && coverTop != null) { ctx.fillStyle = covCol; for (let i = 0; i < 46; i++) { const x = (i * 97 + Math.floor(t * 2200) * 13) % W, y = 10 + ((i * 53 + t * 5200) % Math.max(12, coverTop - 16)); ctx.beginPath(); ctx.arc(x, y, 2.6, 0, 7); ctx.fill(); } }
-    // 침식 알갱이
-    if (t >= .66 && t < .84) { ctx.fillStyle = covCol; for (let i = 0; i < 26; i++) { const x = (i * 137 + Math.floor(t * 2600) * 17) % W, y = (cover2Top ?? coverTop) - 8 - (i * 31 + t * 3000) % 60; ctx.beginPath(); ctx.arc(x, y, 2.4, 0, 7); ctx.fill(); } }
-    // 라벨
-    ctx.fillStyle = '#24303A'; ctx.fillRect(14, 56, 172, 34); ctx.fillStyle = '#fff'; ctx.font = '19px Jua, sans-serif'; ctx.textAlign = 'left'; ctx.fillText('옆에서 본 단면', 26, 80);
+    const sec = t * DUR.foot / 1000;
+    // 떨어지는 알갱이: 층이 쌓이는 동안(첫 층 .40-.46, 그 위 층 .46-.58) 위에서 내려와 층 윗면에 닿으면 쌓임
+    if (t >= .40 && t < .58) fallGrains(t < .46 ? covCol : cov2, sec, cover2Top ?? coverTop);
+    // 침식 알갱이: 깎이는 층 윗면에서 떨어져 나와 날려 감
+    if (t >= .66 && t < .84) blowGrains(cover2Top != null ? cov2 : covCol, sec, cover2Top ?? coverTop);
   }
   /* 굴 화석화: 0-.28 생물이 떠난 열린 굴에 새 퇴적물이 입구로 들어와 낮은 곳부터 채워짐 / .28-.5 지층 쌓임 / .5-.7 굳음 / .7-.95 침식(위층 제거) */
   function renderBurrowAnim(t) {
@@ -1890,21 +1935,26 @@ function drawExplorer() {
     drawBase(rockT);
     const fillCol = hexLerp('#6E8B74', '#4E5A50', rockT);
     drawBurrows('#5A3A1E');
-    drawBurrowFill(fillCol, clamp((t - .05) / .23, 0, 1));
-    if (t < .26) drawEntranceGrains(fillCol, t);
+    const sec = t * DUR.burrow / 1000, fillFrac = clamp((t - .05) / .23, 0, 1);
+    drawBurrowFill(fillCol, fillFrac);
+    if (t < .28) { fallGrains(fillCol, sec, SED.surface, 0, 22); drawBurrowInflow(fillCol, sec, fillFrac); } // 물속에서 가라앉는 퇴적물 일부가 굴 입구로 들어감
     // 위에 쌓이는 지층
     const nL = 3; const stackT = clamp((t - .28) / .22, 0, 1);
     const erosT = clamp((t - .7) / .25, 0, 1);
+    let stackTop = SED.surface, topCol = null, eroding = false;
     for (let i = 0; i < nL; i++) {
       const li = clamp(stackT * nL - i, 0, 1); if (li <= 0) continue;
       let h = 34 * li; const bottom = SED.surface - 34 * i;
       if (erosT > 0) { const ei = clamp(erosT * nL - (nL - 1 - i), 0, 1); h = h * (1 - ei); } // 위층부터 얇아지며 사라짐
       if (h <= 0.5) continue;
       const y = bottom - h;
-      ctx.fillStyle = hexLerp(['#C9B58A', '#A89B8C', '#C7A46C'][i], ['#9E9587', '#7E766C', '#9C8B6A'][i], rockT);
-      ctx.fillRect(0, y, W, h); ctx.strokeStyle = '#24303A'; ctx.lineWidth = 3; ctx.strokeRect(0, y, W, h);
-      if (erosT > 0 && h < 34 * li) { ctx.fillStyle = 'rgba(0,0,0,.15)'; for (let k = 0; k < 18; k++) { const x = (k * 157 + i * 61) % W; ctx.beginPath(); ctx.arc(x, y - 6 - (k % 4) * 6, 2.4, 0, 7); ctx.fill(); } }
+      const col = hexLerp(['#C9B58A', '#A89B8C', '#C7A46C'][i], ['#9E9587', '#7E766C', '#9C8B6A'][i], rockT);
+      ctx.fillStyle = col; ctx.fillRect(0, y, W, h); ctx.strokeStyle = '#24303A'; ctx.lineWidth = 3; ctx.strokeRect(0, y, W, h);
+      stackTop = y; topCol = col; eroding = erosT > 0 && h < 34 * li;
     }
+    // 지층이 쌓이는 동안: 물속에서 알갱이가 가라앉아 맨 위층에 쌓임 / 침식 동안: 맨 위층에서 알갱이가 떨어져 나가 날려 감
+    if (t >= .28 && t < .5) fallGrains(topCol ?? '#C9B58A', sec, stackTop, 0, 36);
+    if (eroding) blowGrains(topCol, sec, stackTop, 30);
     if (t >= .5 && t < .7) { ctx.fillStyle = 'rgba(36,48,58,.85)'; ctx.fillRect(W / 2 - 150, 300, 300, 60); ctx.fillStyle = '#fff'; ctx.font = '30px Jua, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('오랜 시간 경과 중…', W / 2, 341); }
     if (t >= .95) { // 라벨
       burrows.forEach(b => { const [x, y] = b[Math.floor(b.length / 2)]; ctx.strokeStyle = '#E8553E'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(x, y, 34, 0, 7); ctx.stroke(); });
@@ -1916,10 +1966,11 @@ function drawExplorer() {
     if (mode === 'foot' && prints.length === 0) { hint.style.display = ''; hint.firstChild.textContent = '먼저 진흙 위를 드래그해서 발자국을 남겨요!'; return; }
     if (mode === 'burrow' && burrows.length === 0) { hint.style.display = ''; hint.firstChild.textContent = '먼저 퇴적물 표면에서 시작해 굴을 파요!'; return; }
     hint.style.display = 'none'; cap.classList.remove('hidden'); $('#t4-run').disabled = true; $('#t4-clear').disabled = true;
-    const dur = mode === 'foot' ? 17000 : 13000, t0 = performance.now(); const CAPS = mode === 'foot' ? CAPS_FOOT : CAPS_BUR;
+    const dur = DUR[mode], t0 = performance.now(); const CAPS = mode === 'foot' ? CAPS_FOOT : CAPS_BUR;
     const loop = now => {
       animT = clamp((now - t0) / dur, 0, 1); render();
       const c = CAPS.filter(c => animT >= c[0]).pop(); if (c) { cap.innerHTML = hangCap(c[1]); badge.textContent = c[2]; }
+      view.hidden = !(mode === 'foot' && animT >= .37 && animT < .87); // 단면 보기 동안만 '옆에서 본 단면' 배지 표시
       if (animT < 1) animRAF = requestAnimationFrame(loop); else { done = true; $('#t4-again').style.display = ''; $('#t4-run').style.display = 'none'; }
     };
     animRAF = requestAnimationFrame(loop);
@@ -1927,7 +1978,7 @@ function drawExplorer() {
   function reset() {
     cancelAnimationFrame(animRAF); clearTimeout(hintTimer); animT = -1; prints = []; burrows = []; done = false;
     $('#t4-run').disabled = false; $('#t4-clear').disabled = false; $('#t4-run').style.display = ''; $('#t4-again').style.display = 'none';
-    cap.classList.add('hidden'); badge.textContent = mode === 'foot' ? '발자국 체험' : '굴 파기 체험';
+    cap.classList.add('hidden'); view.hidden = true; badge.textContent = mode === 'foot' ? '발자국 체험' : '굴 파기 체험';
     hint.style.display = ''; hint.firstChild.textContent = mode === 'foot' ? '진흙 위를 손가락으로 드래그해 걸어가 보세요' : '퇴적물 표면에서 시작해 드래그로 굴을 파 보세요';
     $('#foot-pick').style.display = mode === 'foot' ? '' : 'none';
     render();
