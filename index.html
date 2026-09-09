@@ -206,6 +206,12 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
   .foot-pick button{flex:1;justify-content:center;padding:4px 6px}
   .foot-pick button canvas{width:34px;height:34px;flex:none}
   .foot-pick button span{white-space:nowrap}
+  /* 자막: 폰에서는 그림을 가리지 않도록 그림 아래 칸으로 옮겨서 보여 줌 (JS가 .cap-slot으로 이동) */
+  .cap-slot{margin-top:8px}
+  .cap-slot:empty{display:none}
+  .caption.below{position:static;left:auto;right:auto;bottom:auto;font-size:15px;padding:8px 12px;pointer-events:auto;transition:none}
+  .caption.below.hidden{display:none}
+  .overlay-hint span{font-size:16px;padding:8px 14px;margin:0 12px;text-align:center}
 }
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
 
@@ -379,6 +385,22 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 /* ================= 공통 ================= */
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
+/* 폰(600px 이하)에서는 자막(.caption)을 그림(.stage-wrap) 밖 아래 칸으로 옮겨 그림을 가리지 않게 함. 넓은 화면으로 바뀌면 다시 그림 안으로 되돌림 */
+(function () {
+  const mq = matchMedia('(max-width:600px)');
+  const apply = () => {
+    $$('.stage-wrap').forEach(sw => {
+      let slot = sw.nextElementSibling;
+      if (!slot || !slot.classList.contains('cap-slot')) { slot = document.createElement('div'); slot.className = 'cap-slot'; sw.after(slot); }
+      const cap = (mq.matches ? sw : slot).querySelector('.caption');
+      if (!cap) return;
+      cap.classList.toggle('below', mq.matches);
+      (mq.matches ? slot : sw).appendChild(cap);
+    });
+  };
+  apply();
+  mq.addEventListener('change', apply);
+})();
 /* 캡션 정리:
    - '<b>배지</b> — 설명…' 형태면 '—'를 빼고 배지 바로 뒤에 설명이 오게 하며, 줄바꿈된 다음 줄이
      배지 아래가 아니라 설명 시작 위치에 맞춰 정렬되도록(내어쓰기) 감싼다
