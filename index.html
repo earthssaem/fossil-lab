@@ -27,6 +27,10 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 .brand{display:flex;align-items:baseline;gap:10px;min-width:0;flex-wrap:nowrap;white-space:nowrap}
 .brand h1{font-family:var(--display);font-weight:400;font-size:clamp(19px,3.1vw,30px);margin:0;letter-spacing:-.5px;flex:none}
 .brand .sub{font-size:clamp(11px,1.7vw,16px);color:var(--ink-2);border-left:2px solid rgba(36,48,58,.25);padding-left:10px;min-width:0;overflow:hidden;text-overflow:ellipsis}
+/* 제목 부분(앱 이름·부제)을 누르면 처음 화면으로 */
+a.brand{color:inherit;text-decoration:none;border-radius:16px;margin:-4px -8px;padding:4px 8px;-webkit-tap-highlight-color:transparent}
+@media (hover:hover){ a.brand:hover h1{color:var(--accent)} }   /* 터치 화면에서는 누른 뒤 색이 남지 않게 */
+a.brand:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .tabs{display:flex;gap:6px;max-width:1240px;margin:6px auto 0;padding:0 36px 0 16px;overflow-x:auto;scrollbar-width:none;width:100%;min-width:0}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex:1 0 auto;min-width:150px;padding:10px 14px 12px;border-radius:14px 14px 0 0;background:#fff;color:var(--ink-2);font-size:18px;border:3px solid var(--ink);border-bottom:none;position:relative;top:3px;display:flex;align-items:center;gap:8px;white-space:nowrap;transition:transform .15s}
@@ -188,7 +192,7 @@ footer .hub:hover{color:var(--ink);text-decoration-color:currentColor}
 </head>
 <body>
 <header class="top">
-  <div class="brand"><h1>화석 탐구실</h1><span class="sub">생물의 몸과 흔적은 어떻게 지층에 기록될까?</span></div>
+  <a class="brand" id="homeLink" href="#" title="처음 화면으로" aria-label="화석 탐구실 — 처음 화면으로"><h1>화석 탐구실</h1><span class="sub">생물의 몸과 흔적은 어떻게 지층에 기록될까?</span></a>
 </header>
 <nav class="tabs" role="tablist">
   <button class="tab active" data-tab="1" role="tab"><span class="num">1</span>화석 형성 과정</button>
@@ -430,6 +434,17 @@ $$('.tab').forEach(b => b.addEventListener('click', () => {
   $$('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel' + b.dataset.tab));
   if (tabInit[b.dataset.tab]) { tabInit[b.dataset.tab](); }
 }));
+
+/* 제목을 누르면 처음 화면으로: 1탭 · STEP 0 (2탭 선택·결과, 3탭 진행, 4탭 발자국은 그대로 둠) */
+const animBusy = {};      // 탭별 '장면 애니메이션 진행 중' 확인 (탭2가 채움)
+let t1Home = () => {};    // 탭1을 STEP 0으로 (탭1이 채움)
+function goHome() {
+  const first = $('.tab[data-tab="1"]');
+  if (!first.classList.contains('active')) first.click();   // 이미 1탭이면 다시 누르지 않음
+  t1Home();
+  scrollTo(0, 0); document.body.scrollTop = 0;   // 좁은 화면에서 스크롤한 경우 맨 위로
+}
+$('#homeLink').addEventListener('click', e => { e.preventDefault(); goHome(); });
 
 /* ---- 공용 그림: 생물 ---- */
 /* 물고기: soft(몸) / hard(뼈) 그룹.  중심 (0,0), 길이 ~150 */
@@ -697,12 +712,12 @@ function erode(rect, ms, fx, x0 = 0, x1 = 960, toTop = null) {
   });
 }
 /* 융기: 흔들림 → 지층 전체 상승, 바다는 빠져나감 */
-async function uplift(ground, waterEls, dy, ms, extraFn) {
-  for (let i = 0; i < 7; i++) { css(ground, { transform: `translate(${i % 2 ? 4 : -4}px,${i % 3 ? 2 : -2}px)` }, 70); await sleep(80); }
+async function uplift(ground, waterEls, dy, ms, extraFn, wait = sleep) { // wait: 탭1은 멈출 수 있는 sleep을 넘김
+  for (let i = 0; i < 7; i++) { css(ground, { transform: `translate(${i % 2 ? 4 : -4}px,${i % 3 ? 2 : -2}px)` }, 70); await wait(80); }
   css(ground, { transform: `translate(0,-${dy}px)` }, ms);
   waterEls.forEach(w => css(w, { transform: `translate(0,${dy * 1.6}px)`, opacity: 0 }, ms));
   if (extraFn) extraFn();
-  await sleep(ms + 100);
+  await wait(ms + 100);
 }
 /* 탐사자 (발끝이 (0,0)) */
 function drawExplorer() {
@@ -830,7 +845,7 @@ function drawExplorer() {
     { badge: '⑥ 풍화·침식', cap: '<b>⑥ 풍화·침식</b> — 비와 바람 등의 영향으로 암석이 조금씩 깎여 나가요.' },
     { badge: '⑦ 노출·발견', cap: '<b>⑦ 노출·발견</b> — 위쪽 암석이 깎이면서 화석이 지표에 드러났어요. 이제 화석을 발견할 수 있어요!' },
   ];
-  let cur = 0, busy = false;
+  let cur = 0, busy = false, homeReq = false;
   const dots = $('#t1-steps');
   STEPS.forEach((s) => { const d = document.createElement('div'); d.className = 'dot'; d.title = s.badge; dots.appendChild(d); });
   const setCap = (html, badge) => { $('#cap1').innerHTML = hangCap(html); if (badge) $('#badge1').textContent = badge; };
@@ -869,6 +884,11 @@ function drawExplorer() {
     css(person, { opacity: n === 6 ? 1 : 0 }, 0); css(sparkle, { opacity: n === 6 ? 1 : 0 }, 0);
   }
 
+  /* 제목 → 처음 화면: 단계 애니메이션 중에 제목을 누르면(homeReq) 다음 동작으로 넘어가지 않고 멈추도록 감싼 sleep 등 */
+  const HOME = Symbol('home');
+  const stopOnHome = f => (...a) => f(...a).then(r => { if (homeReq) throw HOME; return r; });
+  const sleep1 = stopOnHome(sleep), deposit1 = stopOnHome(deposit), erode1 = stopOnHome(erode);
+
   /* n-1 → n 애니메이션 */
   async function animateStep(n) {
     $$('#t1-steps .dot').forEach((d, i) => { d.classList.toggle('on', i === n); d.classList.toggle('done', i < n); });
@@ -876,64 +896,69 @@ function drawExplorer() {
     if (n === 1) {
       css(fishG, { transform: `translate(470px,${FY}px) rotate(180deg)` }, 1600);
       css(eyeOpen, { opacity: 0 }, 900); css(eyeDead, { opacity: 1 }, 900);
-      await sleep(1700);
+      await sleep1(1700);
     }
     if (n === 2) {
       setCap('<b>② 매몰</b> — 호수로 흘러든 고운 모래와 진흙이 물고기를 덮어요. 빨리 묻힐수록 먹히거나 흩어질 가능성이 줄어들어요.', '② 매몰');
-      await deposit(layers[0], 272, 4200, fx, 20, 940, 150);
+      await deposit1(layers[0], 272, 4200, fx, 20, 940, 150);
       css(soft, { opacity: 0 }, 0);
-      await sleep(300);
+      await sleep1(300);
       setCap(STEPS[2].cap, '② 매몰');
-      css(ghost, { opacity: .5 }, 900); await sleep(1000);
+      css(ghost, { opacity: .5 }, 900); await sleep1(1000);
     }
     if (n === 3) {
       setCap('<b>③ 퇴적층 형성</b> — 그 위로 퇴적물이 계속 쌓여 지층이 두꺼워져요.', '③ 퇴적층 형성');
       css(ghost, { opacity: 1 }, 800);
-      await deposit(layers[1], 228, 2600, fx, 20, 940, 150);
-      await deposit(layers[2], 188, 2400, fx, 20, 940, 150);
+      await deposit1(layers[1], 228, 2600, fx, 20, 940, 150);
+      await deposit1(layers[2], 188, 2400, fx, 20, 940, 150);
       setCap('오랜 시간이 흐르며 퇴적물이 계속 쌓이고, 물고기가 묻힌 지층은 <b>땅속 깊이</b> 묻혀요.', '시간 경과');
-      scene.water.forEach(w => css(w, { opacity: 0 }, 1800)); await sleep(2000);
+      scene.water.forEach(w => css(w, { opacity: 0 }, 1800)); await sleep1(2000);
       setCap('<b>④ 암석화</b> — 오랜 시간 퇴적물이 눌리고 다져지며 <b>퇴적암</b>으로 굳어요. 묻힌 뼈도 주변의 물과 광물의 영향을 받아 변할 수 있어요.', '④ 암석화');
-      layers.forEach((l, i) => css(l, { fill: ROCK[i] }, 1800)); await sleep(2000);
-      css(mag, { opacity: 1 }, 600); await sleep(900);
+      layers.forEach((l, i) => css(l, { fill: ROCK[i] }, 1800)); await sleep1(2000);
+      css(mag, { opacity: 1 }, 600); await sleep1(900);
       setCap('<b>광물 충전</b> — 퇴적층의 틈을 이동하는 물에는 여러 성분이 녹아 있어요. 이 물이 뼈의 작은 빈틈으로 스며들어요.', '광물 충전');
-      setMagLabel('여러 성분이 녹은 물이 스며들어요'); css(flow, { opacity: 1 }, 600); await sleep(2600);
+      setMagLabel('여러 성분이 녹은 물이 스며들어요'); css(flow, { opacity: 1 }, 600); await sleep1(2600);
       setMagLabel('빈틈에 광물이 침전해 쌓여요 — 광물 충전');
       setCap('<b>광물 충전</b> — 물에 녹아 있던 성분이 뼈의 빈틈에서 <b>광물로 침전</b>해 쌓여요. 빈틈이 채워지면서 뼈가 더욱 단단해질 수 있어요.', '광물 충전');
-      (async () => { for (let i = 0; i < crystals.length; i++) { const c = crystals[i], p = pores[i]; css(c, { transform: `translate(${p.getAttribute('cx')}px,${p.getAttribute('cy')}px) scale(1)` }, 500); await sleep(150); } })();
-      await sleep(3000);
+      (async () => { for (let i = 0; i < crystals.length; i++) { const c = crystals[i], p = pores[i]; css(c, { transform: `translate(${p.getAttribute('cx')}px,${p.getAttribute('cy')}px) scale(1)` }, 500); await sleep1(150); } })().catch(e => { if (e !== HOME) throw e; });
+      await sleep1(3000);
       setCap('<b>경우에 따라 치환</b> — 경우에 따라 뼈의 원래 성분 일부가 녹아 없어지고, 그 자리를 <b>다른 광물이 대신</b>하기도 해요.', '치환');
       setMagLabel('경우에 따라 원래 성분을 다른 광물이 대신해요');
-      css(boneDisc, { fill: '#8A8276' }, 3200); setBone('#8A8276', 3200); await sleep(3400);
+      css(boneDisc, { fill: '#8A8276' }, 3200); setBone('#8A8276', 3200); await sleep1(3400);
       css(flow, { opacity: 0 }, 600);
       setMagLabel('광물이 채워져 뼈의 형태가 단단하게 보존되었어요');
-      setCap(STEPS[3].cap, STEPS[3].badge); await sleep(800);
+      setCap(STEPS[3].cap, STEPS[3].badge); await sleep1(800);
     }
     if (n === 4) {
       css(mag, { opacity: 0 }, 400);
-      await uplift(ground, scene.water, 60, 2600, () => css(hills, { opacity: 1 }, 2000));
+      await uplift(ground, scene.water, 60, 2600, () => css(hills, { opacity: 1 }, 2000), sleep1);
     }
     if (n === 5) {
-      css(rain, { opacity: 1 }, 600); await sleep(500);
-      await erode(layers[2], 1500, fx, 0, 960);
-      await erode(layers[1], 1500, fx, 0, 960);
-      await erode(layers[0], 1200, fx, 0, 960, 330);
+      css(rain, { opacity: 1 }, 600); await sleep1(500);
+      await erode1(layers[2], 1500, fx, 0, 960);
+      await erode1(layers[1], 1500, fx, 0, 960);
+      await erode1(layers[0], 1200, fx, 0, 960, 330);
     }
     if (n === 6) {
       css(rain, { opacity: 0 }, 600);
-      await erode(layers[0], 1000, fx, 0, 960);
+      await erode1(layers[0], 1000, fx, 0, 960);
       css(ghost, { opacity: 0 }, 400); setBone('#6E675C', 800);
-      css(sparkle, { opacity: 1 }, 600); await sleep(500);
-      css(person, { opacity: 1 }, 700); await sleep(800);
+      css(sparkle, { opacity: 1 }, 600); await sleep1(500);
+      css(person, { opacity: 1 }, 700); await sleep1(800);
     }
     setState(n);
   }
 
   async function go(n, animate = true) {
-    if (busy) return; busy = true;
+    if (busy) return; busy = true; homeReq = false;
     setPaused(false); // 단계 이동 시 해당 단계 애니메이션을 처음부터 재생
     n = clamp(n, 0, STEPS.length - 1);
-    if (animate && n === cur + 1) await animateStep(n); else setState(n);
+    if (animate && n === cur + 1) { try { await animateStep(n); } catch (e) { if (e !== HOME) throw e; } } else setState(n);
+    if (homeReq) { // 단계 애니메이션 중에 제목을 누른 경우: 남은 전환을 지우고 STEP 0으로
+      n = 0; setPaused(false);
+      _cssActive.forEach(r => { if (svg.contains(r.el)) { clearTimeout(r.done); _cssActive.delete(r); } });
+      setState(0);
+    }
     cur = n;
     $('#t1-prev').disabled = cur === 0; $('#t1-next').disabled = cur === STEPS.length - 1;
     $('#t1-next').textContent = cur === STEPS.length - 2 ? '결과 보기 ▶' : '다음 ▶';
@@ -942,6 +967,13 @@ function drawExplorer() {
   $('#t1-next').onclick = () => go(cur + 1);
   $('#t1-prev').onclick = () => go(cur - 1, false);
   $('#t1-reset').onclick = () => go(0, false);
+  // 제목 → 처음 화면: 단계 애니메이션 중이면 그 장면을 멈추고 STEP 0으로.
+  // 장면 중단 신호(_animEpoch)는 모든 탭 공용이므로, 탭2 장면이 진행 중일 때는 쓰지 않고 지금 동작이 끝나는 대로 멈춤
+  t1Home = () => {
+    if (!busy) { go(0, false); return; }
+    homeReq = true; setPaused(false); // 일시 정지 중이어도 멈춘 장면이 끝나도록
+    if (!(animBusy[2] && animBusy[2]())) _animEpoch++;
+  };
   registerPauseBtn($('#t1-pause'));
   setState(0); $('#t1-prev').disabled = true;
 })();
@@ -1283,6 +1315,7 @@ function drawExplorer() {
     const first = $('#org-grid button.org'); if (first) first.focus();
   };
   registerPauseBtn($('#t2-pause'));
+  animBusy[2] = () => busy;
   t2Mode('idle');
   showIdle();
 })();
