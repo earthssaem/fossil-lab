@@ -165,6 +165,8 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 
 /* ---------- 푸터 ---------- */
 .site-foot{max-width:1240px;margin:auto auto 0;padding:4px 16px 8px;text-align:center;font-size:13px;color:var(--ink-2);width:100%}
+footer .hub{color:inherit;font-weight:500;white-space:nowrap;text-decoration:underline;text-decoration-color:color-mix(in srgb,currentColor 35%,transparent);text-underline-offset:3px}
+footer .hub:hover{color:var(--ink);text-decoration-color:currentColor}
 
 /* 탭2 결과 패널 */
 .result .rwrap{padding:10px 14px 12px}
@@ -294,7 +296,7 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 </section>
 
 </main>
-<footer class="site-foot">© 2026 제작: 김연경(earthssaem@gmail.com)</footer>
+<footer class="site-foot">© 2026 제작: 김연경(earthssaem@gmail.com) | <a class="hub" href="https://earthssaem-lab.vercel.app/" target="_blank" rel="noopener">연경쌤의 지구과학 실험실 둘러보기 →</a></footer>
 <script>
 /* ================= 공통 ================= */
 const $ = s => document.querySelector(s);
